@@ -10228,7 +10228,7 @@
 
                 const baseNormGold = Math.round(250 + idx * 250 + 20 * idx * idx * idx);
                 const fullGold = this.isHardMode ? Math.round(baseNormGold * Math.max(1, idx) + 5000) : baseNormGold;
-                const lateTpBump = idx >= 3 ? (idx - 2) * (this.isHardMode ? 4 : 2) : 0;
+                const lateTpBump = idx >= 5 ? (idx - 2) * (this.isHardMode ? 4 : 2) : 0;
                 const fullTP = (this.isHardMode ? (6 + Math.floor(idx * 5.2)) + lateTpBump : (2 + Math.floor(idx * 2.6))) + lateTpBump;
                 const fullSP = this.isHardMode ? (8 + Math.floor(idx * 3.5)) : (5 + Math.floor(idx * 2.2));
                 const fullParts = this.isHardMode ? (4 + idx) : (2 + Math.floor(idx * 0.65));
@@ -18200,7 +18200,7 @@
                     this.state.level++;
                     if (this.runStats) this.runStats.levelsGained++;
                     const lvl = this.state.level;
-                    const xpGrowth = lvl < 15 ? 1.24 : (lvl < 30 ? 1.15 : (lvl < 40 ? 1.11 : 1.14));
+                    const xpGrowth = lvl < 15 ? 1.13 : (lvl < 30 ? 1.12 : (lvl < 40 ? 1.11 : 1.14));
                     this.state.maxXp = Math.max(180, Math.round(this.state.maxXp * xpGrowth));
                     this.state.statPts += 5;
                     const tpGain = 1;
@@ -18209,10 +18209,11 @@
                     this.recalculateStats(false);
                     const missingHp = Math.max(0, this.player.maxHp - this.player.hp);
                     const missingMp = Math.max(0, this.player.maxMp - this.player.mp);
-                    this.player.hp = Math.min(this.player.maxHp, this.player.hp + Math.round(missingHp * 0.50));
+                    this.player.hp = this.player.maxHp;
                     this.player.armorShield = this.player.maxArmorShield;
-                    this.player.mp = Math.min(this.player.maxMp, this.player.mp + Math.round(missingMp * 0.50));
-                    UI.announce(`OPERATIVE LEVEL UP! — LEVEL ${this.state.level}`, `+${tpGain} Tech Pt & +5 Spec Pts • +50% Missing HP/EN & Full Shield Restored!`);
+                    this.player.mp = this.player.maxMp;
+                    this.player.stamina = this.player.maxStamina
+                    UI.announce(`OPERATIVE LEVEL UP! — ${this.state.level}`, `INTERNAL SYSTEMS STRENGTHENED • REPAIR SYSTEMS EXECUTED`);
                 }
 
                 if (en.isBoss) {
@@ -19957,21 +19958,20 @@
 
                             // A wire only arms once Zed3 is clear of it, and only trips on an actual crossing.
                             let armed = false;
-                            let lastDz = this.player.pos.z - wz;
                             this.bossCustomEffects.push({
                                 mesh: wireGrp,
                                 life: 6.5 * p3,
                                 update: () => {
                                     const dz = this.player.pos.z - wz;
-                                    const prevDz = lastDz;
-                                    lastDz = dz;
+                                
+                                    
                                     if (!armed) {
                                         if (Math.abs(dz) >= 1.2) armed = true;
                                         return true;
                                     }
                                     const inSpan = Math.abs(this.player.pos.x - wireGrp.position.x) <= 9.0;
                                     const onGround = (this.player.pos.y || 0) < 1.8; // strand is knee-high; decks / jump arcs pass over it
-                                    const crossed = Math.abs(dz) < 0.65 || (prevDz * dz < 0); // sign flip catches fast dashes / teleports
+                                    const crossed = Math.abs(dz) < 0.65;
                                     if (crossed && inSpan && onGround) {
                                         if (this.player.dashActiveTimer <= 0) {
                                             this.player.blizzardSlowTimer = 2.5;
