@@ -4482,14 +4482,14 @@
         const WEAPON_ARCHETYPES = {
             cleaver: {
                 id: 'cleaver', weaponClass: 'Rifle', name: 'R3 Puncher Carbine', styleName: 'Puncher', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
-                auto: true, range: 15.5, arc: 0, cooldown: 0.30, dmgMult: 1.00, critBonus: 4, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0xfbbf24,
+                auto: true, range: 16, arc: 0, cooldown: 0.30, dmgMult: 1.00, critBonus: 4, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0xfbbf24,
                 pellets: 1, spread: 0.022, magSize: 22, reloadTime: 2.45, recoilPerShot: 0.090, maxBloom: 0.44, bloomDecay: 0.45,
                 partWeights: { rec: 8, brl: 7, bolt: 6, trig: 5, furn: 6, aux: 5 },
                 desc: 'Full-Auto 3.33 RPS service carbine (15.5m Range). Accurate on burst-fire; moving blooms spread.'
             },
             m4_phantom: {
                 id: 'm4_phantom', weaponClass: 'Rifle', name: 'R4-S Hitman Carbine', styleName: 'Hitman', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
-                auto: true, isSuppressed: true, range: 14.2, arc: 0, cooldown: 0.19, dmgMult: 0.78, critBonus: 6, speedMod: 0.03, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0x22d3ee,
+                auto: true, isSuppressed: true, range: 14.5, arc: 0, cooldown: 0.19, dmgMult: 0.78, critBonus: 6, speedMod: 0.03, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0x22d3ee,
                 pellets: 1, spread: 0.015, magSize: 28, reloadTime: 2.20, recoilPerShot: 0.065, maxBloom: 0.34, bloomDecay: 0.54,
                 partWeights: { rec: 8, brl: 8, bolt: 6, trig: 6, furn: 5, aux: 5 },
                 desc: 'Full-Auto 5.26 RPS suppressed carbine (14.2m Range, +3% Move Spd). Fast cycle rate & low recoil.'
@@ -4503,84 +4503,84 @@
             },
             br55_burst: {
                 id: 'br55_burst', weaponClass: 'Rifle', name: 'R8-H Terminal Rifle', styleName: 'Terminal', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
-                auto: false, range: 18.5, arc: 0, cooldown: 0.35, dmgMult: 1.70, critBonus: 10, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 52, projColor: 0x38bdf8,
+                auto: false, range: 18, arc: 0, cooldown: 0.35, dmgMult: 1.70, critBonus: 10, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 52, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.008, magSize: 15, reloadTime: 2.60, recoilPerShot: 0.10, maxBloom: 0.34, bloomDecay: 0.58,
                 partWeights: { rec: 9, brl: 10, bolt: 7, trig: 8, furn: 6, aux: 6 },
                 desc: 'Semi-Auto 2.86 RPS precision rifle (18.5m Range, +10% Crit). Pinpoint accuracy on paced shots.'
             },
             daggers: {
                 id: 'daggers', weaponClass: 'SMG', name: 'S4 Vector SMG', styleName: 'Vector', icon: 'fa-bolt', displayIcon: 'fa-bolt',
-                auto: true, isRunAndGun: true, range: 10.5, arc: 0, cooldown: 0.13, dmgMult: 0.40, critBonus: 5, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x10b981,
+                auto: true, isRunAndGun: true, range: 10, arc: 0, cooldown: 0.13, dmgMult: 0.40, critBonus: 5, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x10b981,
                 pellets: 1, spread: 0.048, magSize: 30, reloadTime: 2.10, recoilPerShot: 0.052, maxBloom: 0.36, bloomDecay: 0.62,
                 partWeights: { rec: 7, brl: 5, bolt: 6, trig: 5, furn: 5, aux: 0 },
                 desc: 'Run-and-Gun 7.69 RPS CQB shredder (10.5m Range, +7% Spd). Stays accurate while moving and dodging.'
             },
             mp7_pdw: {
                 id: 'mp7_pdw', weaponClass: 'SMG', name: 'S5-R Ripper PDW', styleName: 'Ripper', icon: 'fa-bolt', displayIcon: 'fa-bolt',
-                auto: true, isRunAndGun: true, range: 12.4, arc: 0, cooldown: 0.15, dmgMult: 0.46, critBonus: 6, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 44, projColor: 0x2dd4bf,
+                auto: true, isRunAndGun: true, range: 12, arc: 0, cooldown: 0.15, dmgMult: 0.46, critBonus: 6, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 44, projColor: 0x2dd4bf,
                 pellets: 1, spread: 0.042, magSize: 26, reloadTime: 2.10, recoilPerShot: 0.048, maxBloom: 0.34, bloomDecay: 0.64,
                 partWeights: { rec: 7, brl: 6, bolt: 6, trig: 6, furn: 0, aux: 5 },
                 desc: 'Run-and-Gun 6.67 RPS armor-piercing PDW (12.4m Range, +7% Spd). Tight mobile tracking.'
             },
             v22_viper: {
                 id: 'v22_viper', weaponClass: 'SMG', name: 'S30-C Viper SMG', styleName: 'Viper', icon: 'fa-bolt', displayIcon: 'fa-bolt',
-                auto: true, isRunAndGun: true, isNeedler: true, range: 11.4, arc: 0, cooldown: 0.14, dmgMult: 0.38, critBonus: 5, speedMod: 0.06, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xe879f9,
+                auto: true, isRunAndGun: true, isNeedler: true, range: 10.5, arc: 0, cooldown: 0.14, dmgMult: 0.38, critBonus: 5, speedMod: 0.06, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xe879f9,
                 pellets: 1, spread: 0.045, magSize: 28, reloadTime: 2.15, recoilPerShot: 0.050, maxBloom: 0.35, bloomDecay: 0.62,
                 partWeights: { rec: 7, brl: 6, bolt: 6, trig: 6, furn: 4, aux: 5 },
                 desc: 'Run-and-Gun 7.14 RPS crystal needler (11.4m Range). Every 8th needle (6th on NEO) detonates a Super-Combine burst!'
             },
             m134_minigun: {
                 id: 'm134_minigun', weaponClass: 'SMG', name: 'L2 Breaker LMG', styleName: 'Breaker', icon: 'fa-hurricane', displayIcon: 'fa-hurricane',
-                auto: true, isMinigun: true, range: 15.0, arc: 0, cooldown: 0.28, minCooldown: 0.08, dmgMult: 0.42, critBonus: 4, speedMod: -0.22, isRanged: true, mpCost: 0, projSpeed: 45, projColor: 0x38bdf8,
+                auto: true, isMinigun: true, range: 15.5, arc: 0, cooldown: 0.28, minCooldown: 0.08, dmgMult: 0.42, critBonus: 4, speedMod: -0.22, isRanged: true, mpCost: 0, projSpeed: 45, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.032, magSize: 150, reloadTime: 3.80, recoilPerShot: 0.012, maxBloom: 0.28, bloomDecay: 0.55,
                 partWeights: { rec: 10, brl: 11, bolt: 8, trig: 6, furn: 7, aux: 8 },
                 desc: '150-Round Rotary LMG (15.0m Range, -22% Move Spd). Ramps from 3.57 RPS up to 12.5 RPS with tight sustained spread.'
             },
             maul: {
                 id: 'maul', weaponClass: 'Shotgun', name: 'B19 Cruncher Shotgun', styleName: 'Cruncher', icon: 'fa-burst', displayIcon: 'fa-burst',
-                auto: false, range: 7.8, arc: 0, cooldown: 0.72, dmgMult: 0.48, stunChance: 0.35, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 38, projColor: 0xf97316,
+                auto: false, range: 8, arc: 0, cooldown: 0.72, dmgMult: 0.48, stunChance: 0.35, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 38, projColor: 0xf97316,
                 pellets: 7, spread: 0.135, magSize: 6, reloadTime: 3.00, recoilPerShot: 0.26, maxBloom: 0.38, bloomDecay: 0.50,
                 partWeights: { rec: 8, brl: 9, bolt: 6, trig: 5, furn: 7, aux: 0 },
                 desc: 'Semi-Auto 1.39 RPS pump scattergun (7 pellets, 7.8m Range). High point-blank stopping power & stagger.'
             },
             aa18_auto: {
                 id: 'aa18_auto', weaponClass: 'Shotgun', name: 'B17-A Repeater Shotgun', styleName: 'Repeater', icon: 'fa-burst', displayIcon: 'fa-burst',
-                auto: true, range: 6.8, arc: 0, cooldown: 0.36, dmgMult: 0.30, stunChance: 0.18, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 37, projColor: 0xfb7185,
+                auto: true, range: 7, arc: 0, cooldown: 0.36, dmgMult: 0.30, stunChance: 0.18, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 37, projColor: 0xfb7185,
                 pellets: 6, spread: 0.16, magSize: 8, reloadTime: 3.20, recoilPerShot: 0.20, maxBloom: 0.46, bloomDecay: 0.46,
                 partWeights: { rec: 9, brl: 8, bolt: 8, trig: 0, furn: 6, aux: 6 },
                 desc: 'Full-Auto 2.78 RPS drum shotgun (6 pellets, 6.8m Range, -2% Move Spd). Rapid CQB room-clearer.'
             },
             k88_helios: {
                 id: 'k88_helios', weaponClass: 'Shotgun', name: 'B12-E Warhead Shotgun', styleName: 'Warhead', icon: 'fa-burst', displayIcon: 'fa-burst',
-                auto: false, stickyChargeShotgun: true, range: 8.2, arc: 0, cooldown: 0.68, dmgMult: 0.32, stunChance: 0.22, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xf59e0b,
+                auto: false, stickyChargeShotgun: true, range: 8, arc: 0, cooldown: 0.68, dmgMult: 0.32, stunChance: 0.22, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xf59e0b,
                 pellets: 5, spread: 0.13, magSize: 6, reloadTime: 3.00, recoilPerShot: 0.24, maxBloom: 0.40, bloomDecay: 0.50,
                 partWeights: { rec: 8, brl: 9, bolt: 6, trig: 6, furn: 6, aux: 6 },
                 desc: 'Semi-Auto 1.47 RPS 5-slug shotgun (8.2m Range). Each slug plants a sticky charge that detonates 1.35s later!'
             },
             m79_thumper: {
                 id: 'm79_thumper', weaponClass: 'Shotgun', name: 'G13-E Breacher Grenade Launcher', styleName: 'Breacher', icon: 'fa-bomb', displayIcon: 'fa-bomb',
-                auto: false, isGrenadeLauncher: true, aoeBlastRadius: 3.2, range: 14.8, arc: 0, cooldown: 0.82, dmgMult: 1.85, stunChance: 0.35, speedMod: -0.06, isRanged: true, mpCost: 0, projSpeed: 32, projColor: 0xf97316,
+                auto: false, isGrenadeLauncher: true, aoeBlastRadius: 3.2, range: 15.5, arc: 0, cooldown: 0.82, dmgMult: 1.85, stunChance: 0.35, speedMod: -0.06, isRanged: true, mpCost: 0, projSpeed: 32, projColor: 0xf97316,
                 pellets: 1, spread: 0.018, magSize: 4, reloadTime: 3.10, recoilPerShot: 0.30, maxBloom: 0.42, bloomDecay: 0.50,
                 partWeights: { rec: 9, brl: 10, bolt: 7, trig: 6, furn: 7, aux: 6 },
                 desc: '4-Round 40mm Grenade Launcher (1.22 RPS, 14.8m Range). Shells detonate in a 3.2m spherical blast.'
             },
             staff: {
                 id: 'staff', weaponClass: 'Sniper', name: 'SR2 Atomizer Railgun', styleName: 'Atomizer', icon: 'fa-atom', displayIcon: 'fa-atom',
-                auto: false, range: 21.5, arc: 0, cooldown: 0.68, dmgMult: 2.45, critBonus: 14, speedMod: -0.06, isRanged: true, piercing: true, isTechWeapon: true, mpCost: 0, projSpeed: 64, projColor: 0x38bdf8,
+                auto: false, range: 21, arc: 0, cooldown: 0.68, dmgMult: 2.45, critBonus: 14, speedMod: -0.06, isRanged: true, piercing: true, isTechWeapon: true, mpCost: 0, projSpeed: 64, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.004, magSize: 6, reloadTime: 2.95, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
                 partWeights: { rec: 9, brl: 11, bolt: 8, trig: 7, furn: 6, aux: 9 },
                 desc: 'Semi-Auto 1.47 RPS magnetic railgun (21.5m Range, -6% Move Spd). Pierces all targets in a line.'
             },
             sr99_sniper: {
                 id: 'sr99_sniper', weaponClass: 'Sniper', name: 'SR99 Through-hole Sniper', styleName: 'Through-hole', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
-                auto: false, range: 24.5, arc: 0, cooldown: 0.85, dmgMult: 3.20, critBonus: 18, speedMod: -0.08, isRanged: true, piercing: true, mpCost: 0, projSpeed: 68, projColor: 0xfacc15,
+                auto: false, range: 25, arc: 0, cooldown: 0.85, dmgMult: 3.20, critBonus: 18, speedMod: -0.08, isRanged: true, piercing: true, mpCost: 0, projSpeed: 68, projColor: 0xfacc15,
                 pellets: 1, spread: 0.002, magSize: 5, reloadTime: 3.25, recoilPerShot: 0.26, maxBloom: 0.38, bloomDecay: 0.52,
                 partWeights: { rec: 10, brl: 12, bolt: 9, trig: 8, furn: 8, aux: 7 },
                 desc: 'Bolt-Action 1.18 RPS sniper (24.5m Range, +18% Crit, -8% Move Spd). Heavy piercing stopping power.'
             },
             xr0_eclipse: {
                 id: 'xr0_eclipse', weaponClass: 'Sniper', name: 'SR0-C Ronin Sniper', styleName: 'Ronin', icon: 'fa-bolt-lightning', displayIcon: 'fa-bolt-lightning',
-                auto: false, isChargeLance: true, isTechWeapon: true, range: 25.0, arc: 0, cooldown: 0.58, dmgMult: 1.45, critBonus: 14, speedMod: -0.06, isRanged: true, piercing: false, mpCost: 0, projSpeed: 70, projColor: 0x22d3ee,
+                auto: false, isChargeLance: true, isTechWeapon: true, range: 26, arc: 0, cooldown: 0.58, dmgMult: 1.45, critBonus: 14, speedMod: -0.06, isRanged: true, piercing: false, mpCost: 0, projSpeed: 70, projColor: 0x22d3ee,
                 pellets: 1, spread: 0.003, magSize: 6, reloadTime: 2.95, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
                 partWeights: { rec: 10, brl: 12, bolt: 8, trig: 7, furn: 6, aux: 9 },
                 desc: '3-Stage ADS Charge Lance (25m Range). Hold RMB to charge up to 3.0x Dmg + Wall Penetration!'
@@ -4594,21 +4594,21 @@
             },
             mk23_soc: {
                 id: 'mk23_soc', weaponClass: 'Pistol', name: 'P23 Roller Pistol', styleName: 'Roller', icon: 'fa-gun', displayIcon: 'fa-gun',
-                auto: false, isSidearmSpecialist: true, isRunAndGun: true, range: 12.0, arc: 0, cooldown: 0.17, dmgMult: 0.82, critBonus: 12, speedMod: 0.10, isRanged: true, mpCost: 0, projSpeed: 44, projColor: 0x38bdf8,
+                auto: false, isSidearmSpecialist: true, isRunAndGun: true, range: 11, arc: 0, cooldown: 0.17, dmgMult: 0.82, critBonus: 12, speedMod: 0.10, isRanged: true, mpCost: 0, projSpeed: 44, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.028, magSize: 12, reloadTime: 1.65, recoilPerShot: 0.09, maxBloom: 0.32, bloomDecay: 0.70,
                 partWeights: { rec: 6, brl: 5, bolt: 0, trig: 5, furn: 0, aux: 5 },
                 desc: 'Sidearm Specialist (5.88 RPS, +10% Spd). 0% Secondary Slot penalty & grants +25% Crit/Reload for 2s on swap!'
             },
             de50_magnum: {
                 id: 'de50_magnum', weaponClass: 'Pistol', name: 'P1-H Eagle Pistol', styleName: 'Eagle', icon: 'fa-gun', displayIcon: 'fa-gun',
-                auto: false, isSidearmSpecialist: true, range: 13.8, arc: 0, cooldown: 0.42, dmgMult: 1.60, critBonus: 16, stunChance: 0.28, speedMod: 0.08, isRanged: true, mpCost: 0, projSpeed: 48, projColor: 0xf59e0b,
+                auto: false, isSidearmSpecialist: true, range: 14, arc: 0, cooldown: 0.45, dmgMult: 1.60, critBonus: 16, stunChance: 0.28, speedMod: 0.08, isRanged: true, mpCost: 0, projSpeed: 48, projColor: 0xf59e0b,
                 pellets: 1, spread: 0.022, magSize: 7, reloadTime: 2.05, recoilPerShot: 0.20, maxBloom: 0.38, bloomDecay: 0.60,
                 partWeights: { rec: 7, brl: 7, bolt: 6, trig: 5, furn: 0, aux: 0 },
-                desc: 'Sidearm Specialist (2.38 RPS, .50-Cal). 0% Secondary Slot penalty & +25% Crit/Reload for 2s on swap!'
+                desc: 'Sidearm Specialist (2.22 RPS, .50-Cal). 0% Secondary Slot penalty & +25% Crit/Reload for 2s on swap!'
             },
             g18_autopistol: {
                 id: 'g18_autopistol', weaponClass: 'Pistol', name: 'P5-A Stoptime Pistol', styleName: 'Stoptime', icon: 'fa-gun', displayIcon: 'fa-gun',
-                auto: true, isSidearmSpecialist: true, isRunAndGun: true, range: 9.8, arc: 0, cooldown: 0.11, dmgMult: 0.34, critBonus: 6, speedMod: 0.10, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x34d399,
+                auto: true, isSidearmSpecialist: true, isRunAndGun: true, range: 9.5, arc: 0, cooldown: 0.11, dmgMult: 0.34, critBonus: 6, speedMod: 0.10, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x34d399,
                 pellets: 1, spread: 0.055, magSize: 22, reloadTime: 1.85, recoilPerShot: 0.065, maxBloom: 0.40, bloomDecay: 0.65,
                 partWeights: { rec: 6, brl: 5, bolt: 5, trig: 0, furn: 0, aux: 6 },
                 desc: 'Sidearm Specialist (9.09 RPS Full-Auto). 0% Secondary Slot penalty & +25% Crit/Reload for 2s on swap!'
@@ -4846,7 +4846,7 @@
                 maxRank: 5, mpCost: 36, cooldown: 17.0,
                 evoDesc: 'RANK 6 AMP: 5.6m radius, 2.5s Freeze, pulses twice with 3D ice spires.',
                 ovrDesc: 'RANK 7 OVERLOAD: 7.2m radius, pulses THREE times, and freezes targets for 3.0s!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('cryoGrenade', r) : 'Lob a 3D cryo-canister that erupts jagged ice spires, freezing and slowing foes.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('cryoGrenade', r) : 'Lob a cryo-canister that erupts jagged ice spires, freezing and slowing foes.'
             },
             {
                 id: 'vortexSingularity', branch: 'Tech-Ops', type: 'active', quickCast: false, previewType: 'groundAoE', range: 14.0, aoeRadius: 6.2, defaultSlot: -1,
@@ -4854,7 +4854,7 @@
                 maxRank: 5, mpCost: 42, cooldown: 20.0,
                 evoDesc: 'RANK 6 AMP: 8.2m pull, strips shields, 240% Supernova implosion.',
                 ovrDesc: 'RANK 7 OVERLOAD: 10.5m pull for 5.5s, 420% Quasar implosion!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('vortexSingularity', r) : 'Spawn a 3D gravity well that continuously drags hostiles inward and implodes.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('vortexSingularity', r) : 'Summon a gravity well that continuously drags hostiles inward and implodes.'
             },
             {
                 id: 'guardDrone', branch: 'Tech-Ops', type: 'active', quickCast: true, previewType: 'selfAoE', aoeRadius: 9.5, defaultSlot: -1,
@@ -4862,7 +4862,7 @@
                 maxRank: 5, mpCost: 40, cooldown: 18.0,
                 evoDesc: 'RANK 6 AMP: 2 gunship drones for 8.0s firing rapid beams every 0.25s.',
                 ovrDesc: 'RANK 7 OVERLOAD: 4 gunship drones for 11.5s firing twin piercing beams every 0.16s!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('guardDrone', r) : '[QUICK-CAST] Deploy orbiting 3D twin-rotor gunship drones that auto-fire lasers.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('guardDrone', r) : '[QUICK-CAST] Deploy orbiting twin-rotor gunship drones that auto-fire lasers.'
             },
             {
                 id: 'roboSquad', branch: 'Tech-Ops', type: 'active', quickCast: false, previewType: 'groundAoE', range: 10.0, aoeRadius: 3.5, defaultSlot: -1,
@@ -4870,7 +4870,7 @@
                 maxRank: 5, mpCost: 44, cooldown: 25.0,
                 evoDesc: 'RANK 6 AMP: Spawns 5 decoy bots that taunt foes and detonate for 215% Tech Blast Dmg + Stun!',
                 ovrDesc: 'RANK 7 OVERLOAD: Spawns 7 volatile bots that taunt foes and detonate for 310% Tech Blast Dmg (5.0m) + 1.8s Stun!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('roboSquad', r) : 'Deploy 3D bipedal decoy bots that draw aggro, fire lasers, and detonate on expiry.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('roboSquad', r) : 'Deploy bipedal decoy bots that draw aggro, fire lasers, and detonate on expiry.'
             },
             {
                 id: 'arcOverload', branch: 'Tech-Ops', type: 'active', quickCast: false, previewType: 'groundAoE', range: 13.5, aoeRadius: 4.0, defaultSlot: -1,
@@ -4878,7 +4878,7 @@
                 maxRank: 5, mpCost: 38, cooldown: 15.0,
                 evoDesc: 'RANK 6 AMP: Chains 8 targets, strips shields.',
                 ovrDesc: 'RANK 7 OVERLOAD: Chains 14 targets, stuns 2.4s, and leaves a 6s high-voltage plasma field!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('arcOverload', r) : 'Drop a 3D EMP discharge coil that arcs multi-forked lightning across enemies.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('arcOverload', r) : 'Drop a EMP discharge coil that arcs multi-forked lightning across enemies.'
             },
             {
                 id: 'mindControlDart', branch: 'Tech-Ops', type: 'active', quickCast: false, previewType: 'laserLine', range: 22.0, defaultSlot: -1,
@@ -4886,7 +4886,7 @@
                 maxRank: 5, mpCost: 38, cooldown: 26.0,
                 evoDesc: 'RANK 6 AMP: Fires 3 darts (16s, +60% Dmg). Kills by hacked allies spawn a Synth-Bot! Heavy Boss Dmg.',
                 ovrDesc: 'RANK 7 OVERLOAD: Fires 4 darts (20s, +110% Dmg). Kills & death spawn Synth-Bots! Massive Boss Neural-Shock!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('mindControlDart', r) : 'Fire a 3D winged neural syringe-dart that hacks enemies or shocks bosses.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('mindControlDart', r) : 'Fire a winged neural syringe-dart that hacks enemies or shocks bosses.'
             },
             {
                 id: 'teslaPylon', branch: 'Tech-Ops', type: 'active', quickCast: false, previewType: 'groundAoE', range: 13.0, aoeRadius: 5.5, defaultSlot: -1,
@@ -4894,7 +4894,7 @@
                 maxRank: 5, mpCost: 36, cooldown: 17.0,
                 evoDesc: 'RANK 6 AMP: Deploys 2 linked 3D Faraday towers (11s) that zap foes every 0.65s.',
                 ovrDesc: 'RANK 7 OVERLOAD: Deploys 3 linked towers in a triangle (14s, zaps every 0.45s) & grants +30% Tech CDR inside!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('teslaPylon', r) : 'Deploy 3D high-voltage Faraday towers that zap nearby enemies and intercept shots.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('teslaPylon', r) : 'Deploy high-voltage Faraday towers that zap nearby enemies and intercept shots.'
             },
             {
                 id: 'nanitePlague', branch: 'Tech-Ops', type: 'active', quickCast: false, previewType: 'groundAoE', range: 14.0, aoeRadius: 4.5, defaultSlot: -1,
@@ -4902,7 +4902,7 @@
                 maxRank: 5, mpCost: 38, cooldown: 18.0,
                 evoDesc: 'RANK 6 AMP: 7s Nanite DoT, -12% enemy dmg (-6% Boss) & siphons +3 Shield / +1.5 EN per tick.',
                 ovrDesc: 'RANK 7 OVERLOAD: 8.5s DoT, -16% enemy dmg (-8% Boss), +10% Vuln (+5% Boss) & spawns acid pool on death!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('nanitePlague', r) : 'Release a 3D swirling cloud of corrosive micro-drones that dissolve and weaken foes.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('nanitePlague', r) : 'Release a swirling cloud of corrosive micro-drones that dissolve and weaken foes.'
             },
             {
                 id: 'arcaneFlow', branch: 'Tech-Ops', type: 'passive',
@@ -4966,9 +4966,9 @@
                 id: 'payloadSniper', branch: 'Recon', type: 'active', quickCast: true, previewType: 'laserLine', range: 42.0, defaultSlot: 3,
                 name: 'X-99 Payload Sniper (3 Rds)', evoName: 'AMP // Omega Rail-Cannon (5 Rds)', ovrName: 'OVR // Antimatter Rail-Lance (7 Rds)', icon: 'fa-crosshairs', color: 'text-emerald-400',
                 maxRank: 5, mpCost: 42, cooldown: 20.0,
-                evoDesc: 'RANK 6 AMP: Equips 3D X-99 Rail-Cannon with 5 wall-piercing rounds that detonate in a 3.5m sphere.',
+                evoDesc: 'RANK 6 AMP: Equips X-99 Rail-Cannon with 5 wall-piercing rounds that detonate in a 3.5m sphere.',
                 ovrDesc: 'RANK 7 OVERLOAD: 7 wall-piercing antimatter rounds that detonate in a 4.5m sphere on every hit!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('payloadSniper', r) : '[QUICK-CAST] Equip the 3D X-99 Anti-Materiel Rail-Cannon with wall-piercing explosive rounds.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('payloadSniper', r) : '[QUICK-CAST] Equip the X-99 Anti-Materiel Rail-Cannon with wall-piercing explosive rounds.'
             },
             {
                 id: 'dealersGambit', branch: 'Recon', type: 'active', quickCast: true, previewType: 'laserLine', range: 15.5, defaultSlot: -1,
@@ -4976,7 +4976,7 @@
                 maxRank: 5, mpCost: 26, drawMpCost: 6, cooldown: 12.0, drawCooldown: 0.85,
                 evoDesc: 'RANK 6 AMP: Adds 1 Joker (1/53) to the deck — shooting a Joker mark imbues your next shot with +500% Dmg, Wall Pierce & 5.0m sphere blast!',
                 ovrDesc: 'RANK 7 OVERLOAD: Adds 2 Jokers (2/54) to the deck & buffs Joker Shot to +750% Dmg with 2 charges!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('dealersGambit', r) : '[QUICK-CAST] Throw a 3D playing card (0.85s CD) to mark 1 foe; shoot the mark to trigger Suit/Royal/Joker effects!'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('dealersGambit', r) : '[QUICK-CAST] Throw a playing card (0.85s CD) to mark 1 foe; shoot the mark to trigger Suit/Royal/Joker effects!'
             },
             {
                 id: 'holoMirage', branch: 'Recon', type: 'active', quickCast: false, previewType: 'groundAoE', range: 11.0, aoeRadius: 2.8, defaultSlot: -1,
@@ -4984,7 +4984,7 @@
                 maxRank: 5, mpCost: 38, cooldown: 19.0,
                 evoDesc: 'RANK 6 AMP: Projects 3 Holo-Zed3 Clones for 10s.',
                 ovrDesc: 'RANK 7 OVERLOAD: Projects 5 Holo-Zed3 Clones for 14s with 2x fire rate & EMP detonation!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('holoMirage', r) : 'Project 3D holographic Zed3 decoys that draw enemy aggro and fire rail-beams.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('holoMirage', r) : 'Project holographic Zed3 decoys that draw enemy aggro and fire rail-beams.'
             },
             {
                 id: 'activeCamo', branch: 'Recon', type: 'active', quickCast: true, previewType: 'selfAoE', aoeRadius: 2.2, defaultSlot: -1,
@@ -4992,7 +4992,7 @@
                 maxRank: 5, mpCost: 34, cooldown: 15.0,
                 evoDesc: 'RANK 6 AMP: 6.5s 3D Optical Stealth, +35% Speed, +65% Ambush Crit.',
                 ovrDesc: 'RANK 7 OVERLOAD: 9.5s 3D Optical Stealth, +50% Speed, +50% Shield, and opening shot is a +125% Ambush Crit!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('activeCamo', r) : '[QUICK-CAST] Engage 3D optical wireframe stealth, breaking enemy target-locks.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('activeCamo', r) : '[QUICK-CAST] Engage optical wireframe stealth, breaking enemy target-locks.'
             },
             {
                 id: 'thrusterVault', branch: 'Recon', type: 'active', quickCast: false, previewType: 'groundAoE', range: 11.5, aoeRadius: 3.0, defaultSlot: -1,
@@ -5016,7 +5016,7 @@
                 maxRank: 5, mpCost: 26, cooldown: 15.0,
                 evoDesc: 'RANK 6 AMP: 65m scan for 20s, +18% Dmg vulnerability, +10 EN & +12 Shield/kill.',
                 ovrDesc: 'RANK 7 OVERLOAD: 80m scan for 30s, +32% Dmg vulnerability, 2s stun on pulse, +15 EN & +20 Shield/kill!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('sonarPulse', r) : '[QUICK-CAST] Sweep a 3D radar dome that attaches target-lock diamonds over hostiles.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('sonarPulse', r) : '[QUICK-CAST] Sweep a radar dome that attaches target-lock diamonds over hostiles.'
             },
             {
                 id: 'bountyProtocol', branch: 'Recon', type: 'active', quickCast: true, previewType: 'selfAoE', aoeRadius: 3.0, defaultSlot: -1,
@@ -5032,7 +5032,7 @@
                 maxRank: 5, mpCost: 34, cooldown: 20.0,
                 evoDesc: 'RANK 6 AMP: 4.5s window; snapback restores 100% lost HP/Shield, +50% Stamina & leaves a Freeze Bomb!',
                 ovrDesc: 'RANK 7 OVERLOAD: 5.5s window; snapback leaves a Freeze Nova, cuts other cooldowns by -3.5s & grants 4.5s Tempo!',
-                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('chronoRewind', r) : '[QUICK-CAST] Leave a 3D holographic afterimage anchor; recast or expire to rewind position & HP/Shield.'
+                desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('chronoRewind', r) : '[QUICK-CAST] Leave a holographic afterimage anchor; recast or expire to rewind position & HP/Shield.'
             },
             {
                 id: 'lethalPrecision', branch: 'Recon', type: 'passive',
@@ -10112,15 +10112,15 @@
             // Calibrated Hard Mode Profiles (~2.2x–3.0x Boss HP & 1.5x–2.0x Enemy Power over Normal Parity)
             getHardModeProfile(sectorIdx = this.activeBiomeIndex) {
                 const profiles = [
-                    { equivStage: 'THIRST', recLevel: 16, bossHp: 11500, bossDmg: 95, enHpMult: 2.1, enDmgMult: 1.55, enSpdMult: 1.15, rewardTier: 2, rewardMult: 3 },
-                    { equivStage: 'THIRST', recLevel: 18, bossHp: 19000, bossDmg: 125, enHpMult: 2.1, enDmgMult: 1.55, enSpdMult: 1.15, rewardTier: 2, rewardMult: 3 },
-                    { equivStage: 'STARVE', recLevel: 21, bossHp: 34000, bossDmg: 175, enHpMult: 2.3, enDmgMult: 1.65, enSpdMult: 1.18, rewardTier: 3, rewardMult: 5 },
-                    { equivStage: 'STARVE', recLevel: 24, bossHp: 52000, bossDmg: 220, enHpMult: 2.3, enDmgMult: 1.65, enSpdMult: 1.18, rewardTier: 3, rewardMult: 5 },
-                    { equivStage: 'STRUGGLE', recLevel: 27, bossHp: 85000, bossDmg: 280, enHpMult: 2.5, enDmgMult: 1.75, enSpdMult: 1.22, rewardTier: 4, rewardMult: 7 },
-                    { equivStage: 'STRUGGLE', recLevel: 30, bossHp: 135000, bossDmg: 340, enHpMult: 2.5, enDmgMult: 1.75, enSpdMult: 1.22, rewardTier: 4, rewardMult: 7 },
-                    { equivStage: 'KILL', recLevel: 33, bossHp: 210000, bossDmg: 420, enHpMult: 2.7, enDmgMult: 1.85, enSpdMult: 1.25, rewardTier: 4, rewardMult: 9 },
-                    { equivStage: 'KILL', recLevel: 36, bossHp: 275000, bossDmg: 490, enHpMult: 2.7, enDmgMult: 1.85, enSpdMult: 1.25, rewardTier: 4, rewardMult: 9 },
-                    { equivStage: 'REBIRTH', recLevel: 39, bossHp: 360000, bossDmg: 560, enHpMult: 2.9, enDmgMult: 2.00, enSpdMult: 1.28, rewardTier: 4, rewardMult: 10 }
+                    { equivStage: 'THIRST', recLevel: 16, bossHp: 1200, bossDmg: 100, enHpMult: 2.5, enDmgMult: 2, enSpdMult: 1.15, rewardTier: 2, rewardMult: 3 },
+                    { equivStage: 'THIRST', recLevel: 18, bossHp: 20000, bossDmg: 150, enHpMult: 2.5, enDmgMult: 2, enSpdMult: 1.15, rewardTier: 2, rewardMult: 3 },
+                    { equivStage: 'STARVE', recLevel: 21, bossHp: 35000, bossDmg: 175, enHpMult: 3, enDmgMult: 2.5, enSpdMult: 1.2, rewardTier: 3, rewardMult: 5 },
+                    { equivStage: 'STARVE', recLevel: 24, bossHp: 55000, bossDmg: 225, enHpMult: 3, enDmgMult: 2.5, enSpdMult: 1.2, rewardTier: 3, rewardMult: 5 },
+                    { equivStage: 'STRUGGLE', recLevel: 27, bossHp: 90000, bossDmg: 275, enHpMult: 4, enDmgMult: 2.75, enSpdMult: 1.25, rewardTier: 4, rewardMult: 7 },
+                    { equivStage: 'STRUGGLE', recLevel: 30, bossHp: 140000, bossDmg: 350, enHpMult: 4, enDmgMult: 2.75, enSpdMult: 1.25, rewardTier: 4, rewardMult: 7 },
+                    { equivStage: 'KILL', recLevel: 33, bossHp: 225000, bossDmg: 450, enHpMult: 4.5, enDmgMult: 3, enSpdMult: 1.275, rewardTier: 4, rewardMult: 9 },
+                    { equivStage: 'KILL', recLevel: 36, bossHp: 275000, bossDmg: 500, enHpMult: 4.5, enDmgMult: 3, enSpdMult: 1.275, rewardTier: 4, rewardMult: 9 },
+                    { equivStage: 'REBIRTH', recLevel: 39, bossHp: 400000, bossDmg: 600, enHpMult: 5, enDmgMult: 4, enSpdMult: 1.3, rewardTier: 4, rewardMult: 10 }
                 ];
                 return profiles[Math.max(0, Math.min(profiles.length - 1, sectorIdx))] || profiles[0];
             },
@@ -16119,15 +16119,15 @@
                         const rad = isOvr ? 6.0 : (isAmp ? 4.8 : 3.8);
                         const mainDmg = Math.round(pDmg * (isOvr ? (1.45 + 7 * 0.36) : (1.15 + r * (isAmp ? 0.38 : 0.32))) * (nonLin * 0.65));
                         const subDmg = Math.round(mainDmg * 0.62);
-                        if (isOvr) return `[OVERLOAD] Lob 3D frag (${rad}m sphere): ${mainDmg.toLocaleString()} Dmg + 6 cluster bombs (${subDmg.toLocaleString()} Dmg each) + 6s Napalm Pool & 2.0s Stun!`;
-                        if (isAmp) return `[AMP] Lob 3D MIRV (${rad}m sphere): ${mainDmg.toLocaleString()} Dmg + 3 cluster bombs (${subDmg.toLocaleString()} Dmg each) & 1.4s Stun.`;
-                        return `Lob a 3D frag canister (${rad}m sphere) dealing ${mainDmg.toLocaleString()} Blast Dmg + 1.4s Stun.`;
+                        if (isOvr) return `[OVERLOAD] Lob frag (${rad}m sphere): ${mainDmg.toLocaleString()} Dmg + 6 cluster bombs (${subDmg.toLocaleString()} Dmg each) + 6s Napalm Pool & 2.0s Stun!`;
+                        if (isAmp) return `[AMP] Lob MIRV (${rad}m sphere): ${mainDmg.toLocaleString()} Dmg + 3 cluster bombs (${subDmg.toLocaleString()} Dmg each) & 1.4s Stun.`;
+                        return `Lob a frag canister (${rad}m sphere) dealing ${mainDmg.toLocaleString()} Blast Dmg + 1.4s Stun.`;
                     }
                     case 'claymoreMine': {
                         const cnt = isOvr ? 4 : (isAmp ? 2 : 1);
                         const rad = isOvr ? 4.5 : 3.4;
                         const mDmg = Math.round(pDmg * (isOvr ? (1.75 + 7 * 0.40) : (1.50 + r * (isAmp ? 0.34 : 0.30))) * (nonLin * 0.65));
-                        return `${cnt > 1 ? `Deploys ${cnt} directional 3D Claymores` : 'Deploy a directional 3D Claymore'} (${rad}m blast) dealing ${mDmg.toLocaleString()} Dmg each + 3.5s Slow.`;
+                        return `${cnt > 1 ? `Deploys ${cnt} directional Claymores` : 'Deploy a directional Claymore'} (${rad}m blast) dealing ${mDmg.toLocaleString()} Dmg each + 3.5s Slow.`;
                     }
                     case 'repulsorPulse': {
                         const rad = isOvr ? 8.5 : (isAmp ? 6.2 : 4.8);
@@ -16142,7 +16142,7 @@
                         const bnc = isOvr ? 10 : (isAmp ? 7 : (3 + Math.floor(r / 2)));
                         const hDmg = Math.round(pDmg * (isOvr ? (1.4 + 7 * 0.3) : (1.2 + r * (isAmp ? 0.27 : 0.25))) * (nonLin * 0.742));
                         const bld = Math.max(13, Math.round(hDmg * (isOvr ? 0.117 : 0.096)));
-                        return `[QUICK-CAST] Throw ${cnt} aimed 3D buzzsaw${cnt > 1 ? 's' : ''} (16.5m); on enemy hit, bounces up to ${bnc}x for ${hDmg.toLocaleString()} Dmg/hit + ${bld.toLocaleString()}/s Bleed.`;
+                        return `[QUICK-CAST] Throw ${cnt} aimed buzzsaw${cnt > 1 ? 's' : ''} (16.5m); on enemy hit, bounces up to ${bnc}x for ${hDmg.toLocaleString()} Dmg/hit + ${bld.toLocaleString()}/s Bleed.`;
                     }
                     case 'aegisBarrier': {
                         const dur = isOvr ? 7.0 : (isAmp ? 6.0 : (2.5 + r * 0.5));
@@ -16151,7 +16151,7 @@
                         const domeHp = Math.max(80, Math.round(ehpPool * mult));
                         const mit = isOvr ? 35 : (isAmp ? 25 : 15);
                         const refDmg = Math.round(tDmg * (isOvr ? 3.50 : 2.20));
-                        return `[QUICK-CAST] ${dur.toFixed(1)}s 3D Hex Dome with ${domeHp.toLocaleString()} HP (${mit}% Mit)${isAmp ? `, reflects shots for ${refDmg.toLocaleString()} Dmg & explodes on expiry!` : '.'}`;
+                        return `[QUICK-CAST] ${dur.toFixed(1)}s Hex Dome with ${domeHp.toLocaleString()} HP (${mit}% Mit)${isAmp ? `, reflects shots for ${refDmg.toLocaleString()} Dmg & explodes on expiry!` : '.'}`;
                     }
                     case 'warCry': {
                         const hpGain = Math.round(d.maxHp * (isOvr ? 0.65 : (isAmp ? 0.40 : (0.12 + r * 0.04))));
@@ -16164,20 +16164,20 @@
                         const bDmg = Math.round(pDmg * (isOvr ? (1.35 + 7 * 0.30) : (isAmp ? (1.15 + 6 * 0.26) : (1.05 + r * 0.24))) * (nonLin * 0.65));
                         const pDmgTick = Math.max(8, Math.round(tDmg * (isOvr ? 0.62 : (isAmp ? 0.48 : 0.36)) * (nonLin * 0.55)));
                         const dur = isOvr ? 8.5 : (isAmp ? 7.0 : 5.5);
-                        return `3D Strike-Jet drops ${bombs} napalm bombs (${bDmg.toLocaleString()} Blast Dmg each) leaving ${dur}s fire pools (${pDmgTick.toLocaleString()} Dmg/tick).`;
+                        return ` Strike-Jet drops ${bombs} napalm bombs (${bDmg.toLocaleString()} Blast Dmg each) leaving ${dur}s fire pools (${pDmgTick.toLocaleString()} Dmg/tick).`;
                     }
                     case 'berserkTether': {
                         const cnt = isOvr ? 5 : (isAmp ? 3 : 1);
                         const hDmg = Math.round(pDmg * (isOvr ? (1.80 + 7 * 0.34) : (isAmp ? (1.45 + 6 * 0.30) : (1.25 + r * 0.26))) * (nonLin * 0.65));
                         const stn = isOvr ? 3.0 : (isAmp ? 2.4 : 1.8);
-                        return `Fire 3D Harpoon reeling in ${cnt} foe${cnt > 1 ? 's' : ''} for ${hDmg.toLocaleString()} Dmg, ${stn}s Stun & +${isOvr ? 100 : (isAmp ? 50 : 35)}% Shield${isOvr ? ' + 6s 45% Shared Dmg link!' : '.'}`;
+                        return `Fire  Harpoon reeling in ${cnt} foe${cnt > 1 ? 's' : ''} for ${hDmg.toLocaleString()} Dmg, ${stn}s Stun & +${isOvr ? 100 : (isAmp ? 50 : 35)}% Shield${isOvr ? ' + 6s 45% Shared Dmg link!' : '.'}`;
                     }
                     case 'cryoGrenade': {
                         const rad = isOvr ? 7.2 : (isAmp ? 5.6 : 4.2);
                         const pulses = isOvr ? 3 : (isAmp ? 2 : 1);
                         const cDmg = Math.round(tDmg * (isOvr ? (1.20 + 7 * 0.30) : (0.85 + r * (isAmp ? 0.26 : 0.22))) * (nonLin * 0.65));
                         const frz = isOvr ? 3.0 : (isAmp ? 2.5 : +(1.2 + r * 0.2).toFixed(1));
-                        return `3D Cryo-Canister (${rad}m) erupts ice spires: ${pulses > 1 ? `${pulses}x ` : ''}${cDmg.toLocaleString()} Tech Dmg, ${frz}s Freeze & 4.0s Slow.`;
+                        return `Cryo-Canister projectile (${rad}m) erupts ice spires: ${pulses > 1 ? `${pulses}x ` : ''}${cDmg.toLocaleString()} Tech Dmg, ${frz}s Freeze & 4.0s Slow.`;
                     }
                     case 'vortexSingularity': {
                         const rad = isOvr ? 10.5 : (isAmp ? 8.2 : 6.2);
@@ -16190,7 +16190,7 @@
                         const cnt = isOvr ? 4 : (isAmp ? 2 : 1);
                         const dur = isOvr ? 11.5 : (isAmp ? 8.0 : 5.5);
                         const sDmg = Math.round(tDmg * (isOvr ? 0.85 : (isAmp ? 0.65 : (0.35 + r * 0.06))) * (nonLin * 0.55));
-                        return `[QUICK-CAST] Deploy ${cnt} orbiting 3D Gunship Drone${cnt > 1 ? 's' : ''} (${dur}s) firing beams for ${sDmg.toLocaleString()} Tech Dmg/shot.`;
+                        return `[QUICK-CAST] Deploy ${cnt} orbiting Gunship Drone${cnt > 1 ? 's' : ''} (${dur}s) firing beams for ${sDmg.toLocaleString()} Tech Dmg/shot.`;
                     }
                     case 'roboSquad': {
                         const cnt = isOvr ? 7 : (isAmp ? 5 : 3);
@@ -16201,77 +16201,77 @@
                     case 'arcOverload': {
                         const chn = isOvr ? 14 : (isAmp ? 8 : 5);
                         const aDmg = Math.round(tDmg * (isOvr ? (1.75 + 7 * 0.40) : (1.20 + r * (isAmp ? 0.32 : 0.28))) * (nonLin * 0.65));
-                        return `3D EMP Coil chains jagged lightning to ${chn} targets for ${aDmg.toLocaleString()} Tech Dmg, stripping shields & stunning (${isOvr ? '2.4s' : '0.9s'}).`;
+                        return ` EMP Coil chains jagged lightning to ${chn} targets for ${aDmg.toLocaleString()} Tech Dmg, stripping shields & stunning (${isOvr ? '2.4s' : '0.9s'}).`;
                     }
                     case 'mindControlDart': {
                         const cnt = isOvr ? 4 : (isAmp ? 3 : 1);
                         const dur = isOvr ? 20 : (isAmp ? 16 : (7 + r));
                         const baseD = Math.round(tDmg * (isOvr ? 1.35 : (isAmp ? 1.05 : (0.65 + r * 0.10))) * (nonLin * 0.65));
                         const bossD = Math.round(baseD * (isOvr ? 4.2 : (isAmp ? 3.5 : 2.8)));
-                        return `Fire ${cnt} 3D Syringe-Dart${cnt > 1 ? 's' : ''}: Hacks foes for ${dur}s, or deals ${bossD.toLocaleString()} Neural-Shock Dmg to Bosses.`;
+                        return `Fire ${cnt} Syringe-Dart${cnt > 1 ? 's' : ''}: Hacks foes for ${dur}s, or deals ${bossD.toLocaleString()} Neural-Shock Dmg to Bosses.`;
                     }
                     case 'teslaPylon': {
                         const cnt = isOvr ? 3 : (isAmp ? 2 : 1);
                         const dur = isOvr ? 14 : (isAmp ? 11 : 9);
                         const zDmg = Math.round(tDmg * (isOvr ? (0.80 + 7 * 0.18) : (isAmp ? (0.60 + 6 * 0.15) : (0.45 + r * 0.12))) * (nonLin * 0.65));
-                        return `Deploy ${cnt} 3D Faraday Tower${cnt > 1 ? 's' : ''} (${dur}s, 5.5m) zapping foes for ${zDmg.toLocaleString()} Tech Dmg & blocking enemy shots.`;
+                        return `Deploy ${cnt} Faraday Tower${cnt > 1 ? 's' : ''} (${dur}s, 5.5m) zapping foes for ${zDmg.toLocaleString()} Tech Dmg & blocking enemy shots.`;
                     }
                     case 'nanitePlague': {
                         const dur = isOvr ? 8.5 : (isAmp ? 7.0 : 6.0);
                         const dps = Math.round(tDmg * (isOvr ? (0.55 + 7 * 0.12) : (isAmp ? (0.42 + 6 * 0.10) : (0.32 + r * 0.08))) * (nonLin * 0.65));
-                        return `3D Nanite Swarm (${isOvr ? 5.6 : 4.5}m, ${dur}s) dealing ${dps.toLocaleString()} Tech DoT/s & weakening enemy damage by -${isOvr ? 16 : (isAmp ? 12 : 10)}%.`;
+                        return `Nanite Swarm (${isOvr ? 5.6 : 4.5}m, ${dur}s) dealing ${dps.toLocaleString()} Tech DoT/s & weakening enemy damage by -${isOvr ? 16 : (isAmp ? 12 : 10)}%.`;
                     }
                     case 'payloadSniper': {
                         const rds = isOvr ? 7 : (isAmp ? 5 : 3);
                         const sDmg = Math.round(pDmg * (isOvr ? 2.40 : (isAmp ? 2.00 : (1.35 + r * 0.12))) * (nonLin * 0.65));
                         const rad = isOvr ? 4.5 : (isAmp ? 3.5 : 2.2);
-                        return `[QUICK-CAST] Equip 3D X-99 Rail-Cannon (${rds} Rds): ${sDmg.toLocaleString()} Wall-Piercing Dmg + ${rad}m Sphere Blast per round!`;
+                        return `[QUICK-CAST] Equip X-99 Rail-Cannon (${rds} Rds): ${sDmg.toLocaleString()} Wall-Piercing Dmg + ${rad}m Sphere Blast per round!`;
                     }
                     case 'dealersGambit': {
                         const sStrike = Math.round((pDmg * 2.2 * nonLin) * 0.55);
-                        return `[QUICK-CAST] Throw 3D card (6 EN, 0.85s CD) to mark foe. Shoot mark to trigger ♥Heal, ♠Strike (~${sStrike.toLocaleString()} Dmg), ♦Gold, ♣Hypno, or ${isOvr ? '2x +750% Joker Shots!' : (isAmp ? '1x +500% Joker Shot!' : 'Royal Buffs!')}`;
+                        return `[QUICK-CAST] Throw card (6 EN, 0.85s CD) to mark foe. Shoot mark to trigger ♥Heal, ♠Strike (~${sStrike.toLocaleString()} Dmg), ♦Gold, ♣Hypno, or ${isOvr ? '2x +750% Joker Shots!' : (isAmp ? '1x +500% Joker Shot!' : 'Royal Buffs!')}`;
                     }
                     case 'holoMirage': {
                         const cnt = isOvr ? 5 : (isAmp ? 3 : 1);
                         const dur = isOvr ? 14 : (isAmp ? 10 : 8.5);
                         const cDmg = Math.round(pDmg * (isOvr ? (0.80 + 7 * 0.18) : (0.50 + r * (isAmp ? 0.14 : 0.12))) * (nonLin * 0.65));
-                        return `Project ${cnt} 3D Holo-Zed3 Decoy${cnt > 1 ? 's' : ''} (${dur}s) firing rail-beams for ${cDmg.toLocaleString()} Dmg/shot.`;
+                        return `Project ${cnt} Holo-Zed3 Decoy${cnt > 1 ? 's' : ''} (${dur}s) firing rail-beams for ${cDmg.toLocaleString()} Dmg/shot.`;
                     }
                     case 'activeCamo': {
                         const dur = isOvr ? 9.5 : (isAmp ? 6.5 : +(3.2 + r * 0.4).toFixed(1));
                         const amb = isOvr ? 125 : (isAmp ? 65 : 35);
-                        return `[QUICK-CAST] ${dur}s 3D Optical Wireframe Cloak (+${isOvr ? 50 : (isAmp ? 35 : 25)}% Speed${isOvr ? ', +50% Shield' : ''}, opening shot is a +${amb}% Ambush Crit).`;
+                        return `[QUICK-CAST] ${dur}s Optical Wireframe Cloak (+${isOvr ? 50 : (isAmp ? 35 : 25)}% Speed${isOvr ? ', +50% Shield' : ''}, opening shot is a +${amb}% Ambush Crit).`;
                     }
                     case 'thrusterVault': {
                         const rng = isOvr ? 16.0 : (isAmp ? 14.0 : 11.5);
                         const rad = isOvr ? 5.5 : (isAmp ? 4.2 : 3.0);
                         const vMult = isOvr ? 1.85 : (isAmp ? 1.40 : (0.65 + r * 0.12));
                         const vDmg = Math.round(pDmg * vMult * (nonLin * 0.55));
-                        return `3D Parabolic Jet-Leap (${rng}m) slamming a ${rad}m shock-cone for ${vDmg.toLocaleString()} Dmg, ${isOvr ? 1.2 : (isAmp ? 0.9 : 0.7)}s Stun${isOvr ? ' & +100% Shield!' : (isAmp ? ' & +50% Shield.' : '.')}`;
+                        return `Parabolic Jet-Leap (${rng}m) slamming a ${rad}m shock-cone for ${vDmg.toLocaleString()} Dmg, ${isOvr ? 1.2 : (isAmp ? 0.9 : 0.7)}s Stun${isOvr ? ' & +100% Shield!' : (isAmp ? ' & +50% Shield.' : '.')}`;
                     }
                     case 'hvtStrike': {
                         if (isAmp) {
                             const taps = isOvr ? 5 : 3;
                             const tapDmg = Math.round(pDmg * (isOvr ? (2.60 + 7 * 0.52) : (2.20 + 6 * 0.45)) * (isOvr ? 1.35 : 1.25) * (nonLin * 0.32));
-                            return `3D Orbital Target-Lock: ${taps}x ${tapDmg.toLocaleString()} Ion Strikes (${(tapDmg * taps).toLocaleString()} Total Boss Dmg), +${isOvr ? 32 : 18}% Vuln & arcs to ${isOvr ? 2 : 1} foe${isOvr ? 's' : ''}!`;
+                            return ` Orbital Target-Lock: ${taps}x ${tapDmg.toLocaleString()} Ion Strikes (${(tapDmg * taps).toLocaleString()} Total Boss Dmg), +${isOvr ? 32 : 18}% Vuln & arcs to ${isOvr ? 2 : 1} foe${isOvr ? 's' : ''}!`;
                         }
                         const sDmg = Math.round(pDmg * (3.20 + r * 0.75) * 1.15 * (nonLin * 0.65));
-                        return `Locks highest-HP target in 4.5m with a 3D orbital reticle for ${sDmg.toLocaleString()} Execution Dmg + 2.0s Stun.`;
+                        return `Locks highest-HP target in 4.5m with a orbital reticle for ${sDmg.toLocaleString()} Execution Dmg + 2.0s Stun.`;
                     }
                     case 'sonarPulse': {
                         const rad = isOvr ? 80 : (isAmp ? 65 : (18 + r * 5));
                         const dur = isOvr ? 30 : (isAmp ? 20 : (6 + r * 2));
-                        return `[QUICK-CAST] ${rad}m 3D Radar Sweep (${dur}s): Attaches target-diamonds${isOvr ? ' (+32% Dmg Taken, 2s Stun, +15 EN/+20 Shld on kill)!' : (isAmp ? ' (+18% Dmg Taken, +10 EN/+12 Shld on kill).' : ` (+${3 + r} EN/kill).`)}`;
+                        return `[QUICK-CAST] ${rad}m Radar Sweep (${dur}s): Attaches target-diamonds${isOvr ? ' (+32% Dmg Taken, 2s Stun, +15 EN/+20 Shld on kill)!' : (isAmp ? ' (+18% Dmg Taken, +10 EN/+12 Shld on kill).' : ` (+${3 + r} EN/kill).`)}`;
                     }
                     case 'bountyProtocol': {
                         const cnt = isOvr ? 3 : (isAmp ? 2 : 1);
                         const gld = isOvr ? 750 : (isAmp ? 370 : (60 + r * 25));
-                        return `[QUICK-CAST] Marks ${cnt} target${cnt > 1 ? 's' : ''} with a 3D golden beacon${isAmp ? ` (+${isOvr ? 40 : 25}% Dmg Taken)` : ''}; each drops +${gld}₵ + HP/EN/Stam cache.`;
+                        return `[QUICK-CAST] Marks ${cnt} target${cnt > 1 ? 's' : ''} with a golden beacon${isAmp ? ` (+${isOvr ? 40 : 25}% Dmg Taken)` : ''}; each drops +${gld}₵ + HP/EN/Stam cache.`;
                     }
                     case 'chronoRewind': {
                         const dur = isOvr ? 5.5 : (isAmp ? 4.5 : 4.0);
                         const fDmg = isAmp ? Math.round(tDmg * (isOvr ? 3.40 : 2.20) * (nonLin * 0.55)) : 0;
-                        return `[QUICK-CAST] Leave a ${dur}s 3D Holo-Anchor; recast/expire to snap back, restoring ${isAmp ? 100 : Math.min(100, 50 + r * 8)}% lost HP/Shield${fDmg ? ` & ${fDmg.toLocaleString()} Freeze Nova!` : '.'}`;
+                        return `[QUICK-CAST] Leave a ${dur}s Holo-Anchor; recast/expire to snap back, restoring ${isAmp ? 100 : Math.min(100, 50 + r * 8)}% lost HP/Shield${fDmg ? ` & ${fDmg.toLocaleString()} Freeze Nova!` : '.'}`;
                     }
                     default:
                         return '';
@@ -19966,7 +19966,7 @@
                                 
                                     
                                     if (!armed) {
-                                        if (Math.abs(dz) >= 1.2) armed = true;
+                                        if (Math.abs(dz) >= 1.4) armed = true;
                                         return true;
                                     }
                                     const inSpan = Math.abs(this.player.pos.x - wireGrp.position.x) <= 9.0;
@@ -26202,7 +26202,7 @@
                         <div class="flex flex-wrap justify-between items-center arpg-panel p-4 gap-2 shrink-0">
                             <div class="font-cinzel font-bold text-cyan-300 text-sm">
                                 Neural Tech Matrix Points: <span class="text-amber-400">${st.skillPts} TP</span>
-                                <span class="text-slate-400 text-xs ml-2">(All numbers reflect your current real damage & cooldowns — Hover a skill to preview next rank)</span>
+                                <span class="text-slate-400 text-xs ml-2">Hover a skill to preview the next rank</span>
                             </div>
                             <button onclick="UI.respecSkills()" class="arpg-btn px-3.5 py-1.5 text-xs text-cyan-300" ${st.gold < 10000 ? 'disabled' : ''}>ReSpec All Tech (10,000₵)</button>
                         </div>
