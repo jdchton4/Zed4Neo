@@ -5,11 +5,12 @@
 * All assets are synthesized either within the code itself, or use public asset libraries (for icons and fonts). This includes music, voice lines, 3D models, and UI
 
 ## How to Run
-1. Download Zed4Neo.html (Alternatively, copy and paste the code into .txt file and save it as a .html file. I'm not sure why you would do that, though)
+1. Download Zed4Neo.html
 2. Run in any browser that supports running HTML files (Chrome, Edge, Firefox)
 3. Click any button in the title screen to enter the game
 4. Note: Some browsers struggle to run this game (Notably, some deprecated or experimental browser builds were found to struggle. Google Chrome Beta worked fine, but Google Chrome Canary struggled)
 
+[Alternatively, Click this](https://jdchton4.github.io/zed3/Zed4Neo.html)
 
 ## Premise
 Play as Zed3, an android construct completing tasks to 'clean up' failed experiments and rogue machines. Utilize Zed3's movement kit, upgradeable and modifiable weapon arsenal, ability kit, and any advantage you can find to complete each mission while avoiding level hazards and enemy threats.
