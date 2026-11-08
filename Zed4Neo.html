@@ -1372,7 +1372,8 @@
                                 class="bg-gradient-to-r from-sky-600 via-cyan-400 to-emerald-300 h-full transition-all duration-300"
                                 style="width: 0%"></div>
                         </div>
-                        <div class="flex justify-between items-center text-[10px] font-semibold text-slate-400 mt-1 whitespace-nowrap">
+                        <div
+                            class="flex justify-between items-center text-[10px] font-semibold text-slate-400 mt-1 whitespace-nowrap">
                             <span id="hud-xp-text" class="truncate">EXP: 0 / 180</span>
                             <div class="flex items-center gap-2 shrink-0">
                                 <span class="text-amber-400 font-bold"><span id="hud-gold">0</span>₵</span>
@@ -1413,7 +1414,8 @@
 
                 <!-- Persistent 4-Line Telemetry & Loot Status Log -->
                 <div class="mt-1.5 pt-1.5 border-t border-sky-900/40">
-                    <div class="flex justify-between items-center text-[8px] font-cinzel text-slate-400 uppercase tracking-wider mb-0.5">
+                    <div
+                        class="flex justify-between items-center text-[8px] font-cinzel text-slate-400 uppercase tracking-wider mb-0.5">
                         <span>TELEMETRY & LOOT LOG</span>
                         <span class="text-sky-400">LIVE</span>
                     </div>
@@ -1425,12 +1427,18 @@
 
                 <!-- Hidden Legacy Telemetry Nodes for Safe DOM Compatibility -->
                 <div class="hidden">
-                    <span id="hud-shield-text"></span><div id="hud-shield-bar"></div>
-                    <div id="hud-aegis-row"><span id="hud-aegis-label"></span><span id="hud-aegis-text"></span><div id="hud-aegis-bar"></div></div>
-                    <span id="hud-stamina-text"></span><div id="hud-stamina-bar"></div>
-                    <span id="hud-ammo-text"></span><div id="hud-ammo-bar"></div>
+                    <span id="hud-shield-text"></span>
+                    <div id="hud-shield-bar"></div>
+                    <div id="hud-aegis-row"><span id="hud-aegis-label"></span><span id="hud-aegis-text"></span>
+                        <div id="hud-aegis-bar"></div>
+                    </div>
+                    <span id="hud-stamina-text"></span>
+                    <div id="hud-stamina-bar"></div>
+                    <span id="hud-ammo-text"></span>
+                    <div id="hud-ammo-bar"></div>
                     <span id="hud-neocores">0</span><span id="hud-ampcores">0</span>
-                    <span id="hud-srv">0</span><span id="hud-rec">0</span><span id="hud-brl">0</span><span id="hud-opt">0</span><span id="hud-t4">0</span><span id="hud-tp">0</span>
+                    <span id="hud-srv">0</span><span id="hud-rec">0</span><span id="hud-brl">0</span><span
+                        id="hud-opt">0</span><span id="hud-t4">0</span><span id="hud-tp">0</span>
                 </div>
             </div>
 
@@ -13103,7 +13111,7 @@
                         addSpecialCover(-10 * s, 16 * s, 'oneway', 0);
                         addSpecialCover(10 * s, 16 * s, 'oneway', 0);
                         this.floorExitPos = { x: 0, z: -20 * s };
-                     } else if (layoutId === 3) {
+                    } else if (layoutId === 3) {
                         addSolidWall(-22 * s, 2 * s, 24 * s, 2.4, 4.8);
                         addSolidWall(22 * s, 2 * s, 24 * s, 2.4, 4.8);
                         addSpecialCover(0, 2 * s, 'rotating', 0, 6.0);
@@ -13720,27 +13728,27 @@
                 this.enemiesRemaining = this.enemies.length;
 
                 let startSpot = this.findSafeOpenSpot((this.floorStartPos ? this.floorStartPos.x : 0), (this.floorStartPos ? this.floorStartPos.z : halfBound - 4.5), 1.5, 0);
-{
-    const launchPts = [];
-    (this.archEntities || []).forEach(ae => { if (ae.type === 'arch_jumppad' && ae.pos) launchPts.push(ae.pos); });
-    (this.gimmickEntities || []).forEach(g => { if (g.type === 'teleporter' && g.pos) launchPts.push(g.pos); });
-    const tooClose = (p) => launchPts.some(q => Math.hypot(p.x - q.x, p.z - q.z) < 4.5);
-    if (tooClose(startSpot)) {
-        let found = null;
-        for (let r = 3.0; r <= 30 && !found; r += 1.5) {
-            for (let a = 0; a < 16 && !found; a++) {
-                const ang = (a / 16) * Math.PI * 2;
-                const cand = this.findSafeOpenSpot(startSpot.x + Math.cos(ang) * r, startSpot.z + Math.sin(ang) * r, 1.5, 0);
-                if (!tooClose(cand)) found = cand;
-            }
-        }
-        if (found) startSpot = found;
-    }
-}
-this.player.teleportCooldown = Math.max(this.player.teleportCooldown || 0, 1.5);
-this.player.jumpPadArc = null;
-this.player.padRearmFrom = null;
-this.player.pos.set(startSpot.x, 0, startSpot.z);
+                {
+                    const launchPts = [];
+                    (this.archEntities || []).forEach(ae => { if (ae.type === 'arch_jumppad' && ae.pos) launchPts.push(ae.pos); });
+                    (this.gimmickEntities || []).forEach(g => { if (g.type === 'teleporter' && g.pos) launchPts.push(g.pos); });
+                    const tooClose = (p) => launchPts.some(q => Math.hypot(p.x - q.x, p.z - q.z) < 4.5);
+                    if (tooClose(startSpot)) {
+                        let found = null;
+                        for (let r = 3.0; r <= 30 && !found; r += 1.5) {
+                            for (let a = 0; a < 16 && !found; a++) {
+                                const ang = (a / 16) * Math.PI * 2;
+                                const cand = this.findSafeOpenSpot(startSpot.x + Math.cos(ang) * r, startSpot.z + Math.sin(ang) * r, 1.5, 0);
+                                if (!tooClose(cand)) found = cand;
+                            }
+                        }
+                        if (found) startSpot = found;
+                    }
+                }
+                this.player.teleportCooldown = Math.max(this.player.teleportCooldown || 0, 1.5);
+                this.player.jumpPadArc = null;
+                this.player.padRearmFrom = null;
+                this.player.pos.set(startSpot.x, 0, startSpot.z);
                 this.player.currentElevationY = 0;
                 this.resolveWallCollisions(this.player.pos, 0.85);
                 this.player.mesh.position.copy(this.player.pos);
@@ -14469,7 +14477,7 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                 return this.getSectorRamp().gimmick * floorScale * (this.isTensorRun ? 2.1 : (this.isHardMode ? 1.55 : 1.0));
             },
 
-            
+
 
 
 
@@ -19841,7 +19849,7 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                                 const dist = this.player.pos.distanceTo(boss.pos);
                                 if (dist >= innerR && dist <= outerR) {
                                     this.damagePlayer(Math.round(boss.dmg * 1.40));
-                                    this.player.stamina = Math.max(0, this.player.stamina - 40);
+                                    this.player.stamina = Math.max(0, this.player.stamina * .6);
                                 }
                                 if (hm) {
                                     setTimeout(() => {
@@ -19931,8 +19939,12 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                     } else {
                         setBanner('GOSSAMER TRIPWIRE WEB-GRID');
                         const wireCount = (hm ? 4 : 3) + (boss.phase >= 3 ? 1 : 0);
+                        const WIRE_STEP = 5.5;
+                        // An odd wire count used to put the middle wire exactly on top of Zed3 (instant trip).
+                        // Shift odd grids by half a step so she always starts BETWEEN two wires.
+                        const gridShift = (wireCount % 2 === 1) ? (Math.random() < 0.5 ? -1 : 1) * (WIRE_STEP / 2) : 0;
                         for (let i = 0; i < wireCount; i++) {
-                            const wz = this.player.pos.z + (i - (wireCount - 1) / 2) * 5.5;
+                            const wz = this.player.pos.z + (i - (wireCount - 1) / 2) * WIRE_STEP + gridShift;
                             const wireGrp = new THREE.Group();
                             wireGrp.position.set(this.player.pos.x, 0, wz);
                             const strand = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 18.0, 8), new THREE.MeshBasicMaterial({ color: 0xffffff }));
@@ -19943,11 +19955,24 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                             wireGrp.add(strand, postL, postR);
                             this.scene.add(wireGrp);
 
+                            // A wire only arms once Zed3 is clear of it, and only trips on an actual crossing.
+                            let armed = false;
+                            let lastDz = this.player.pos.z - wz;
                             this.bossCustomEffects.push({
                                 mesh: wireGrp,
                                 life: 6.5 * p3,
                                 update: () => {
-                                    if (Math.abs(this.player.pos.z - wz) < 0.65 && Math.abs(this.player.pos.x - wireGrp.position.x) <= 9.0) {
+                                    const dz = this.player.pos.z - wz;
+                                    const prevDz = lastDz;
+                                    lastDz = dz;
+                                    if (!armed) {
+                                        if (Math.abs(dz) >= 1.2) armed = true;
+                                        return true;
+                                    }
+                                    const inSpan = Math.abs(this.player.pos.x - wireGrp.position.x) <= 9.0;
+                                    const onGround = (this.player.pos.y || 0) < 1.8; // strand is knee-high; decks / jump arcs pass over it
+                                    const crossed = Math.abs(dz) < 0.65 || (prevDz * dz < 0); // sign flip catches fast dashes / teleports
+                                    if (crossed && inSpan && onGround) {
                                         if (this.player.dashActiveTimer <= 0) {
                                             this.player.blizzardSlowTimer = 2.5;
                                             this.damagePlayer(Math.round(boss.dmg * 0.85));
@@ -24392,7 +24417,7 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                             }
                         });
 
-                       const validSkillIds = new Set(SKILL_TREE.map(s => s.id));
+                        const validSkillIds = new Set(SKILL_TREE.map(s => s.id));
                         if (!Array.isArray(this.state.hotbar) || this.state.hotbar.some(id => id && !validSkillIds.has(id))) {
                             this.state.hotbar = ['fragGrenade', null, null, null];
                             if (!this.state.skills.fragGrenade) this.state.skills.fragGrenade = 1;
@@ -24495,7 +24520,7 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
          * 5. UI CONTROLLER & MODAL TERMINALS
          * ============================================================================
          */
-                       const UI = {
+        const UI = {
             activeModal: null,
             forgeSubPage: 'mod', // 'mod' | 'craft'
             evoSubPage: 'abilities', // 'abilities' | 'weapons' | 'armor'
@@ -26809,10 +26834,10 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                                 <div class="flex items-center gap-1.5 flex-wrap">
                                     <span class="text-xs font-cinzel font-bold text-slate-400 mr-1">STATUS:</span>
                                     ${[
-                            { id: 'All', label: 'All Abilities' },
-                            { id: 'Ready', label: 'Ready to Ascend (R5 / R6)' },
-                            { id: 'Ascended', label: 'Ascended (R6 / R7)' }
-                        ].map(sf => `
+                                { id: 'All', label: 'All Abilities' },
+                                { id: 'Ready', label: 'Ready to Ascend (R5 / R6)' },
+                                { id: 'Ascended', label: 'Ascended (R6 / R7)' }
+                            ].map(sf => `
                                         <button onclick="UI.evoSkillStateFilter='${sf.id}'; UI.openModal('evo_neo');" class="px-3.5 py-1 text-xs font-cinzel font-bold border ${sFilter === sf.id ? 'bg-amber-600 text-white border-amber-300' : 'bg-slate-900 text-slate-400 border-slate-700'}">${sf.label}</button>
                                     `).join('')}
                                 </div>
@@ -26820,14 +26845,14 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
 
                             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 flex-1 overflow-y-auto pr-1">
                                 ${filteredSkills.map(sk => {
-                            const rank = st.skills[sk.id] || 0;
-                            const isAmp = rank >= 6;
-                            const isOvr = rank >= 7;
-                            const canAmp = rank === 5 && ampCoresHave >= 4 && st.skillPts >= 12 && st.gold >= 12000;
-                            const canOvr = rank === 6 && ampCoresHave >= 25 && st.skillPts >= 15 && st.gold >= 30000;
-                            const targetPreviewRank = isAmp ? 7 : 6;
-                            const targetMp = sk.type === 'active' ? Game.getSkillMpCost(sk, targetPreviewRank) : 0;
-                            return `
+                                const rank = st.skills[sk.id] || 0;
+                                const isAmp = rank >= 6;
+                                const isOvr = rank >= 7;
+                                const canAmp = rank === 5 && ampCoresHave >= 4 && st.skillPts >= 12 && st.gold >= 12000;
+                                const canOvr = rank === 6 && ampCoresHave >= 25 && st.skillPts >= 15 && st.gold >= 30000;
+                                const targetPreviewRank = isAmp ? 7 : 6;
+                                const targetMp = sk.type === 'active' ? Game.getSkillMpCost(sk, targetPreviewRank) : 0;
+                                return `
                                         <div class="arpg-panel p-4 flex flex-col justify-between gap-3 ${isOvr ? 'overload-glow' : (isAmp ? 'amp-glow' : (rank === 5 ? 'border-cyan-400' : 'opacity-70'))}">
                                             <div>
                                                 <div class="flex justify-between items-center gap-2">
@@ -26852,7 +26877,7 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                                             </div>
                                         </div>
                                     `;
-                        }).join('')}
+                            }).join('')}
                             </div>
                         ` : (subPage === 'weapons' ? `
                             <div class="arpg-panel p-3.5 flex flex-wrap justify-between items-center gap-3 shrink-0">
@@ -26868,13 +26893,13 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
 
                             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 flex-1 overflow-y-auto pr-1">
                                 ${allPlayerWeapons.map(({ item, loc }) => {
-                            const attCount = item.attachments ? ['optic', 'barrel', 'mag', 'underbarrel'].filter(k => item.attachments[k]).length : 0;
-                            const allSlotsFilled = attCount >= 4;
-                            const cost = this.getNeoAscensionCost(item);
-                            const canAscend = !item.isNeo && allSlotsFilled && st.gold >= cost.gold && neoCoresHave >= cost.neoCores;
-                            const eligibleTranscendRarity = item.rarity === 'Prototype' || item.rarity === 'Zenith';
-                            const canTranscend = item.isNeo && !item.isTranscended && eligibleTranscendRarity && neoCoresHave >= 15 && st.gold >= 30000;
-                            return `
+                                const attCount = item.attachments ? ['optic', 'barrel', 'mag', 'underbarrel'].filter(k => item.attachments[k]).length : 0;
+                                const allSlotsFilled = attCount >= 4;
+                                const cost = this.getNeoAscensionCost(item);
+                                const canAscend = !item.isNeo && allSlotsFilled && st.gold >= cost.gold && neoCoresHave >= cost.neoCores;
+                                const eligibleTranscendRarity = item.rarity === 'Prototype' || item.rarity === 'Zenith';
+                                const canTranscend = item.isNeo && !item.isTranscended && eligibleTranscendRarity && neoCoresHave >= 15 && st.gold >= 30000;
+                                return `
                                         <div class="arpg-panel p-4 flex flex-col justify-between gap-3 rarity-${item.rarity} ${item.isTranscended ? 'transcend-glow' : (item.isNeo ? 'neo-glow' : '')}">
                                             <div>
                                                 <div class="flex flex-wrap justify-between items-center gap-2">
@@ -26898,7 +26923,7 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                                             </div>
                                         </div>
                                     `;
-                        }).join('')}
+                            }).join('')}
                             </div>
                         ` : `
                             <div class="arpg-panel p-3.5 flex flex-wrap justify-between items-center gap-3 shrink-0">
@@ -26914,13 +26939,13 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
 
                             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 flex-1 overflow-y-auto pr-1">
                                 ${allPlayerArmors.map(({ item, loc }) => {
-                            const mkOk = (item.mk || 1) >= 4;
-                            const reqFusCores = item.rarity === 'Zenith' ? 4 : 3;
-                            const costGold = this.getNeoAscensionCost(item).gold;
-                            const canFuse = !item.isFused && mkOk && fusCoresHave >= reqFusCores && st.gold >= costGold;
-                            const eligibleOversatRarity = item.rarity === 'Prototype' || item.rarity === 'Zenith';
-                            const canOversat = item.isFused && !item.isOversaturated && mkOk && eligibleOversatRarity && fusCoresHave >= 15 && st.gold >= 30000;
-                            return `
+                                const mkOk = (item.mk || 1) >= 4;
+                                const reqFusCores = item.rarity === 'Zenith' ? 4 : 3;
+                                const costGold = this.getNeoAscensionCost(item).gold;
+                                const canFuse = !item.isFused && mkOk && fusCoresHave >= reqFusCores && st.gold >= costGold;
+                                const eligibleOversatRarity = item.rarity === 'Prototype' || item.rarity === 'Zenith';
+                                const canOversat = item.isFused && !item.isOversaturated && mkOk && eligibleOversatRarity && fusCoresHave >= 15 && st.gold >= 30000;
+                                return `
                                         <div class="arpg-panel p-4 flex flex-col justify-between gap-3 rarity-${item.rarity} ${item.isOversaturated ? 'transcend-glow' : (item.isFused ? 'amp-glow' : '')}">
                                             <div>
                                                 <div class="flex flex-wrap justify-between items-center gap-2">
@@ -26944,7 +26969,7 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
                                             </div>
                                         </div>
                                     `;
-                        }).join('')}
+                            }).join('')}
                             </div>
                         `)}
                     </div>
@@ -29950,6 +29975,3 @@ this.player.pos.set(startSpot.x, 0, startSpot.z);
 </body>
 
 </html>
-
-
-
