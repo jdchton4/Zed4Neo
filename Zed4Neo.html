@@ -14891,7 +14891,7 @@
 
                 const qHaste = (this.player.cardBuffs && this.player.cardBuffs.queenCardHasteTimer > 0) ? 0.2 : 1.0;
                 const clubsEnMult = d.cardClubsEnCostMult || 1.0;
-                const rankCostMult = sRank >= 7 ? 1.35 : (sRank === 6 ? 1.20 : (1 + (sRank - 1) * 0.06));
+                const rankCostMult = sRank >= 7 ? 1.4 : (sRank === 6 ? 1.25 : (1 + (sRank - 1) * 0.07));
                 const actMpCost = Math.max(5, Math.round(26 * rankCostMult * qHaste * clubsEnMult));
 
                 if (!this.canPaySkillCost(actMpCost)) {
@@ -16524,15 +16524,18 @@
             getSkillMpCost(skDef, rank = 1) {
                 if (!skDef) return 0;
                 const d = this.getDerivedStats ? this.getDerivedStats() : { cardClubsEnCostMult: 1.0 };
+
+                const base = skDef.mpCost || 35;
+                const r = Math.max(1, rank);
+                const costMultTable = [1, 1.00, 1.25, 2, 2.25, 3, 3.5, 4.5];
+                const rawCost = Math.round(base * (costMultTable[Math.min(7, r)] || 1.0)) + 1;
+
                 const clubsMult = d.cardClubsEnCostMult || 1.0;
                 if (skDef.id === 'dealersGambit') {
                     const qHaste = (this.player.cardBuffs && this.player.cardBuffs.queenCardHasteTimer > 0) ? 0.6 : 1.0;
-                    return Math.max(2, Math.round(6 * qHaste * clubsMult));
+                    return Math.max(2, Math.round(6 * qHaste * clubsMult) + (1 * r));
                 }
-                const base = skDef.mpCost || 35;
-                const r = Math.max(1, rank);
-                const costMultTable = [1, 1.00, 1.25, 1.55, 1.90, 2.30, 3.00, 4.00];
-                const rawCost = Math.round(base * (costMultTable[Math.min(7, r)] || 1.0));
+
                 return Math.max(4, Math.round(rawCost * clubsMult));
             },
 
@@ -16786,7 +16789,7 @@
                     this.player.armorShield = Math.min(this.player.maxArmorShield, this.player.armorShield + Math.round(this.player.maxArmorShield * shldPct));
                 }
 
-                const extraVaultRange = (skillId === 'thrusterVault') ? (isOvr ? 4.5 : (isAmp ? 2.5 : 0)) : 0;
+                const extraVaultRange = (skillId === 'thrusterVault') ? (isOvr ? 5 : (isAmp ? 3 : 0)) : 0;
                 const targetPt = this.getAbilityTargetPoint(skDef, extraVaultRange);
                 const toAim = targetPt.clone().sub(this.player.pos).setY(0);
 
