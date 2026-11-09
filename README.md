@@ -1,4 +1,4 @@
-# Zed4Neo // jdchton4
+# Zed4Neo // jdchton4 // v0.9.0
 ## Intro 
 * Zed4Neo is a vibe coded project (built with Gemini 4) I started over the course of a few weeks. It is a single file game written in javascript alongside three.js, HTML, and CSS. 
 * The game itself is a top-down or third-person shooter (This depends on the camera mode specified, chosen with [Q]).
@@ -10,7 +10,7 @@
 3. Click any button in the title screen to enter the game
 4. Note: Some browsers struggle to run this game (Notably, some deprecated or experimental browser builds were found to struggle. Google Chrome Beta worked fine, but Google Chrome Canary struggled)
 
-[Alternatively, Click this](https://jdchton4.github.io/zed3/Zed4Neo.html)
+[Alternatively, Click this](https://jdchton4.github.io/Zed4Neo/Zed4Neo.html)
 
 ## Premise
 Play as Zed3, an android construct completing tasks to 'clean up' failed experiments and rogue machines. Utilize Zed3's movement kit, upgradeable and modifiable weapon arsenal, ability kit, and any advantage you can find to complete each mission while avoiding level hazards and enemy threats.
