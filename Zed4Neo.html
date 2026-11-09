@@ -4225,9 +4225,9 @@
         const ARMOR_ARCHETYPES = {
             // BODY ARMORS (8)
             exo_vanguard: { id: 'exo_vanguard', slot: 'armor', name: 'Issue Combat Vest', icon: 'fa-vest', hpMult: 1.0, shieldMult: 1.0, dmgMult: 0, critAdd: 0, speedPct: 0, desc: 'Standard-issue contractor vest with balanced Health and Armor Shield.' },
-            exo_juggernaut: { id: 'exo_juggernaut', slot: 'armor', name: 'Bastion Plate Rig', icon: 'fa-shield-halved', hpMult: 1.55, shieldMult: 1.20, dmgMult: 0, critAdd: 0, speedPct: -0.05, desc: 'Heavy ballistic slab-plating built to soak sustained fire (-5% Move Speed).' },
-            exo_aegis: { id: 'exo_aegis', slot: 'armor', name: 'Capacitor Weave Suit', icon: 'fa-bolt-lightning', hpMult: 0.65, shieldMult: 1.80, dmgMult: 0, critAdd: 0, speedPct: 0, desc: 'Trades structural hull plating for a massive rechargeable Armor Shield bank.' },
-            exo_stalker: { id: 'exo_stalker', slot: 'armor', name: 'Specter Recon Rig', icon: 'fa-person-running', hpMult: 0.80, shieldMult: 0.85, dmgMult: 0.35, critAdd: 4, speedPct: 0.08, desc: 'Stripped-down flanker rig granting +8% Move Speed, +4% Crit & bonus Firepower.' },
+            exo_juggernaut: { id: 'exo_juggernaut', slot: 'armor', name: 'Bastion Plate Rig', icon: 'fa-shield-halved', hpMult: 1.55, shieldMult: 1.20, dmgMult: 0, critAdd: .02, speedPct: -0.06, desc: 'Heavy ballistic slab-plating built to soak sustained fire (-5% Move Speed).' },
+            exo_aegis: { id: 'exo_aegis', slot: 'armor', name: 'Capacitor Weave Suit', icon: 'fa-bolt-lightning', hpMult: 0.60, shieldMult: 1.80, dmgMult: 0, critAdd: 0, speedPct: 0, desc: 'Trades structural hull plating for a massive rechargeable Armor Shield bank.' },
+            exo_stalker: { id: 'exo_stalker', slot: 'armor', name: 'Specter Recon Rig', icon: 'fa-person-running', hpMult: 0.80, shieldMult: 0.85, dmgMult: 0.45, critAdd: 6, speedPct: 0.08, dmgAdd: 10, desc: 'Stripped-down flanker rig granting +8% Move Speed, +4% Crit & bonus Firepower.' },
             exo_berserker: { id: 'exo_berserker', slot: 'armor', name: 'Reaver Blood-Frame', icon: 'fa-fire-flame-curved', hpMult: 1.25, shieldMult: -0.45, dmgMult: 0.65, critAdd: 5, speedPct: 0.04, leechAdd: 0.025, rofAdd: 0.12, desc: 'Aggressive CQB harness (+Firepower, +12% ROF, +2.5% Leech), but cuts Max Shield.' },
             exo_cryo_carapace: { id: 'exo_cryo_carapace', slot: 'armor', name: 'Glacier Bunker Carapace', icon: 'fa-icicles', hpMult: 1.40, shieldMult: 1.65, dmgMult: 0, critAdd: 0, speedPct: -0.10, cdrAdd: 0.12, rofAdd: -0.08, desc: 'Sub-zero Coolant fortress (+HP, +Shield, +12% Tech CDR; -10% Speed, -8% ROF).' },
             exo_phantom_mirage: { id: 'exo_phantom_mirage', slot: 'armor', name: 'Mirage Slip-Suit', icon: 'fa-wind', hpMult: -0.25, shieldMult: 1.10, dmgMult: 0.35, critAdd: 8, speedPct: 0.12, dashCostRed: 0.25, desc: 'Ultra-light dash harness (+12% Speed, +8% Crit, -25% Dash Cost; reduces Max HP).' },
@@ -4239,7 +4239,7 @@
             helm_neural: { id: 'helm_neural', slot: 'helm', name: 'Conduit Relay Crown', icon: 'fa-brain', critMult: 0.80, mpMult: 1.45, dmgAdd: 0, shieldAdd: 12, cdrAdd: 0.08, desc: 'Expanded neural bus granting extra Energy capacity, Shield, and +8% Tech CDR.' },
             helm_bastion: { id: 'helm_bastion', slot: 'helm', name: 'Bastion Blast Visor', icon: 'fa-shield-virus', critMult: 0.65, mpMult: 0.80, dmgAdd: 0, shieldAdd: 28, cdrAdd: 0, hpAdd: 25, desc: 'Reinforced breacher faceplate adding heavy Armor Shield and Health.' },
             helm_berserk_ocular: { id: 'helm_berserk_ocular', slot: 'helm', name: 'Reaver Target-Painter', icon: 'fa-eye', critMult: 1.40, mpMult: -0.30, dmgAdd: 18, shieldAdd: -15, cdrAdd: 0, desc: 'High-output threat optics (+Crit & +Firepower, but lowers Max Shield & Energy).' },
-            helm_chrono_crown: { id: 'helm_chrono_crown', slot: 'helm', name: 'Chrono-Link Diadem', icon: 'fa-clock', critMult: 0.50, mpMult: 1.60, dmgAdd: 0, shieldAdd: 15, cdrAdd: 0.16, desc: 'Overclocked caster crown granting +16% Tech CDR and high Energy reserves.' },
+            helm_chrono_crown: { id: 'helm_chrono_crown', slot: 'helm', name: 'Chrono-Link Diadem', icon: 'fa-clock', critMult: 0.65, mpMult: 1.60, dmgAdd: 8, shieldAdd: 15, cdrAdd: 0.13, desc: 'Overclocked caster crown granting +16% Tech CDR and high Energy reserves.' },
             helm_goliath_dome: { id: 'helm_goliath_dome', slot: 'helm', name: 'Colossus Siege Dome', icon: 'fa-chess-rook', critMult: 0.50, mpMult: 0.80, dmgAdd: 0, shieldAdd: 45, cdrAdd: 0, hpAdd: 55, speedPct: -0.05, desc: 'Thick armored dome granting massive Health & Shield (-5% Move Speed).' },
             helm_gambler_visor: { id: 'helm_gambler_visor', slot: 'helm', name: 'High-Roller Optics', icon: 'fa-coins', critMult: 1.50, mpMult: 1.0, dmgAdd: 8, shieldAdd: -12, cdrAdd: 0, speedPct: 0.08, scavAdd: 0.18, desc: 'Syndicate appraisal visor (+Crit, +8% Speed, +18% Salvage/Credits; reduces Shield).' },
 
@@ -4247,21 +4247,21 @@
             relic_tac: { id: 'relic_tac', slot: 'relic', name: 'Issue Ballistic Chip', icon: 'fa-microchip', dmgMult: 1.0, critMult: 1.0, leechAdd: 0, rofAdd: 0, shieldAdd: 10, desc: 'Balanced co-processor boosting Firepower, Crit Chance, and Armor Shield.' },
             relic_vamp: { id: 'relic_vamp', slot: 'relic', name: 'Siphon Sub-Processor', icon: 'fa-droplet', dmgMult: 0.85, critMult: 0.80, leechAdd: 0.018, rofAdd: 0, shieldAdd: 0, hpAdd: 22, desc: 'Repair-routing chip granting +1.8% Weapon Life Leech and bonus Health.' },
             relic_overclock: { id: 'relic_overclock', slot: 'relic', name: 'Specter Cycle Module', icon: 'fa-gauge-high', dmgMult: 0.90, critMult: 1.15, leechAdd: 0, rofAdd: 0.10, shieldAdd: 0, desc: 'High-speed bolt actuator granting +10% Fire Rate and bonus Crit Chance.' },
-            relic_dynamo: { id: 'relic_dynamo', slot: 'relic', name: 'Capacitor Dynamo Cell', icon: 'fa-car-battery', dmgMult: 0.70, critMult: 0.75, leechAdd: 0, rofAdd: 0, shieldAdd: 36, desc: 'Backup shield bank adding heavy Armor Shield capacity (lower Firepower).' },
-            relic_glass_cannon: { id: 'relic_glass_cannon', slot: 'relic', name: 'Reaver Assassin Chip', icon: 'fa-skull-crossbones', dmgMult: 1.50, critMult: 1.25, leechAdd: 0, rofAdd: 0.06, shieldAdd: -24, desc: 'Unrestricted offensive logic (+Firepower, +Crit, +6% ROF; reduces Max Shield).' },
-            relic_blood_pact: { id: 'relic_blood_pact', slot: 'relic', name: 'Hemovore Leech Matrix', icon: 'fa-heart-crack', dmgMult: 1.15, critMult: 1.0, leechAdd: 0.032, rofAdd: 0, shieldAdd: -18, desc: 'Aggressive CQB siphon chip (+3.2% Life Leech & +Firepower; reduces Max Shield).' },
+            relic_dynamo: { id: 'relic_dynamo', slot: 'relic', name: 'Capacitor Dynamo Cell', icon: 'fa-car-battery', dmgMult: 0.75, critMult: 0.85, leechAdd: 0, rofAdd: .05, shieldAdd: 41, desc: 'Backup shield bank adding heavy Armor Shield capacity (lower Firepower).' },
+            relic_glass_cannon: { id: 'relic_glass_cannon', slot: 'relic', name: 'Reaver Assassin Chip', icon: 'fa-skull-crossbones', dmgMult: 1.50, critMult: 1.25, leechAdd: 0, rofAdd: 0.08, shieldAdd: -24, desc: 'Unrestricted offensive logic (+Firepower, +Crit, +8% ROF; reduces Max Shield).' },
+            relic_blood_pact: { id: 'relic_blood_pact', slot: 'relic', name: 'Hemovore Leech Matrix', icon: 'fa-heart-crack', dmgMult: 1.19, critMult: 1.01, leechAdd: 0.02, rofAdd: .02, shieldAdd: -26, desc: 'Aggressive CQB siphon chip (+2% Life Leech & +Firepower; reduces Max Shield).' },
             relic_bullet_hose: { id: 'relic_bullet_hose', slot: 'relic', name: 'Rotary Feed Co-Processor', icon: 'fa-hurricane', dmgMult: 0.80, critMult: 0.90, leechAdd: 0, rofAdd: 0.14, shieldAdd: 0, reloadAdd: 0.16, desc: 'Rapid-feed loader granting +14% Fire Rate and +16% Reload Speed.' },
-            relic_arcane_battery: { id: 'relic_arcane_battery', slot: 'relic', name: 'Conduit Spell-Core', icon: 'fa-wand-sparkles', dmgMult: 0.75, critMult: 0.70, leechAdd: 0, rofAdd: 0, shieldAdd: 30, cdrAdd: 0.14, techDmgPct: 0.24, desc: 'Tech co-processor granting +14% Tech CDR, +24% Tech Dmg, and bonus Shield.' },
+            relic_arcane_battery: { id: 'relic_arcane_battery', slot: 'relic', name: 'Conduit Spell-Core', icon: 'fa-wand-sparkles', dmgMult: 0.75, critMult: 0.70, leechAdd: 0, rofAdd: 0, shieldAdd: 30, cdrAdd: 0.14, techDmgPct: 0.21, desc: 'Tech co-processor granting +14% Tech CDR, +21% Tech Dmg, and bonus Shield.' },
 
             // EXO-GREAVES / BOOTS (8)
-            boot_vanguard: { id: 'boot_vanguard', slot: 'boots', name: 'Issue Strider Greaves', icon: 'fa-shoe-prints', hpMult: 1.0, shieldMult: 1.0, speedPct: 0.05, dashCostRed: 0.08, desc: 'Standard contractor greaves granting Health, Shield, +5% Speed & -8% Dash Cost.' },
+            boot_vanguard: { id: 'boot_vanguard', slot: 'boots', name: 'Issue Strider Greaves', icon: 'fa-shoe-prints', hpMult: 1.0, shieldMult: 1.0, speedPct: 0.05, dashCostRed: 0.04, shieldAdd: 10, desc: 'Standard contractor greaves granting Health, Shield, +5% Speed & -4% Dash Cost.' },
             boot_titan: { id: 'boot_titan', slot: 'boots', name: 'Bastion Mag-Boots', icon: 'fa-weight-hanging', hpMult: 1.50, shieldMult: 1.45, speedPct: -0.04, dashCostRed: 0, desc: 'Heavy magnetic siege boots granting high Health & Shield (-4% Move Speed).' },
             boot_aegis: { id: 'boot_aegis', slot: 'boots', name: 'Capacitor Flux Treads', icon: 'fa-bolt', hpMult: 0.65, shieldMult: 1.80, speedPct: 0.04, cdrAdd: 0.06, desc: 'Shield-routing treads granting large Armor Shield, +4% Speed & +6% Tech CDR.' },
-            boot_stalker: { id: 'boot_stalker', slot: 'boots', name: 'Specter Jet-Greaves', icon: 'fa-jet-fighter-up', hpMult: 0.75, shieldMult: 0.80, speedPct: 0.12, dashCostRed: 0.22, critAdd: 4, desc: 'High-thrust recon greaves granting +12% Move Speed, -22% Dash Cost & +4% Crit.' },
-            boot_berserker: { id: 'boot_berserker', slot: 'boots', name: 'Reaver Spiked Sabatons', icon: 'fa-fire', hpMult: 1.20, shieldMult: -0.40, speedPct: 0.09, dmgMult: 0.45, rofAdd: 0.08, desc: 'Assault sabatons (+Firepower, +9% Speed, +8% ROF; reduces Max Shield).' },
+            boot_stalker: { id: 'boot_stalker', slot: 'boots', name: 'Specter Jet-Greaves', icon: 'fa-jet-fighter-up', hpMult: 0.75, shieldMult: 0.80, speedPct: 0.12, dashCostRed: 0.5, critAdd: 4, desc: 'High-thrust recon greaves granting +12% Move Speed, -5% Dash Cost & +4% Crit.' },
+            boot_berserker: { id: 'boot_berserker', slot: 'boots', name: 'Reaver Spiked Sabatons', icon: 'fa-fire', hpMult: 1.20, shieldMult: -0.40, speedPct: 0.06, dmgMult: 0.45, rofAdd: 0.08, desc: 'Assault sabatons (+Firepower, +6% Speed, +8% ROF; reduces Max Shield).' },
             boot_cryo: { id: 'boot_cryo', slot: 'boots', name: 'Glacier Anchor Sabatons', icon: 'fa-snowflake', hpMult: 1.35, shieldMult: 1.55, speedPct: -0.06, cdrAdd: 0.10, desc: 'Weighted cryo-greaves granting heavy Shield, HP & +10% Tech CDR (-6% Speed).' },
-            boot_phantom: { id: 'boot_phantom', slot: 'boots', name: 'Mirage Slipstream Runners', icon: 'fa-wind', hpMult: -0.20, shieldMult: 0.90, speedPct: 0.16, dashCostRed: 0.30, reloadAdd: 0.12, desc: 'Featherweight runners (+16% Speed, -30% Dash Cost, +12% Reload; reduces Max HP).' },
-            boot_reactor: { id: 'boot_reactor', slot: 'boots', name: 'Conduit Ley-Greaves', icon: 'fa-atom', hpMult: 0.80, shieldMult: 1.20, speedPct: 0.04, techDmgPct: 0.20, mpBonusAdd: 25, desc: 'Tech-conduit greaves granting +20% Tech Dmg, +Energy, +Shield & +4% Speed.' }
+            boot_phantom: { id: 'boot_phantom', slot: 'boots', name: 'Mirage Slipstream Runners', icon: 'fa-wind', hpMult: -0.20, shieldMult: 0.90, speedPct: 0.10, dashCostRed: 0.8, reloadAdd: 0.11, desc: 'Featherweight runners (+10% Speed, -8% Dash Cost, +11% Reload; reduces Max HP).' },
+            boot_reactor: { id: 'boot_reactor', slot: 'boots', name: 'Conduit Ley-Greaves', icon: 'fa-atom', hpMult: 0.80, shieldMult: 1.20, speedPct: 0.04, techDmgPct: 0.10, mpBonusAdd: 25, desc: 'Tech-conduit greaves granting +20% Tech Dmg, +Energy, +Shield & +4% Speed.' }
         };
 
         const BIOMES = [
@@ -4483,14 +4483,14 @@
             cleaver: {
                 id: 'cleaver', weaponClass: 'Rifle', name: 'R3 Puncher Carbine', styleName: 'Puncher', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
                 auto: true, range: 16, arc: 0, cooldown: 0.30, dmgMult: 1.00, critBonus: 4, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0xfbbf24,
-                pellets: 1, spread: 0.022, magSize: 22, reloadTime: 2.45, recoilPerShot: 0.090, maxBloom: 0.44, bloomDecay: 0.45,
+                pellets: 1, spread: 0.022, magSize: 24, reloadTime: 2.45, recoilPerShot: 0.090, maxBloom: 0.44, bloomDecay: 0.45,
                 partWeights: { rec: 8, brl: 7, bolt: 6, trig: 5, furn: 6, aux: 5 },
                 desc: 'Full-Auto 3.33 RPS service carbine (15.5m Range). Accurate on burst-fire; moving blooms spread.'
             },
             m4_phantom: {
                 id: 'm4_phantom', weaponClass: 'Rifle', name: 'R4-S Hitman Carbine', styleName: 'Hitman', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
                 auto: true, isSuppressed: true, range: 14.5, arc: 0, cooldown: 0.19, dmgMult: 0.78, critBonus: 6, speedMod: 0.03, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0x22d3ee,
-                pellets: 1, spread: 0.015, magSize: 28, reloadTime: 2.20, recoilPerShot: 0.065, maxBloom: 0.34, bloomDecay: 0.54,
+                pellets: 1, spread: 0.015, magSize: 30, reloadTime: 2.20, recoilPerShot: 0.065, maxBloom: 0.34, bloomDecay: 0.54,
                 partWeights: { rec: 8, brl: 8, bolt: 6, trig: 6, furn: 5, aux: 5 },
                 desc: 'Full-Auto 5.26 RPS suppressed carbine (14.2m Range, +3% Move Spd). Fast cycle rate & low recoil.'
             },
@@ -4504,35 +4504,35 @@
             br55_burst: {
                 id: 'br55_burst', weaponClass: 'Rifle', name: 'R8-H Terminal Rifle', styleName: 'Terminal', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
                 auto: false, range: 18, arc: 0, cooldown: 0.35, dmgMult: 1.70, critBonus: 10, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 52, projColor: 0x38bdf8,
-                pellets: 1, spread: 0.008, magSize: 15, reloadTime: 2.60, recoilPerShot: 0.10, maxBloom: 0.34, bloomDecay: 0.58,
+                pellets: 1, spread: 0.008, magSize: 14, reloadTime: 2.60, recoilPerShot: 0.10, maxBloom: 0.34, bloomDecay: 0.58,
                 partWeights: { rec: 9, brl: 10, bolt: 7, trig: 8, furn: 6, aux: 6 },
                 desc: 'Semi-Auto 2.86 RPS precision rifle (18.5m Range, +10% Crit). Pinpoint accuracy on paced shots.'
             },
             daggers: {
                 id: 'daggers', weaponClass: 'SMG', name: 'S4 Vector SMG', styleName: 'Vector', icon: 'fa-bolt', displayIcon: 'fa-bolt',
-                auto: true, isRunAndGun: true, range: 10, arc: 0, cooldown: 0.13, dmgMult: 0.40, critBonus: 5, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x10b981,
-                pellets: 1, spread: 0.048, magSize: 30, reloadTime: 2.10, recoilPerShot: 0.052, maxBloom: 0.36, bloomDecay: 0.62,
+                auto: true, isRunAndGun: true, range: 10, arc: 0, cooldown: 0.12, dmgMult: 0.40, critBonus: 5, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x10b981,
+                pellets: 1, spread: 0.048, magSize: 20, reloadTime: 2.10, recoilPerShot: 0.052, maxBloom: 0.36, bloomDecay: 0.62,
                 partWeights: { rec: 7, brl: 5, bolt: 6, trig: 5, furn: 5, aux: 0 },
-                desc: 'Run-and-Gun 7.69 RPS CQB shredder (10.5m Range, +7% Spd). Stays accurate while moving and dodging.'
+                desc: 'Run-and-Gun 8.33 RPS CQB shredder (10.5m Range, +7% Spd). Stays accurate while moving and dodging.'
             },
             mp7_pdw: {
                 id: 'mp7_pdw', weaponClass: 'SMG', name: 'S5-R Ripper PDW', styleName: 'Ripper', icon: 'fa-bolt', displayIcon: 'fa-bolt',
                 auto: true, isRunAndGun: true, range: 12, arc: 0, cooldown: 0.15, dmgMult: 0.46, critBonus: 6, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 44, projColor: 0x2dd4bf,
-                pellets: 1, spread: 0.042, magSize: 26, reloadTime: 2.10, recoilPerShot: 0.048, maxBloom: 0.34, bloomDecay: 0.64,
+                pellets: 1, spread: 0.042, magSize: 24, reloadTime: 2.10, recoilPerShot: 0.048, maxBloom: 0.34, bloomDecay: 0.64,
                 partWeights: { rec: 7, brl: 6, bolt: 6, trig: 6, furn: 0, aux: 5 },
                 desc: 'Run-and-Gun 6.67 RPS armor-piercing PDW (12.4m Range, +7% Spd). Tight mobile tracking.'
             },
             v22_viper: {
                 id: 'v22_viper', weaponClass: 'SMG', name: 'S30-C Viper SMG', styleName: 'Viper', icon: 'fa-bolt', displayIcon: 'fa-bolt',
                 auto: true, isRunAndGun: true, isNeedler: true, range: 10.5, arc: 0, cooldown: 0.14, dmgMult: 0.38, critBonus: 5, speedMod: 0.06, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xe879f9,
-                pellets: 1, spread: 0.045, magSize: 28, reloadTime: 2.15, recoilPerShot: 0.050, maxBloom: 0.35, bloomDecay: 0.62,
+                pellets: 1, spread: 0.045, magSize: 22, reloadTime: 2.15, recoilPerShot: 0.050, maxBloom: 0.35, bloomDecay: 0.62,
                 partWeights: { rec: 7, brl: 6, bolt: 6, trig: 6, furn: 4, aux: 5 },
                 desc: 'Run-and-Gun 7.14 RPS crystal needler (11.4m Range). Every 8th needle (6th on NEO) detonates a Super-Combine burst!'
             },
             m134_minigun: {
                 id: 'm134_minigun', weaponClass: 'SMG', name: 'L2 Breaker LMG', styleName: 'Breaker', icon: 'fa-hurricane', displayIcon: 'fa-hurricane',
                 auto: true, isMinigun: true, range: 15.5, arc: 0, cooldown: 0.28, minCooldown: 0.08, dmgMult: 0.42, critBonus: 4, speedMod: -0.22, isRanged: true, mpCost: 0, projSpeed: 45, projColor: 0x38bdf8,
-                pellets: 1, spread: 0.032, magSize: 150, reloadTime: 3.80, recoilPerShot: 0.012, maxBloom: 0.28, bloomDecay: 0.55,
+                pellets: 1, spread: 0.032, magSize: 175, reloadTime: 3.80, recoilPerShot: 0.012, maxBloom: 0.28, bloomDecay: 0.55,
                 partWeights: { rec: 10, brl: 11, bolt: 8, trig: 6, furn: 7, aux: 8 },
                 desc: '150-Round Rotary LMG (15.0m Range, -22% Move Spd). Ramps from 3.57 RPS up to 12.5 RPS with tight sustained spread.'
             },
@@ -4546,42 +4546,42 @@
             aa18_auto: {
                 id: 'aa18_auto', weaponClass: 'Shotgun', name: 'B17-A Repeater Shotgun', styleName: 'Repeater', icon: 'fa-burst', displayIcon: 'fa-burst',
                 auto: true, range: 7, arc: 0, cooldown: 0.36, dmgMult: 0.30, stunChance: 0.18, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 37, projColor: 0xfb7185,
-                pellets: 6, spread: 0.16, magSize: 8, reloadTime: 3.20, recoilPerShot: 0.20, maxBloom: 0.46, bloomDecay: 0.46,
+                pellets: 6, spread: 0.16, magSize: 9, reloadTime: 3.20, recoilPerShot: 0.20, maxBloom: 0.46, bloomDecay: 0.46,
                 partWeights: { rec: 9, brl: 8, bolt: 8, trig: 0, furn: 6, aux: 6 },
                 desc: 'Full-Auto 2.78 RPS drum shotgun (6 pellets, 6.8m Range, -2% Move Spd). Rapid CQB room-clearer.'
             },
             k88_helios: {
                 id: 'k88_helios', weaponClass: 'Shotgun', name: 'B12-E Warhead Shotgun', styleName: 'Warhead', icon: 'fa-burst', displayIcon: 'fa-burst',
                 auto: false, stickyChargeShotgun: true, range: 8, arc: 0, cooldown: 0.68, dmgMult: 0.32, stunChance: 0.22, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xf59e0b,
-                pellets: 5, spread: 0.13, magSize: 6, reloadTime: 3.00, recoilPerShot: 0.24, maxBloom: 0.40, bloomDecay: 0.50,
+                pellets: 5, spread: 0.13, magSize: 5, reloadTime: 3.00, recoilPerShot: 0.24, maxBloom: 0.40, bloomDecay: 0.50,
                 partWeights: { rec: 8, brl: 9, bolt: 6, trig: 6, furn: 6, aux: 6 },
                 desc: 'Semi-Auto 1.47 RPS 5-slug shotgun (8.2m Range). Each slug plants a sticky charge that detonates 1.35s later!'
             },
             m79_thumper: {
                 id: 'm79_thumper', weaponClass: 'Shotgun', name: 'G13-E Breacher Grenade Launcher', styleName: 'Breacher', icon: 'fa-bomb', displayIcon: 'fa-bomb',
                 auto: false, isGrenadeLauncher: true, aoeBlastRadius: 3.2, range: 15.5, arc: 0, cooldown: 0.82, dmgMult: 1.85, stunChance: 0.35, speedMod: -0.06, isRanged: true, mpCost: 0, projSpeed: 32, projColor: 0xf97316,
-                pellets: 1, spread: 0.018, magSize: 4, reloadTime: 3.10, recoilPerShot: 0.30, maxBloom: 0.42, bloomDecay: 0.50,
+                pellets: 1, spread: 0.018, magSize: 7, reloadTime: 3.10, recoilPerShot: 0.30, maxBloom: 0.42, bloomDecay: 0.50,
                 partWeights: { rec: 9, brl: 10, bolt: 7, trig: 6, furn: 7, aux: 6 },
                 desc: '4-Round 40mm Grenade Launcher (1.22 RPS, 14.8m Range). Shells detonate in a 3.2m spherical blast.'
             },
             staff: {
                 id: 'staff', weaponClass: 'Sniper', name: 'SR2 Atomizer Railgun', styleName: 'Atomizer', icon: 'fa-atom', displayIcon: 'fa-atom',
                 auto: false, range: 21, arc: 0, cooldown: 0.68, dmgMult: 2.45, critBonus: 14, speedMod: -0.06, isRanged: true, piercing: true, isTechWeapon: true, mpCost: 0, projSpeed: 64, projColor: 0x38bdf8,
-                pellets: 1, spread: 0.004, magSize: 6, reloadTime: 2.95, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
+                pellets: 1, spread: 0.004, magSize: 5, reloadTime: 2.95, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
                 partWeights: { rec: 9, brl: 11, bolt: 8, trig: 7, furn: 6, aux: 9 },
                 desc: 'Semi-Auto 1.47 RPS magnetic railgun (21.5m Range, -6% Move Spd). Pierces all targets in a line.'
             },
             sr99_sniper: {
                 id: 'sr99_sniper', weaponClass: 'Sniper', name: 'SR99 Through-hole Sniper', styleName: 'Through-hole', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
                 auto: false, range: 25, arc: 0, cooldown: 0.85, dmgMult: 3.20, critBonus: 18, speedMod: -0.08, isRanged: true, piercing: true, mpCost: 0, projSpeed: 68, projColor: 0xfacc15,
-                pellets: 1, spread: 0.002, magSize: 5, reloadTime: 3.25, recoilPerShot: 0.26, maxBloom: 0.38, bloomDecay: 0.52,
+                pellets: 1, spread: 0.002, magSize: 6, reloadTime: 3.25, recoilPerShot: 0.26, maxBloom: 0.38, bloomDecay: 0.52,
                 partWeights: { rec: 10, brl: 12, bolt: 9, trig: 8, furn: 8, aux: 7 },
                 desc: 'Bolt-Action 1.18 RPS sniper (24.5m Range, +18% Crit, -8% Move Spd). Heavy piercing stopping power.'
             },
             xr0_eclipse: {
                 id: 'xr0_eclipse', weaponClass: 'Sniper', name: 'SR0-C Ronin Sniper', styleName: 'Ronin', icon: 'fa-bolt-lightning', displayIcon: 'fa-bolt-lightning',
                 auto: false, isChargeLance: true, isTechWeapon: true, range: 26, arc: 0, cooldown: 0.58, dmgMult: 1.45, critBonus: 14, speedMod: -0.06, isRanged: true, piercing: false, mpCost: 0, projSpeed: 70, projColor: 0x22d3ee,
-                pellets: 1, spread: 0.003, magSize: 6, reloadTime: 2.95, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
+                pellets: 1, spread: 0.003, magSize: 3, reloadTime: 2.95, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
                 partWeights: { rec: 10, brl: 12, bolt: 8, trig: 7, furn: 6, aux: 9 },
                 desc: '3-Stage ADS Charge Lance (25m Range). Hold RMB to charge up to 3.0x Dmg + Wall Penetration!'
             },
@@ -4609,7 +4609,7 @@
             g18_autopistol: {
                 id: 'g18_autopistol', weaponClass: 'Pistol', name: 'P5-A Stoptime Pistol', styleName: 'Stoptime', icon: 'fa-gun', displayIcon: 'fa-gun',
                 auto: true, isSidearmSpecialist: true, isRunAndGun: true, range: 9.5, arc: 0, cooldown: 0.11, dmgMult: 0.34, critBonus: 6, speedMod: 0.10, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x34d399,
-                pellets: 1, spread: 0.055, magSize: 22, reloadTime: 1.85, recoilPerShot: 0.065, maxBloom: 0.40, bloomDecay: 0.65,
+                pellets: 1, spread: 0.055, magSize: 16, reloadTime: 1.85, recoilPerShot: 0.065, maxBloom: 0.40, bloomDecay: 0.65,
                 partWeights: { rec: 6, brl: 5, bolt: 5, trig: 0, furn: 0, aux: 6 },
                 desc: 'Sidearm Specialist (9.09 RPS Full-Auto). 0% Secondary Slot penalty & +25% Crit/Reload for 2s on swap!'
             }
@@ -24487,7 +24487,7 @@
                     reserveHpPots: 0,
                     reserveMpPots: 0,
                     reserveStamPots: 0,
-                    statPts: 0, skillPts: 3, unlockedBiomes: 1,
+                    statPts: 0, skillPts: 1, unlockedBiomes: 1,
                     clearedBiomes: {}, clearedHardBiomes: {},
                     tensorCleared: false, bestTimeTensor: null,
                     bestTimesNormal: {}, bestTimesHard: {},
