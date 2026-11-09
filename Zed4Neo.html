@@ -24496,8 +24496,8 @@
                     stats: { str: 10, dex: 10, int: 10, vit: 10 },
                     equipped: { weapon: null, secondary: null, armor: null, helm: null, relic: null, boots: null },
                     inventory: [],
-                    skills: { fragGrenade: 1, claymoreMine: 0, cryoGrenade: 0, payloadSniper: 0 },
-                    hotbar: ['fragGrenade', null, null, null],
+                    skills: { fragGrenade: 1, claymoreMine: 1, guardDrone: 1, sonarPulse: 1 },
+                    hotbar: ['fragGrenade', 'claymoreMine', 'guardDrone', 'sonarPulse'],
                     soulWell: freshSoulWell,
                     augmentPlacements: [],
                     discoveredLore: [],
@@ -27548,8 +27548,8 @@
                 });
                 if (refundedTP <= 1) return;
                 st.gold -= 10000;
-                st.skills = { fragGrenade: 1, claymoreMine: 0, cryoGrenade: 0, payloadSniper: 0 };
-                st.hotbar = ['fragGrenade', null, null, null];
+                st.skills = { fragGrenade: 1, claymoreMine: 1, guardDrone: 1, sonarPulse: 1 };
+                st.hotbar = ['fragGrenade', 'claymoreMine', 'guardDrone', 'sonarPulse'];
                 st.skillPts += (refundedTP - 1);
                 st.cores.ampCore = (st.cores.ampCore || 0) + refundedAmpCores;
                 AudioEngine.sfx('levelup');
