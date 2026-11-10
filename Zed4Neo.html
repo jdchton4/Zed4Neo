@@ -15,7 +15,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,500;0,600;0,700;1,700&family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="shortcut icon" type="image/x-icon" href="zedicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="ico2.jpg">
     <style>
         :root {
             --bronze: #0ea5e9;
@@ -7137,6 +7137,8 @@
                 if (!this.isDefeatPending) return;
                 this.isDefeatPending = false;
                 this.isTensorRun = false;
+                this.hubActiveJukeboxKey = null;
+                this.hubJukeboxHardMode = false;
                 this.player.deathAnimTimer = 0;
                 this.player.wasSelfTerminated = false;
                 this.player.lowHpVocalPlayed = false;
@@ -9844,9 +9846,10 @@
 
                 const tensorUnlocked = this.isTensorUnlocked();
                 const isHellscape = this.isHellscapeSpawnActive();
-                if (!this.hubActiveJukeboxKey) {
-                    AudioEngine.setMood(isHellscape ? 'sanctuary_hellscape' : 'sanctuary');
-                }
+                this.hubActiveJukeboxKey = null;
+                this.hubJukeboxHardMode = false;
+                AudioEngine.currentMood = null;
+                AudioEngine.setMood(isHellscape ? 'sanctuary_hellscape' : 'sanctuary');
 
                 this.scene.background = new THREE.Color(isHellscape ? 0x120205 : 0x03060c);
                 this.scene.fog = new THREE.FogExp2(isHellscape ? 0x120205 : 0x03060c, isHellscape ? 0.0085 : 0.0060);
@@ -10874,14 +10877,14 @@
             getFloorElevationAt(x, z, currentY = 0, allowSnapToTop = false) {
                 if (this.mode !== 'dungeon' || !this.archEntities) return 0;
                 let bestY = 0;
-                const nearAnyRamp = this.isPointOnRamp(x, z, 2.2);
 
                 for (const ae of this.archEntities) {
                     if (ae.type === 'arch_ramp') {
-                        if (x >= ae.minX - 0.35 && x <= ae.maxX + 0.35 && z >= ae.minZ - 0.35 && z <= ae.maxZ + 0.35) {
+                        // Strict footprint check (no side-bleed through walls) & max 1.55m step-up from currentY
+                        if (x >= ae.minX && x <= ae.maxX && z >= ae.minZ && z <= ae.maxZ) {
                             const t = this.getRampProgress(ae, x, z);
                             const rampY = t * (ae.height || 7.0);
-                            if (allowSnapToTop || Math.abs(currentY - rampY) <= 4.0 || currentY >= rampY - 1.8) {
+                            if (allowSnapToTop || Math.abs(currentY - rampY) <= 1.55 || currentY >= rampY - 0.85) {
                                 bestY = Math.max(bestY, rampY);
                             }
                         }
@@ -10890,9 +10893,10 @@
 
                 for (const ae of this.archEntities) {
                     if (ae.type === 'arch_platform' || ae.type === 'arch_bridge' || ae.type === 'arch_roof') {
-                        if (x >= ae.minX - 0.25 && x <= ae.maxX + 0.25 && z >= ae.minZ - 0.25 && z <= ae.maxZ + 0.25) {
+                        if (x >= ae.minX - 0.20 && x <= ae.maxX + 0.20 && z >= ae.minZ - 0.20 && z <= ae.maxZ + 0.20) {
                             const h = ae.height || 7.0;
-                            if (allowSnapToTop || currentY >= h - 3.5 || nearAnyRamp || bestY >= h - 2.5) {
+                            // Only stay on / step onto upper deck if allowSnapToTop OR player is already near deck height (never teleport from ground y=0!)
+                            if (allowSnapToTop || currentY >= h - 1.85 || bestY >= h - 1.55) {
                                 bestY = Math.max(bestY, h);
                             }
                         }
@@ -10901,7 +10905,7 @@
                 return bestY;
             },
 
-            isPointOnRamp(x, z, pad = 0.25) {
+            isPointOnRamp(x, z, pad = 0.15) {
                 if (this.mode !== 'dungeon' || !this.archEntities) return false;
                 for (const ae of this.archEntities) {
                     if (ae.type === 'arch_ramp') {
@@ -10918,7 +10922,7 @@
                 const y = pos.y || 0;
                 if (y <= 0.95) return 'ground';
                 if (y >= 6.05) return 'high';
-                if (this.isPointOnRamp(pos.x, pos.z, 0.45)) return 'ramp';
+                if (this.isPointOnRamp(pos.x, pos.z, 0.25)) return 'ramp';
                 return y >= 4.5 ? 'high' : 'ground';
             },
 
@@ -11000,6 +11004,8 @@
                 this.isDefeatPending = false;
                 this.isTensorRun = false;
                 this.tensorSanctumLocked = false;
+                this.hubActiveJukeboxKey = null;
+                this.hubJukeboxHardMode = false;
                 this.player.selfTerminateTimer = 0;
                 this.player.deathAnimTimer = 0;
                 this.player.wasSelfTerminated = false;
@@ -11020,17 +11026,15 @@
             },
 
             resolveWallCollisions(pos, radius = 0.65, isEnemy = false) {
-                if (this.mode === 'dungeon' && !this.player?.jumpPadArc) {
-                    pos.y = this.getFloorElevationAt(pos.x, pos.z, pos.y || 0, false);
-                }
-                const curY = pos.y || 0;
-                const onRampNow = this.isPointOnRamp(pos.x, pos.z, 1.05);
+                let curY = pos.y || 0;
+                const onRampNow = this.isPointOnRamp(pos.x, pos.z, 0.25) && curY > 0.6;
                 const onUpperDeckNow = curY >= 5.4 && this.archEntities && this.archEntities.some(ae =>
                     (ae.type === 'arch_bridge' || ae.type === 'arch_platform' || ae.type === 'arch_roof') &&
                     pos.x >= ae.minX - 0.4 && pos.x <= ae.maxX + 0.4 &&
                     pos.z >= ae.minZ - 0.4 && pos.z <= ae.maxZ + 0.4
                 );
 
+                // 1. Resolve solid walls FIRST (so walls always block you from touching ramps on the other side of a wall!)
                 for (const box of this.wallColliders) {
                     if (box.maxY !== undefined && curY >= box.maxY - 0.85) continue;
                     if (box.minY !== undefined && curY + 1.8 <= box.minY) continue;
@@ -11053,7 +11057,7 @@
                             const leftPen = Math.abs(pos.x - box.minX);
                             const rightPen = Math.abs(box.maxX - pos.x);
                             const topPen = Math.abs(pos.z - box.minZ);
-                            const botPen = Math.abs(box.maxZ - pos.z);
+                            const botPen = Math.abs(pos.z - box.maxZ);
                             const minPen = Math.min(leftPen, rightPen, topPen, botPen);
                             if (minPen === leftPen) pos.x = box.minX - radius;
                             else if (minPen === rightPen) pos.x = box.maxX + radius;
@@ -11065,6 +11069,7 @@
 
                 if (this.mode !== 'dungeon' || !this.archEntities) return;
 
+                // 2. Ramp Side-Wall & High-Back Collision: Block ground-floor players from walking into the sides or tall back of a ramp!
                 for (const ae of this.archEntities) {
                     if (ae.type !== 'arch_ramp') continue;
                     const closestX = Math.max(ae.minX, Math.min(pos.x, ae.maxX));
@@ -11074,7 +11079,7 @@
                     if (dx * dx + dz * dz < radius * radius) {
                         const t = this.getRampProgress(ae, closestX, closestZ);
                         const rampY = t * (ae.height || 7.0);
-                        if (rampY > 1.5 && Math.abs(curY - rampY) > 3.2) {
+                        if (rampY > 0.85 && Math.abs(curY - rampY) > 1.45) {
                             const leftPen = Math.abs(pos.x - ae.minX);
                             const rightPen = Math.abs(ae.maxX - pos.x);
                             const topPen = Math.abs(pos.z - ae.minZ);
@@ -11088,7 +11093,8 @@
                     }
                 }
 
-                if (curY < 2.2 && !onRampNow) {
+                // 3. Solid Platform Cliff Collision when on the ground floor
+                if (curY < 2.2) {
                     for (const ae of this.archEntities) {
                         if (ae.type !== 'arch_platform') continue;
                         const closestX = Math.max(ae.minX, Math.min(pos.x, ae.maxX));
@@ -11107,6 +11113,11 @@
                             else pos.z = ae.maxZ + radius;
                         }
                     }
+                }
+
+                // 4. Update floor elevation AFTER horizontal wall/ramp collisions are resolved!
+                if (!this.player?.jumpPadArc && !this.player?.assassinWarpArc) {
+                    pos.y = this.getFloorElevationAt(pos.x, pos.z, curY, false);
                 }
             },
 
@@ -12059,15 +12070,15 @@
 
                     const deckW = (dir === 'east' || dir === 'west') ? len : w;
                     const deckD = (dir === 'east' || dir === 'west') ? w : len;
-                    const extN = (dir === 'south') ? 1.8 : 0.4;
-                    const extS = (dir === 'north') ? 1.8 : 0.4;
-                    const extW = (dir === 'east') ? 1.8 : 0.4;
-                    const extE = (dir === 'west') ? 1.8 : 0.4;
+                    const extN = (dir === 'south') ? 0.5 : (dir === 'north' ? 0.2 : -0.15);
+                    const extS = (dir === 'north') ? 0.5 : (dir === 'south' ? 0.2 : -0.15);
+                    const extW = (dir === 'east') ? 0.5 : (dir === 'west' ? 0.2 : -0.15);
+                    const extE = (dir === 'west') ? 0.5 : (dir === 'east' ? 0.2 : -0.15);
                     this.archEntities.push({
                         type: 'arch_ramp',
                         mesh: grp,
                         minX: x - deckW / 2 - extW, maxX: x + deckW / 2 + extE,
-                        minZ: z - deckD / 2 - extN, maxZ: z + deckD / 2 + extS,
+                        minZ: z - deckD / 2 - extN, maxZ: z + deckD / 2 - extS,
                         dir,
                         height: h
                     });
@@ -13084,15 +13095,15 @@
 
                     const deckW = (dir === 'east' || dir === 'west') ? len : w;
                     const deckD = (dir === 'east' || dir === 'west') ? w : len;
-                    const extN = (dir === 'south') ? 1.8 : 0.4;
-                    const extS = (dir === 'north') ? 1.8 : 0.4;
-                    const extW = (dir === 'east') ? 1.8 : 0.4;
-                    const extE = (dir === 'west') ? 1.8 : 0.4;
+                    const extN = (dir === 'south') ? 0.5 : (dir === 'north' ? 0.2 : -0.15);
+                    const extS = (dir === 'north') ? 0.5 : (dir === 'south' ? 0.2 : -0.15);
+                    const extW = (dir === 'east') ? 0.5 : (dir === 'west' ? 0.2 : -0.15);
+                    const extE = (dir === 'west') ? 0.5 : (dir === 'east' ? 0.2 : -0.15);
                     this.archEntities.push({
                         type: 'arch_ramp',
                         mesh: grp,
                         minX: x - deckW / 2 - extW, maxX: x + deckW / 2 + extE,
-                        minZ: z - deckD / 2 - extN, maxZ: z + deckD / 2 + extS,
+                        minZ: z - deckD / 2 - extN, maxZ: z + deckD / 2 - extS,
                         dir,
                         height: h
                     });
