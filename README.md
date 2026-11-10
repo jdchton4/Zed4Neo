@@ -10,7 +10,7 @@
 3. Click any button in the title screen to enter the game
 4. Note: Some browsers struggle to run this game (Notably, some deprecated or experimental browser builds were found to struggle. Google Chrome Beta worked fine, but Google Chrome Canary struggled)
 
-[Alternatively, Click this](https://jdchton4.github.io/Zed4Neo/Zed4Neo.html)
+Alternatively, click [this](https://jdchton4.github.io/Zed4Neo/Zed4Neo.html) to play in your browser (no download)
 
 ## Premise
 Play as Zed3, an android construct completing tasks to 'clean up' failed experiments and rogue machines. Utilize Zed3's movement kit, upgradeable and modifiable weapon arsenal, ability kit, and any advantage you can find to complete each mission while avoiding level hazards and enemy threats.
