@@ -4339,7 +4339,7 @@
                 boss: {
                     id: 'valkyrie', name: 'VALKYRIE-ZERO', title: 'Aerial Cryo-Interceptor Frame',
                     musicKey: 'boss_glacier',
-                    hp: 22500, dmg: 150, color: 0x38bdf8, scale: 2.0, modelStyle: 'valkyrie_jet', behavior: 'aerial_kiter', maxPhases: 2,
+                    hp: 27500, dmg: 150, color: 0x38bdf8, scale: 2.0, modelStyle: 'valkyrie_jet', behavior: 'aerial_kiter', maxPhases: 2,
                     patterns: ['Afterburner Sky-Dive & Ice Runway', 'Target-Painter Cryo-Swarm', 'Cyclone Frost-Funnel']
                 },
                 debrief: {
@@ -4360,7 +4360,7 @@
                 boss: {
                     id: 'vaelen', name: 'DIRECTOR VAELEN', title: 'Cyber-Mantis Syndicate CEO',
                     musicKey: 'boss_cathedral',
-                    hp: 40000, dmg: 200, color: 0xf43f5e, scale: 2.0, modelStyle: 'cyber_ninja', behavior: 'assassin_blinker', maxPhases: 2,
+                    hp: 55000, dmg: 200, color: 0xf43f5e, scale: 2.0, modelStyle: 'cyber_ninja', behavior: 'assassin_blinker', maxPhases: 2,
                     patterns: ['Syndicate Shadow-Triad Ambush', 'Monowire Guillotine Cage', 'Mantis Counter-Stance']
                 },
                 debrief: {
@@ -4381,7 +4381,7 @@
                 boss: {
                     id: 'aetherion', name: 'AETHERION-AI', title: 'Gyroscope Overmind Core',
                     musicKey: 'boss_astral',
-                    hp: 70000, dmg: 250, color: 0xc084fc, scale: 2.25, modelStyle: 'gyro_core', behavior: 'center_singularity', maxPhases: 2,
+                    hp: 85000, dmg: 250, color: 0xc084fc, scale: 2.25, modelStyle: 'gyro_core', behavior: 'center_singularity', maxPhases: 2,
                     patterns: ['Orbiting Monolith Eclipse Wheel', 'White-Hole / Black-Hole Polarity', 'Tesseract Gravity Cage']
                 },
                 debrief: {
@@ -4402,7 +4402,7 @@
                 boss: {
                     id: 'omni', name: 'OMEGA-LEVIATHAN', title: 'Quadruped War-Behemoth',
                     musicKey: 'boss_nexus',
-                    hp: 100000, dmg: 325, color: 0xfbbf24, scale: 2.45, modelStyle: 'quad_behemoth', behavior: 'juggernaut_siege', maxPhases: 2,
+                    hp: 115000, dmg: 325, color: 0xfbbf24, scale: 2.45, modelStyle: 'quad_behemoth', behavior: 'juggernaut_siege', maxPhases: 2,
                     patterns: ['Seismic Shock-Wave Stomp', 'Dorsal Silo ICBM & Cooling Rods', 'Reactor Meltdown Vent']
                 },
                 debrief: {
@@ -4423,7 +4423,7 @@
                 boss: {
                     id: 'chronos', name: 'CHRONOS-OMEGA', title: '3-Phase Temporal Seraph',
                     musicKey: 'boss_chrono',
-                    hp: 125000, dmg: 400, color: 0x2dd4bf, scale: 2.4, modelStyle: 'chrono_seraph', behavior: 'temporal_weaver', maxPhases: 3,
+                    hp: 150000, dmg: 400, color: 0x2dd4bf, scale: 2.4, modelStyle: 'chrono_seraph', behavior: 'temporal_weaver', maxPhases: 3,
                     patterns: ['Clockwork Sundial Sweep', 'Paradox Echo Recording', 'Temporal Rewind Anchor']
                 },
                 debrief: {
@@ -4444,7 +4444,7 @@
                 boss: {
                     id: 'seraphim', name: 'SERAPHIM-ZERO', title: '3-Phase Solar Dyson Architect',
                     musicKey: 'boss_dyson',
-                    hp: 150000, dmg: 450, color: 0xfacc15, scale: 2.55, modelStyle: 'solar_architect', behavior: 'solar_architect', maxPhases: 3,
+                    hp: 200000, dmg: 450, color: 0xfacc15, scale: 2.55, modelStyle: 'solar_architect', behavior: 'solar_architect', maxPhases: 3,
                     patterns: ['Dyson Solar Eclipse Flare', 'Collector Prism-Link', 'Supernova Accretion Ring']
                 },
                 debrief: {
@@ -15308,13 +15308,13 @@
                 const ramps = [
                     { hp: 1.00, dmg: 1.00, spd: 1.00, proj: 1.00, atk: 1.00, tact: 1.00, gimmick: 1.00 }, // Sec 1
                     { hp: 1.35, dmg: 1.25, spd: 1.03, proj: 1.02, atk: 1.03, tact: 1.05, gimmick: 1.25 }, // Sec 2
-                    { hp: 2.10, dmg: 1.75, spd: 1.06, proj: 1.04, atk: 1.06, tact: 1.10, gimmick: 1.75 }, // Sec 3 (T2)
-                    { hp: 2.85, dmg: 2.20, spd: 1.09, proj: 1.05, atk: 1.09, tact: 1.14, gimmick: 2.20 }, // Sec 4 (T2)
-                    { hp: 4.20, dmg: 3.00, spd: 1.12, proj: 1.06, atk: 1.12, tact: 1.18, gimmick: 3.00 }, // Sec 5 (T3)
-                    { hp: 5.60, dmg: 3.80, spd: 1.15, proj: 1.08, atk: 1.15, tact: 1.22, gimmick: 3.80 }, // Sec 6 (T3)
-                    { hp: 7.40, dmg: 4.70, spd: 1.18, proj: 1.09, atk: 1.18, tact: 1.26, gimmick: 4.70 }, // Sec 7 (T3)
-                    { hp: 9.80, dmg: 5.80, spd: 1.20, proj: 1.10, atk: 1.20, tact: 1.30, gimmick: 5.80 }, // Sec 8 (T4)
-                    { hp: 12.50, dmg: 7.00, spd: 1.22, proj: 1.12, atk: 1.22, tact: 1.35, gimmick: 7.00 } // Sec 9 (T4)
+                    { hp: 2.15, dmg: 1.75, spd: 1.06, proj: 1.03, atk: 1.06, tact: 1.10, gimmick: 1.75 }, // Sec 3 (T2)
+                    { hp: 2.85, dmg: 2.20, spd: 1.09, proj: 1.04, atk: 1.09, tact: 1.14, gimmick: 2.25 }, // Sec 4 (T2)
+                    { hp: 4.5, dmg: 3.75, spd: 1.12, proj: 1.07, atk: 1.12, tact: 1.18, gimmick: 4 }, // Sec 5 (T3)
+                    { hp: 6.5, dmg: 5, spd: 1.15, proj: 1.09, atk: 1.15, tact: 1.22, gimmick: 6 }, // Sec 6 (T3)
+                    { hp: 7.5, dmg: 6, spd: 1.18, proj: 1.1, atk: 1.18, tact: 1.26, gimmick: 8 }, // Sec 7 (T3)
+                    { hp: 10, dmg: 7.5, spd: 1.20, proj: 1.12, atk: 1.20, tact: 1.30, gimmick: 9 }, // Sec 8 (T4)
+                    { hp: 14, dmg: 8.5, spd: 1.22, proj: 1.14, atk: 1.22, tact: 1.35, gimmick: 10 } // Sec 9 (T4)
                 ];
                 return ramps[Math.max(0, Math.min(ramps.length - 1, idx))] || ramps[0];
             },
@@ -15345,18 +15345,18 @@
                 // Calibrated to M41 Carbine Parity: Normal = 3–4 hits, Heavy = 5–6 hits, Elite = 12–13 hits, Mini-Boss = ~50 hits!
                 // Normal enemy hit = ~10–15% of player Shield; Elite hit = ~30–40% of player Shield!
                 const configs = {
-                    skeleton: { name: 'Riot Trooper', color: 0x475569, eye: 0x38bdf8, hp: 135, dmg: 28, speed: 3.5, range: 2.2, scale: 1.0 },
-                    archer: { name: 'Security Marksman', color: 0x334155, eye: 0x38bdf8, hp: 120, dmg: 30, speed: 3.1, range: 11.5, ranged: true, scale: 0.96 },
-                    necro: { name: 'Suppressor Tech', color: 0x1e1b4b, eye: 0xa855f7, hp: 150, dmg: 32, speed: 2.7, range: 10.5, ranged: true, isCaster: true, scale: 1.12 },
-                    riotGuard: { name: 'Shield Enforcer', color: 0x1e3a8a, eye: 0x38bdf8, hp: 195, dmg: 35, speed: 2.9, range: 2.3, hasFrontShield: true, scale: 1.22 },
+                    skeleton: { name: 'Riot Trooper', color: 0x475569, eye: 0x38bdf8, hp: 150, dmg: 35, speed: 3.5, range: 2.2, scale: 1.0 },
+                    archer: { name: 'Security Marksman', color: 0x334155, eye: 0x38bdf8, hp: 135, dmg: 35, speed: 3.1, range: 11.5, ranged: true, scale: 0.96 },
+                    necro: { name: 'Suppressor Tech', color: 0x1e1b4b, eye: 0xa855f7, hp: 135, dmg: 30, speed: 2.7, range: 10.5, ranged: true, isCaster: true, scale: 1.12 },
+                    riotGuard: { name: 'Shield Enforcer', color: 0x1e3a8a, eye: 0x38bdf8, hp: 190, dmg: 40, speed: 2.9, range: 2.3, hasFrontShield: true, scale: 1.22 },
                     taserStalker: { name: 'Stun-Baton Runner', color: 0x0c4a6e, eye: 0x22d3ee, hp: 140, dmg: 30, speed: 4.3, range: 6.5, ranged: true, drainsStamina: true, scale: 1.04 },
 
                     sporeBrute: { name: 'Mutant Husk', color: 0x065f46, eye: 0x10b981, hp: 225, dmg: 36, speed: 2.9, range: 2.4, scale: 1.38 },
-                    spitter: { name: 'Acid Spitter', color: 0x312e81, eye: 0x34d399, hp: 135, dmg: 30, speed: 3.5, range: 11.0, ranged: true, isFlyingUnit: true, scale: 1.05 },
-                    crawler: { name: 'Mantis Crawler', color: 0x047857, eye: 0xfacc15, hp: 125, dmg: 29, speed: 4.6, range: 2.0, scale: 0.98 },
-                    tickBot: { name: 'Volatile Tick (SUICIDE)', color: 0xca8a04, eye: 0xef4444, hp: 80, dmg: 60, speed: 6.2, range: 1.7, isSuicide: true, scale: 0.85 },
-                    broodMother: { name: 'Brood Carrier', color: 0x064e3b, eye: 0xa3e635, hp: 235, dmg: 34, speed: 2.6, range: 9.5, ranged: true, isCaster: true, spawnsSwarmOnDeath: true, scale: 1.32 },
-                    lasherVine: { name: 'Tendril Lasher', color: 0x14532d, eye: 0x84cc16, hp: 185, dmg: 32, speed: 2.2, range: 10.5, ranged: true, isSpreadShooter: true, scale: 1.18 },
+                    spitter: { name: 'Acid Spitter', color: 0x312e81, eye: 0x34d399, hp: 140, dmg: 30, speed: 3.5, range: 11.0, ranged: true, isFlyingUnit: true, scale: 1.05 },
+                    crawler: { name: 'Mantis Crawler', color: 0x047857, eye: 0xfacc15, hp: 140, dmg: 29, speed: 4.6, range: 2.0, scale: 0.98 },
+                    tickBot: { name: 'Volatile Tick (SUICIDE)', color: 0xca8a04, eye: 0xef4444, hp: 75, dmg: 80, speed: 6.2, range: 1.7, isSuicide: true, scale: 0.85 },
+                    broodMother: { name: 'Brood Carrier', color: 0x064e3b, eye: 0xa3e635, hp: 220, dmg: 34, speed: 2.6, range: 9.5, ranged: true, isCaster: true, spawnsSwarmOnDeath: true, scale: 1.32 },
+                    lasherVine: { name: 'Tendril Lasher', color: 0x14532d, eye: 0x84cc16, hp: 200, dmg: 32, speed: 2.2, range: 10.5, ranged: true, isSpreadShooter: true, scale: 1.18 },
 
                     golem: { name: 'Loader Mech', color: 0x27272a, eye: 0xf97316, hp: 235, dmg: 38, speed: 2.7, range: 2.6, scale: 1.48 },
                     pyromancer: { name: 'Thermite Bomber', color: 0x7c2d12, eye: 0xfbbf24, hp: 145, dmg: 34, speed: 3.1, range: 11.0, ranged: true, isCaster: true, scale: 1.14 },
@@ -15460,8 +15460,8 @@
 
                 // Elite = 3.4x HP (~12–13 hits) & 2.20x Dmg (~30–40% of Shield); Mini-Boss = 14.0x HP (~50 hits) & 2.60x Dmg!
                 let maxHp, finalDmg, finalSpeed, bossMaxPhases;
-                const eliteHpMult = isMiniBoss ? 14.0 : (isElite ? 3.4 : 1.0);
-                const eliteDmgMult = isMiniBoss ? 2.60 : (isElite ? 2.20 : 1.0);
+                const eliteHpMult = isMiniBoss ? 15.0 : (isElite ? 3.5 : 1.0);
+                const eliteDmgMult = isMiniBoss ? 2.75 : (isElite ? 2.25 : 1.0);
                 const eliteSpdMult = isMiniBoss ? 1.25 : 1.0;
 
                 if (isZed2Boss) {
@@ -17099,7 +17099,7 @@
                         const rds = isOvr ? 7 : (isAmp ? 5 : 3);
                         const sDmg = Math.round(pDmg * (isOvr ? 2.40 : (isAmp ? 2.00 : (1.35 + r * 0.12))) * (nonLin * 0.65));
                         const rad = isOvr ? 4.5 : (isAmp ? 3.5 : 2.2);
-                        return `[QUICK-CAST] Equip X-99 Rail-Cannon (${rds} Rds): ${sDmg.toLocaleString()} Wall-Piercing Dmg + ${rad}m Sphere Blast per round!`;
+                        return `[QUICK-CAST] Equip modified SR99 Rail-Cannon (${rds} Rds): ${sDmg.toLocaleString()} Wall-Piercing Dmg + ${rad}m Sphere Blast per round!`;
                     }
                     case 'shadowAssassinate': {
                         const skDef = SKILL_TREE.find(s => s.id === 'shadowAssassinate');
