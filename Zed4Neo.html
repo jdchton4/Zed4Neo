@@ -4982,7 +4982,7 @@
             {
                 id: 'shadowAssassinate', branch: 'Recon', type: 'active', quickCast: true, previewType: 'laserLine', range: 24.0, defaultSlot: -1,
                 name: 'Kunai Rush', evoName: 'AMP // Siphon Executioner Step', ovrName: 'OVR // Reaper Reset Protocol', icon: 'fa-khanda', color: 'text-rose-400',
-                maxRank: 5, mpCost: 46, drawMpCost: 6, cooldown: 22.0, drawCooldown: 1.0,
+                maxRank: 5, mpCost: 46, drawMpCost: 6, cooldown: 22.0, drawCooldown: 2,
                 evoDesc: 'RANK 6 AMP: 15s Mark; assassination strike leeches 10% of damage dealt (up to 20% Max HP)!',
                 ovrDesc: 'RANK 7 OVERLOAD: 16s Mark; killing the target (or phasing a Boss) cuts cooldown by -30%!',
                 desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('shadowAssassinate', r) : '[QUICK-CAST] Throw a Kunai (1s CD) to Death-Mark a foe; press again to warp-slide behind them for a lethal backstab!'
@@ -17838,7 +17838,7 @@
                         this.player.rotY = Math.atan2(aimVec.x, aimVec.z);
                         this.player.mesh.rotation.y = this.player.rotY;
 
-                        const kunaiDmg = Math.max(8, Math.round(d.abilityPhysDmg * 0.55 * nonLinScale));
+                        const kunaiDmg = Math.max(8, Math.round(d.abilityPhysDmg * 0.2 * nonLinScale));
                         const markDur = isOvr ? 16.0 : (isAmp ? 15.0 : (11.5 + rank * 0.5));
                         const muzzlePos = this.player.pos.clone().addScaledVector(aimVec, 0.55);
                         this.spawnProjectile(
@@ -18000,7 +18000,7 @@
 
                     const suitColors = { hearts: 0xf43f5e, spades: 0x38bdf8, diamonds: 0xfacc15, clubs: 0x10b981, joker: 0xe879f9 };
                     const cardCol = suitColors[suit] || 0xffffff;
-                    const chipDmg = Math.max(4, Math.round(d.abilityPhysDmg * 0.35 * nonLinScale));
+                    const chipDmg = Math.max(4, Math.round(d.abilityPhysDmg * 0.15 * nonLinScale));
                     const muzzlePos = this.player.pos.clone().addScaledVector(aimVec, 0.5);
 
                     this.spawnProjectile(
