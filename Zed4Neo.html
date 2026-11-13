@@ -2254,157 +2254,160 @@
             },
 
             nexus: {
-                bpm: 118, swing: 0.015, root: 46.25, style: 'acid_jazz', drumKit: 'disco_funk',
-                leadVoice: 'fusion_sax', counterVoice: 'clean_chorus_gtr', soloVoice: 'muted_trumpet', epType: 'rhodes', useOrgan: true,
+                // Rewritten Sector VII (Protocol Omega): Heavy Industrial Prog-Synth Siege March (No cowbell!)
+                bpm: 132, swing: 0.006, root: 36.71, style: 'industrial_prog', drumKit: 'industrial_siege',
+                leadVoice: 'prog_synth_lead', counterVoice: 'steely_guitar', soloVoice: 'minimoog', epType: 'wurli', useOrgan: true,
                 sectionMap: ['A1', 'A2', 'B', 'Breakdown', 'Solo', 'B', 'A2', 'Coda'],
-                harmonySecs: [1, 2, 5], harmonyInterval: 2,
+                harmonySecs: [1, 2, 4, 5, 6], harmonyInterval: 4,
                 scale: SCALES.harmMinor,
-                hmQuirk: { mode: 'arcade_encore', bpmAdd: 30, brassAnswer: true, slapPopBoost: true, harmonyAll: true },
+                hmQuirk: { mode: 'omega_overdrive', bpmAdd: 16, leadOverride: 'steely_guitar', soloOverride: 'prog_synth_lead', brassAnswer: true, hmArp: true, industrialPerc: true },
                 chordsA: [
-                    { root: 0, type: 'min9' }, { root: 0, type: 'mMaj9' }, { root: 8, type: 'maj7s11' }, { root: 7, type: 'phrDom' },
-                    { root: 5, type: 'min11' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'min11' }, { root: 1, type: 'maj7s11' }, { root: 0, type: 'mMaj9' }, { root: 7, type: 'phrDom' },
+                    { root: 8, type: 'maj7s11' }, { root: 5, type: 'min11' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'alt7' }
                 ],
                 chordsB: [
-                    { root: 8, type: 'maj9' }, { root: 7, type: 'phrDom' }, { root: 0, type: 'min9' }, { root: 5, type: 'min11' },
-                    { root: 8, type: 'maj7s11' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }, { root: 7, type: 'alt7' }
+                    { root: 5, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 0, type: 'mMaj9' }, { root: 10, type: 'dom13' },
+                    { root: 3, type: 'maj9' }, { root: 8, type: 'maj7s11' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }
                 ],
                 chordsC: [
-                    { root: 0, type: 'min9' }, { root: 5, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 7, type: 'phrDom' }
+                    { root: 0, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 5, type: 'min11' }, { root: 7, type: 'alt7' }
                 ],
-                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0],
-                clavPattern: [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
-                brassHits: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-                bassLine: [0, null, 12, null, 0, null, 11, null, 8, null, 15, null, 7, null, 5, 2],
-                bassLineB: [8, null, 15, null, 7, null, 14, null, 0, null, 12, 7, 5, null, 7, null],
+                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0],
+                clavPattern: [1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
+                bassLine: [0, 0, 12, 0, 7, 0, 8, 0, 0, 0, 12, 0, 10, 8, 7, 5],
+                bassLineB: [5, 5, 17, 5, 8, 8, 20, 8, 0, 12, 10, 7, 2, 5, 7, 11],
                 phrasesA: [
-                    [7, _, _, 6.5, 6, _, 4, _, 3.5, _, 4, _, 2, _, _, null],
-                    [null, null, 0, 2, 4, _, 3.5, _, 2, _, 0, _, _, _, null, null],
-                    [7, _, _, 8, 6, _, 4, _, 5, _, 4, _, 3.5, _, _, null],
-                    [null, null, 2, 3.5, 4, _, 2, _, 0, _, _, _, _, _, null, null],
-                    [9, _, _, 8, 7, _, 6, _, 4, _, 3.5, _, 4, _, _, null],
-                    [5, _, 4, _, 2, _, 1, _, 0, _, _, _, _, _, null, null],
-                    [0, _, 2, _, 4, _, 6, _, 7, _, 6.5, _, 4, _, _, null],
-                    [5, _, 4, _, 2, _, 1, _, 0, _, _, _, null, null, null, null]
+                    [0, _, _, 4, 7, _, 6, _, 4, _, 11, _, 7, _, _, null],
+                    [null, null, 7, _, 8, _, 6, _, 4, _, 1, _, 0, _, _, null],
+                    [0, _, 4, _, 7, _, 11, _, 12, _, 11, _, 8, _, 7, _],
+                    [6, _, 4, _, 1, _, 0, _, -1, _, 0, _, _, _, null, null],
+                    [11, _, _, 8, 7, _, 4, _, 5, _, 8, _, 7, _, _, null],
+                    [4, _, 5, _, 7, _, 11, _, 8, _, 7, _, 4, _, _, null],
+                    [0, 4, 7, _, 1, 5, 8, _, 4, 7, 11, _, 14, _, 11, _],
+                    [12, _, 11, 8, 7, _, 6, _, 7, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [9, _, _, _, 8, _, 7, _, 6, _, _, _, 4, _, _, null],
-                    [5, _, 6, _, 7, _, 5, _, 4, _, _, _, _, _, null, null],
-                    [9, _, 11, _, 9, _, 8, _, 7, _, 6, _, 4, _, _, null],
-                    [5, _, 4, _, 3.5, _, 4, _, _, _, null, null, null, null, null, null]
+                    [11, _, _, 12, 14, _, _, 11, 8, _, 7, _, 4, _, _, null],
+                    [5, _, 8, _, 12, _, 11, _, 7, _, _, _, _, _, null, null],
+                    [11, _, 14, _, 15, _, 14, 11, 12, _, 8, _, 7, _, _, null],
+                    [8, 7, 5, 4, 1, _, 6, _, 7, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, null, null, 4, _, 2, _, null, null, null, null, 1, _, 0, _],
-                    [null, null, null, null, 7, _, 6, _, null, null, null, null, 4, _, 2, _]
+                    [7, null, null, 4, null, null, 8, _, 7, null, null, 4, 1, _, null, null],
+                    [11, null, null, 7, null, null, 12, _, 11, null, null, 8, 6, _, null, null]
                 ],
                 soloPhrases: [
-                    [4, _, 6, 7, 8, _, 7, 6, 4, _, 3.5, 2, 0, _, _, null],
-                    [0, 2, 4, 5, 6, _, 7, _, 9, _, 8, 7, 6, _, _, null],
-                    [11, _, 9, 8, 7, _, 6, 4, 3.5, 4, 5, _, 4, _, _, null],
-                    [5, 4, 2, 1, 0, _, _, _, null, null, null, null, null, null, null, null]
+                    [0, 4, 7, 11, 12, 11, 8, 7, 6, 7, 8, 6, 4, _, _, null],
+                    [4, 7, 8, 11, 14, _, 15, 14, 12, 11, 8, 7, 11, _, _, null],
+                    [15, 14, 11, 8, 7, 8, 11, 7, 5, 4, 1, 4, 0, _, _, null],
+                    [0, 1, 4, 5, 7, 8, 11, 12, 14, _, _, _, null, null, null, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0], snare: [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
 
             chrono: {
-                bpm: 120, swing: 0.017, root: 49.0, style: 'clav_funk', drumKit: 'purdie_shuffle',
-                leadVoice: 'clean_chorus_gtr', counterVoice: 'muted_trumpet', soloVoice: 'minimoog', epType: 'wurli', useVibes: true,
+                // Rewritten Sector VIII (Abyssal Chrono-Reactor): Dark Hypnotic Ticking Time-Fracture Theme (Minor/Diminished tension)
+                bpm: 138, swing: 0.004, root: 46.25, style: 'chrono_fracture', drumKit: 'electro_clock',
+                leadVoice: 'fm_epiano', counterVoice: 'minimoog', soloVoice: 'prog_synth_lead', epType: 'wurli', useVibes: true, useChoir: true,
                 sectionMap: ['A1', 'A2', 'B', 'Breakdown', 'Solo', 'B', 'A2', 'Coda'],
-                harmonySecs: [1, 2, 5], harmonyInterval: 2,
-                scale: SCALES.dorian,
-                hmQuirk: { mode: 'tachyon_breakbeat', bpmAdd: 28, useOrgan: true, latinPerc: true, brassAnswer: true },
+                harmonySecs: [1, 2, 4, 5, 6], harmonyInterval: 2,
+                scale: SCALES.harmMinor,
+                hmQuirk: { mode: 'paradox_overclock', bpmAdd: 16, leadOverride: 'prog_synth_lead', hmArp: true, brassAnswer: true },
                 chordsA: [
-                    { root: 0, type: 'min11' }, { root: 5, type: 'lydDom' }, { root: 0, type: 'min11' }, { root: 5, type: 'dom13' },
-                    { root: 10, type: 'maj7s11' }, { root: 10, type: 'muMaj' }, { root: 0, type: 'min11' }, { root: 7, type: 'sus13' }
+                    { root: 0, type: 'mMaj9' }, { root: 0, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 7, type: 'phrDom' },
+                    { root: 5, type: 'min9' }, { root: 6, type: 'dim7' }, { root: 0, type: 'mMaj9' }, { root: 7, type: 'alt7' }
                 ],
                 chordsB: [
-                    { root: 3, type: 'maj9' }, { root: 8, type: 'maj7s11' }, { root: 0, type: 'min11' }, { root: 5, type: 'dom13' },
-                    { root: 3, type: 'muMaj' }, { root: 7, type: 'alt7' }, { root: 0, type: 'min11' }, { root: 7, type: 'sus13' }
+                    { root: 8, type: 'maj7s11' }, { root: 6, type: 'dim7' }, { root: 0, type: 'mMaj9' }, { root: 5, type: 'min11' },
+                    { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }, { root: 0, type: 'min9' }, { root: 7, type: 'alt7' }
                 ],
                 chordsC: [
-                    { root: 0, type: 'min11' }, { root: 5, type: 'lydDom' }, { root: 10, type: 'maj7s11' }, { root: 7, type: 'sus13' }
+                    { root: 0, type: 'mMaj9' }, { root: 8, type: 'maj7s11' }, { root: 6, type: 'dim7' }, { root: 7, type: 'phrDom' }
                 ],
-                compHits: [1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
-                clavPattern: [1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0],
-                brassHits: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-                bassLine: [0, null, 3, 4, 5, null, 7, null, 10, null, 7, null, 0, null, 5, 7],
-                bassLineB: [3, null, 10, null, 8, null, 15, null, 0, null, 7, 10, 7, null, 5, 3],
+                compHits: [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0],
+                clavPattern: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+                brassHits: [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+                bassLine: [0, 12, 0, 7, 0, 11, 0, 7, 8, 20, 8, 15, 7, 19, 6, 7],
+                bassLineB: [8, 20, 15, 8, 6, 18, 12, 6, 0, 12, 11, 7, 2, 5, 7, 11],
                 phrasesA: [
-                    [null, null, 0, 2, 2.5, 4, _, _, _, _, 2, _, 0, _, _, null],
-                    [null, null, 4, _, 6, _, 4, _, 2, _, _, _, _, _, null, null],
-                    [null, null, 0, 2, 2.5, 4, _, 7, _, _, 6, _, 4, _, _, null],
-                    [3.5, _, 2, _, 0, _, -1, _, 0, _, _, _, null, null, null, null],
-                    [7, _, _, _, 6, _, 4, _, 2.5, _, 2, _, 0, _, _, null],
-                    [null, null, 2, 4, 6, _, 4, _, 2, _, _, _, null, null, null, null],
-                    [7, _, 9, _, 7, _, 6, _, 4, _, 2.5, _, 2, _, _, null],
-                    [4, _, 2, _, 0, _, _, _, null, null, null, null, null, null, null, null]
+                    [7, _, 6, _, 7, _, 11, _, 8, _, 7, _, 4, _, _, null],
+                    [6, _, 4, _, 1, _, 4, _, 0, _, _, _, _, _, null, null],
+                    [7, _, 6, _, 7, _, 14, _, 12, _, 11, _, 8, _, _, null],
+                    [11, _, 8, 7, 6, _, 4, _, 7, _, _, _, null, null, null, null],
+                    [14, _, 11, _, 12, _, 8, _, 11, _, 7, _, 8, _, _, null],
+                    [7, 6, 4, _, 5, 4, 1, _, 0, _, _, _, null, null, null, null],
+                    [0, 4, 7, 11, 8, 4, 7, 12, 11, 7, 14, _, 13, _, _, null],
+                    [14, _, 11, 8, 7, _, 6, _, 0, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [9, _, _, _, 7, _, _, _, 6, _, 4, _, 2, _, _, null],
-                    [4, _, 6, _, 7, _, _, _, 6, _, 4, _, _, _, null, null],
-                    [9, _, _, 11, 9, _, 7, _, 6, _, 4, _, 2, _, _, null],
-                    [2.5, _, 2, _, 0, _, _, _, null, null, null, null, null, null, null, null]
+                    [11, _, _, 12, 11, _, 8, _, 7, _, 6, _, 7, _, _, null],
+                    [8, _, _, 11, 14, _, 12, _, 11, _, _, _, _, _, null, null],
+                    [14, _, 15, _, 14, _, 11, _, 12, _, 8, _, 7, _, _, null],
+                    [6, _, 7, 8, 4, _, 1, _, 0, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, null, null, null, null, 7, _, 6, _, 4, _, null, null, null, null],
-                    [null, null, null, null, null, null, 9, _, 7, _, 6, _, null, null, null, null]
+                    [0, 7, 4, 7, 0, 8, 4, 8, 0, 7, 4, 7, 6, 4, 1, 0],
+                    [4, 11, 7, 11, 5, 12, 8, 12, 4, 11, 7, 11, 6, 8, 7, 4]
                 ],
                 soloPhrases: [
-                    [0, 2, 2.5, 4, _, 6, 4, 2, 0, _, 2, 4, 0, _, _, null],
-                    [4, 6, 7, 9, _, 7, 6, 4, 6, _, 7, _, 9, _, _, null],
-                    [11, _, 9, 7, 6, 4, 2.5, 2, 0, 2, 4, _, 2, _, _, null],
-                    [4, 2.5, 2, 0, -1, 0, _, _, null, null, null, null, null, null, null, null]
+                    [7, 6, 7, 8, 11, 8, 7, 4, 6, 7, 8, 6, 4, 1, 0, _],
+                    [0, 2, 4, 5, 7, 8, 11, 12, 14, _, 15, 14, 11, _, _, null],
+                    [15, 14, 12, 11, 8, 7, 6, 7, 11, 8, 7, 5, 4, _, _, null],
+                    [7, 11, 14, 11, 8, 12, 15, 12, 14, _, _, _, null, null, null, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1] }
+                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1] }
             },
 
             dyson: {
-                bpm: 122, swing: 0.014, root: 51.91, style: 'acid_jazz', drumKit: 'disco_funk',
-                leadVoice: 'octave_guitar', counterVoice: 'fusion_sax', soloVoice: 'steely_guitar', epType: 'rhodes', useVibes: true, useOrgan: true,
+                // Enhanced Sector IX (Celestial Dyson Citadel): Ethereal, Grandiose Final-Ascent Anthem with Choir, Vibes, Organ & Twin Leads
+                bpm: 126, swing: 0.010, root: 51.91, style: 'celestial_finale', drumKit: 'disco_funk',
+                leadVoice: 'octave_guitar', counterVoice: 'prog_synth_lead', soloVoice: 'steely_guitar', epType: 'rhodes', useVibes: true, useOrgan: true, useChoir: true,
                 sectionMap: ['A1', 'B', 'A2', 'B', 'Solo', 'B', 'Coda', 'A2'],
-                harmonySecs: [0, 1, 3, 5], harmonyInterval: 2,
-                scale: SCALES.majIonian,
-                hmQuirk: { mode: 'symphonic_starfire', bpmAdd: 24, fourOnFloor: true, brassAnswer: true, harmonyAll: true, slapPopBoost: true },
+                harmonySecs: [0, 1, 2, 3, 4, 5, 6, 7], harmonyInterval: 2,
+                scale: SCALES.majLydian,
+                hmQuirk: { mode: 'symphonic_starfire', bpmAdd: 20, fourOnFloor: true, brassAnswer: true, harmonyAll: true, hmArp: true },
                 chordsA: [
-                    { root: 5, type: 'maj9' }, { root: 4, type: 'alt7' }, { root: 9, type: 'min9' }, { root: 2, type: 'dom13' },
+                    { root: 5, type: 'maj7s11' }, { root: 4, type: 'alt7' }, { root: 9, type: 'min11' }, { root: 2, type: 'dom13' },
                     { root: 5, type: 'maj7s11' }, { root: 7, type: 'sus13' }, { root: 0, type: 'maj9' }, { root: 2, type: 'lydDom' }
                 ],
                 chordsB: [
-                    { root: 5, type: 'maj9' }, { root: 7, type: 'sus13' }, { root: 4, type: 'min9' }, { root: 9, type: 'dom13' },
-                    { root: 2, type: 'min11' }, { root: 7, type: 'dom13' }, { root: 0, type: 'maj9' }, { root: 0, type: 'muMaj' }
+                    { root: 5, type: 'maj7s11' }, { root: 7, type: 'sus13' }, { root: 4, type: 'min11' }, { root: 9, type: 'min9' },
+                    { root: 2, type: 'min11' }, { root: 7, type: 'dom13' }, { root: 0, type: 'maj7s11' }, { root: 4, type: 'alt7' }
                 ],
                 chordsC: [
-                    { root: 5, type: 'maj9' }, { root: 4, type: 'alt7' }, { root: 9, type: 'min9' }, { root: 7, type: 'sus13' }
+                    { root: 5, type: 'maj7s11' }, { root: 7, type: 'sus13' }, { root: 9, type: 'min11' }, { root: 4, type: 'alt7' }
                 ],
-                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-                clavPattern: [0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1],
-                brassHits: [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0],
-                bassLine: [5, null, 17, null, 4, null, 16, null, 9, null, 7, null, 2, null, 7, 4],
-                bassLineB: [5, null, 12, null, 7, null, 14, null, 4, null, 9, null, 0, null, 7, 12],
+                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0],
+                clavPattern: [1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1],
+                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+                bassLine: [5, null, 17, 12, 4, null, 16, 11, 9, null, 21, 16, 2, 9, 14, 16],
+                bassLineB: [5, 17, 12, 5, 7, 19, 14, 7, 4, 16, 9, 21, 0, 12, 7, 14],
                 phrasesA: [
-                    [7, _, _, _, 6, _, 4, _, 2, _, _, _, 4, _, _, null],
-                    [null, null, 2, 4, 5, _, _, _, 4, _, 2, _, 1, _, _, null],
-                    [7, _, _, _, 9, _, 8, _, 7, _, 4, _, 2, _, _, null],
-                    [3, _, 4, _, 2, _, 0, _, _, _, _, _, null, null, null, null],
-                    [9, _, _, _, 8, _, 7, _, 5, _, 4, _, 2, _, _, null],
-                    [4, _, 5, _, 7, _, 4, _, 2, _, _, _, null, null, null, null],
-                    [4, _, 6, _, 7, _, _, _, 9, _, 8, _, 7, _, _, null],
-                    [6, _, 4, _, 2, _, 4, _, _, _, _, _, null, null, null, null]
+                    [7, _, _, 9, 11, _, 9, _, 7, _, 6, _, 4, _, _, null],
+                    [null, null, 2, 4, 6, _, 7, _, 9, _, 7, _, 4, _, _, null],
+                    [7, _, _, 9, 11, _, 14, _, 13, _, 11, _, 9, _, _, null],
+                    [10, _, 9, _, 7, _, 6, _, 7, _, _, _, null, null, null, null],
+                    [11, _, _, 13, 14, _, 11, _, 9, _, 7, _, 6, _, _, null],
+                    [4, _, 6, _, 7, _, 9, _, 11, _, _, _, null, null, null, null],
+                    [7, _, 9, _, 11, _, 13, _, 14, _, 16, _, 14, _, 11, _],
+                    [13, _, 11, _, 9, _, 7, _, 11, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [11, _, _, _, 9, _, 7, _, 6, _, _, _, 4, _, _, null],
-                    [5, _, 7, _, 9, _, _, _, 7, _, 4, _, _, _, null, null],
-                    [11, _, _, 12, 11, _, 9, _, 7, _, 6, _, 4, _, _, null],
-                    [5, _, 4, _, 2, _, 0, _, _, _, _, _, null, null, null, null]
+                    [14, _, _, _, 13, _, 11, _, 9, _, _, _, 7, _, _, null],
+                    [6, _, 7, _, 9, _, 11, _, 14, _, 11, _, _, _, null, null],
+                    [14, _, _, 16, 14, _, 13, _, 11, _, 9, _, 7, _, _, null],
+                    [9, _, 7, _, 6, _, 7, _, 11, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, null, null, 9, _, 7, _, null, null, null, null, 6, _, 4, _],
-                    [null, null, null, null, 7, _, 4, _, null, null, null, null, 2, _, 0, _]
+                    [4, null, 7, null, 11, _, 9, _, 4, null, 6, null, 9, _, 7, _],
+                    [7, null, 11, null, 14, _, 11, _, 6, null, 9, null, 11, _, 7, _]
                 ],
                 soloPhrases: [
-                    [4, _, 5, 7, 9, _, 7, 5, 4, _, 2, 4, 0, _, _, null],
-                    [4, 6, 7, 9, 11, _, 9, 7, 8, _, 9, _, 7, _, _, null],
-                    [11, _, 9, 7, 6, 4, 2, 4, 5, _, 4, _, 2, _, _, null],
-                    [4, 2, 1, 0, 2, _, 0, _, _, _, null, null, null, null, null, null]
+                    [4, 6, 7, 9, 11, _, 14, 13, 11, 9, 7, 6, 7, _, _, null],
+                    [7, 9, 11, 13, 14, _, 16, 14, 13, 11, 14, _, 11, _, _, null],
+                    [16, _, 14, 13, 11, 9, 7, 6, 7, 9, 11, _, 7, _, _, null],
+                    [11, 9, 7, 6, 4, 6, 7, 9, 11, _, _, _, null, null, null, null]
                 ],
                 drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
@@ -2415,7 +2418,7 @@
                 sectionMap: ['A1', 'A2', 'B', 'Solo', 'B', 'A2', 'Coda', 'Solo'],
                 harmonySecs: [0, 1, 2, 4], harmonyInterval: 2,
                 scale: SCALES.bluesFunk,
-                hmQuirk: { bpmAdd: 12, brassAnswer: true, harmonyAll: true, slapPopBoost: true },
+                hmQuirk: { bpmAdd: 14, leadOverride: 'prog_synth_lead', brassAnswer: true, harmonyAll: true, slapPopBoost: true, hmArp: true },
                 chordsA: [
                     { root: 0, type: 'min11' }, { root: 0, type: 'min9' }, { root: 0, type: 'min11' }, { root: 0, type: 'min9' },
                     { root: 5, type: 'dom13' }, { root: 5, type: 'dom13' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
@@ -2451,12 +2454,12 @@
             },
 
             boss_fungal: {
-                bpm: 146, swing: 0.012, root: 41.20, style: 'clav_funk', drumKit: 'latin_funk',
+                bpm: 146, swing: 0.012, root: 41.20, style: 'clav_funk', drumKit: 'disco_funk',
                 leadVoice: 'steely_guitar', counterVoice: 'flute_lead', soloVoice: 'minimoog', epType: 'wurli', useOrgan: true,
                 sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
                 harmonySecs: [1, 2, 4], harmonyInterval: 2,
                 scale: SCALES.dorian,
-                hmQuirk: { bpmAdd: 14, latinPerc: true, harmonyAll: true, brassAnswer: true },
+                hmQuirk: { bpmAdd: 15, leadOverride: 'prog_synth_lead', harmonyAll: true, brassAnswer: true, hmArp: true },
                 chordsA: [
                     { root: 0, type: 'min9' }, { root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 5, type: 'dom13' },
                     { root: 0, type: 'min9' }, { root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 5, type: 'dom13' }
@@ -2497,7 +2500,7 @@
                 sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
                 harmonySecs: [0, 1, 2, 4], harmonyInterval: 2,
                 scale: SCALES.dorian,
-                hmQuirk: { bpmAdd: 14, brassAnswer: true, slapPopBoost: true, harmonyAll: true },
+                hmQuirk: { bpmAdd: 16, leadOverride: 'prog_synth_lead', brassAnswer: true, slapPopBoost: true, harmonyAll: true, industrialPerc: true },
                 chordsA: [
                     { root: 0, type: 'min11' }, { root: 0, type: 'min9' }, { root: 3, type: 'muMaj' }, { root: 5, type: 'dom13' },
                     { root: 0, type: 'min11' }, { root: 10, type: 'sus13' }, { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }
@@ -2533,351 +2536,363 @@
             },
 
             boss_glacier: {
-                bpm: 150, swing: 0.010, root: 55.0, style: 'acid_jazz', drumKit: 'disco_funk',
-                leadVoice: 'octave_guitar', counterVoice: 'clean_chorus_gtr', soloVoice: 'minimoog', epType: 'rhodes', useVibes: true,
-                sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
-                harmonySecs: [0, 1, 2, 4], harmonyInterval: 2,
-                scale: SCALES.dorian,
-                hmQuirk: { bpmAdd: 14, fourOnFloor: true, slapPopBoost: true, harmonyAll: true },
+                // Rewritten Boss 4 (Valkyrie-Zero): Blistering 162 BPM High-Altitude Aerial Dogfight Twin-Lead Duel!
+                bpm: 162, swing: 0.005, root: 58.27, style: 'aerial_dogfight', drumKit: 'disco_funk',
+                leadVoice: 'prog_synth_lead', counterVoice: 'steely_guitar', soloVoice: 'steely_guitar', epType: 'rhodes', useVibes: true,
+                sectionMap: ['A1', 'A2', 'B', 'Solo', 'B', 'A2', 'Coda', 'Solo'],
+                harmonySecs: [0, 1, 2, 3, 4, 5], harmonyInterval: 2,
+                scale: SCALES.naturalMin,
+                hmQuirk: { bpmAdd: 14, fourOnFloor: true, slapPopBoost: true, harmonyAll: true, hmArp: true, brassAnswer: true },
                 chordsA: [
-                    { root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 8, type: 'maj9' },
-                    { root: 2, type: 'min9' }, { root: 7, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 3, type: 'maj9' }, { root: 10, type: 'dom13' },
+                    { root: 5, type: 'min9' }, { root: 8, type: 'maj7s11' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }
                 ],
                 chordsB: [
-                    { root: 3, type: 'maj9' }, { root: 5, type: 'dom13' }, { root: 0, type: 'min11' }, { root: 10, type: 'dom13' },
-                    { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }, { root: 0, type: 'sus13' }, { root: 7, type: 'alt7' }
+                    { root: 8, type: 'maj7s11' }, { root: 10, type: 'dom13' }, { root: 0, type: 'min11' }, { root: 3, type: 'maj9' },
+                    { root: 5, type: 'min11' }, { root: 7, type: 'phrDom' }, { root: 0, type: 'mMaj9' }, { root: 7, type: 'alt7' }
                 ],
-                chordsC: [{ root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 7, type: 'alt7' }],
-                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-                clavPattern: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0],
-                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-                bassLine: [0, 12, null, 7, 5, 17, null, 10, 3, 15, null, 10, 8, null, 7, 5],
-                bassLineB: [3, 15, null, 10, 5, 17, null, 12, 0, 12, 10, 22, 8, 7, 5, 7],
+                chordsC: [{ root: 0, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 10, type: 'dom13' }, { root: 7, type: 'phrDom' }],
+                compHits: [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0],
+                clavPattern: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0],
+                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0],
+                bassLine: [0, 0, 12, 0, 8, 8, 20, 8, 3, 3, 15, 3, 10, 10, 7, 5],
+                bassLineB: [8, 20, 8, 20, 10, 22, 10, 22, 0, 12, 7, 12, 5, 7, 8, 10],
                 phrasesA: [
-                    [4, _, 6, 7, 9, _, 7, _, 6, _, 4, _, 2, _, _, null],
-                    [2, 2.5, 4, _, 6, _, 7, _, 6, _, 4, _, 0, _, _, null],
-                    [4, _, 6, 7, 9, _, 11, _, 12, _, 11, _, 9, _, _, null],
-                    [10.5, 11, 9, 7, 6, _, 7, _, 7, _, _, _, null, null, null, null]
+                    [7, _, 11, 9, 7, _, 4, _, 5, 7, 9, _, 7, _, _, null],
+                    [9, _, 12, 11, 9, _, 7, _, 11, _, 14, _, 11, _, _, null],
+                    [14, _, 12, 11, 9, _, 11, _, 7, _, 9, _, 5, _, 4, _],
+                    [2, 4, 5, 7, 9, _, 11, _, 7, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [11, _, _, 9, 12, _, 11, _, 9, _, 7, _, 6, _, _, null],
-                    [7, 6, 4, _, 2, 2.5, 4, _, 7, _, _, _, null, null, null, null]
+                    [11, _, 14, _, 12, _, 9, _, 11, _, 7, _, 5, _, 7, _],
+                    [9, 11, 12, 14, 15, _, 14, 11, 12, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, 9, null, 7, _, null, null, null, null, 11, null, 9, _, null, null]
+                    [null, null, null, null, 11, 9, 7, 4, null, null, null, null, 14, 12, 11, 9],
+                    [4, null, 7, null, 9, _, 7, _, 5, null, 9, null, 11, _, 9, _]
                 ],
                 soloPhrases: [
-                    [4, 6, 7, 9, 9.5, 11, 9, 7, 9, _, 11, _, 12, _, _, null],
-                    [12, 11, 9, 7, 6, 4, 3.5, 2, 2.5, 4, 6, 7, 4, _, _, null]
+                    [0, 2, 4, 7, 9, 11, 12, 14, 11, 9, 7, 9, 11, _, _, null],
+                    [14, 12, 11, 9, 12, 11, 9, 7, 9, 7, 5, 4, 7, _, _, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
 
             boss_cathedral: {
-                bpm: 150, swing: 0.009, root: 51.91, style: 'acid_jazz', drumKit: 'latin_funk',
-                leadVoice: 'steely_guitar', counterVoice: 'flute_lead', soloVoice: 'minimoog', epType: 'rhodes', useVibes: true,
+                // Polished Boss 5 (Director Vaelen): Sharp Syndicate Cyber-Assassin Duel (Zero cowbell!)
+                bpm: 152, swing: 0.008, root: 51.91, style: 'acid_jazz', drumKit: 'purdie_shuffle',
+                leadVoice: 'steely_guitar', counterVoice: 'fusion_sax', soloVoice: 'prog_synth_lead', epType: 'rhodes', useVibes: true,
                 sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
-                harmonySecs: [0, 1, 2, 4], harmonyInterval: 2,
+                harmonySecs: [0, 1, 2, 4, 5], harmonyInterval: 2,
                 scale: SCALES.harmMinor,
-                hmQuirk: { bpmAdd: 15, latinPerc: true, brassAnswer: true, harmonyAll: true },
+                hmQuirk: { bpmAdd: 15, leadOverride: 'prog_synth_lead', brassAnswer: true, harmonyAll: true, hmArp: true },
                 chordsA: [
-                    { root: 0, type: 'min9' }, { root: 0, type: 'min11' }, { root: 8, type: 'maj9' }, { root: 8, type: 'maj7s11' },
+                    { root: 0, type: 'min9' }, { root: 0, type: 'mMaj9' }, { root: 8, type: 'maj9' }, { root: 8, type: 'maj7s11' },
                     { root: 5, type: 'min9' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }, { root: 7, type: 'alt7' }
                 ],
                 chordsB: [
                     { root: 5, type: 'min9' }, { root: 10, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 8, type: 'maj9' },
-                    { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }, { root: 0, type: 'min9' }, { root: 7, type: 'phrDom' }
+                    { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }, { root: 0, type: 'mMaj9' }, { root: 7, type: 'phrDom' }
                 ],
                 chordsC: [{ root: 0, type: 'min9' }, { root: 8, type: 'maj9' }, { root: 5, type: 'min9' }, { root: 7, type: 'phrDom' }],
                 compHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0],
                 clavPattern: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0],
                 brassHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-                bassLine: [0, null, null, 7, null, null, 12, null, 8, null, null, 15, 7, null, 5, null],
-                bassLineB: [5, null, null, 12, 10, null, null, 5, 3, null, 8, null, 7, null, 7, null],
+                bassLine: [0, 12, null, 7, 0, 11, null, 7, 8, 20, null, 15, 7, 14, 6, 5],
+                bassLineB: [5, 17, null, 12, 10, 22, null, 5, 3, 15, 8, 12, 7, 14, 11, 7],
                 phrasesA: [
-                    [7, _, _, 8, 7, _, 5, _, 4, _, _, 5, 7, _, _, null],
-                    [8, _, _, 9, 8, _, 7, _, 6, _, _, _, _, _, null, null],
-                    [7, _, 8, _, 9, _, 11, _, 9, _, 8, _, 7, _, _, null],
-                    [8, _, 7, _, 5, _, 4, _, 4, _, _, _, _, _, null, null]
+                    [7, _, 11, 8, 7, _, 6, _, 4, _, 6, 7, 8, _, _, null],
+                    [11, _, 9, 8, 7, _, 5, _, 6, _, _, _, _, _, null, null],
+                    [7, _, 8, 11, 14, _, 12, _, 11, _, 8, _, 7, _, _, null],
+                    [8, 7, 6, 4, 1, _, 6, _, 4, _, _, _, _, _, null, null]
                 ],
                 phrasesB: [
-                    [9, _, _, _, 11, _, 12, _, 11, _, 9, _, 7, _, _, null],
-                    [8, _, 9, _, 8, _, 7, _, 7, _, _, _, _, _, null, null]
+                    [11, _, _, 14, 12, _, 11, _, 9, _, 8, _, 7, _, _, null],
+                    [8, 11, 14, _, 12, 11, 8, _, 7, _, _, _, _, _, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, 4, 5, 7, _, null, null, null, null, 5, 4, 2, _, null, null]
+                    [null, null, 4, 6, 7, _, 11, _, null, null, 8, 7, 6, _, 4, _]
                 ],
                 soloPhrases: [
-                    [4, 5, 7, _, 8, _, 7, 5, 4, _, 6, _, 7, _, _, null],
-                    [7, 8, 9, 11, 12, _, 11, 9, 8, 7, 6, 7, 4, _, _, null]
+                    [4, 6, 7, 8, 11, 8, 7, 6, 4, 6, 7, 11, 14, _, _, null],
+                    [14, 12, 11, 8, 7, 6, 7, 8, 11, 8, 7, 6, 4, _, _, null]
                 ],
                 drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
 
             boss_astral: {
-                bpm: 148, swing: 0.010, root: 55.0, style: 'steely_fusion', drumKit: 'jazz_ride',
-                leadVoice: 'minimoog', counterVoice: 'flute_lead', soloVoice: 'steely_guitar', epType: 'rhodes', useVibes: true, useOrgan: true,
-                sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
-                harmonySecs: [0, 1, 2, 4], harmonyInterval: 4,
-                scale: SCALES.dorian,
-                hmQuirk: { bpmAdd: 14, harmonyAll: true, latinPerc: true, slapPopBoost: true },
+                // Ground-Up Redo Boss 6 (Aetherion-AI): 156 BPM Quantum Gyroscope Overmind Theme
+                bpm: 156, swing: 0.004, root: 55.0, style: 'quantum_overmind', drumKit: 'electro_clock',
+                leadVoice: 'prog_synth_lead', counterVoice: 'fm_epiano', soloVoice: 'minimoog', epType: 'wurli', useVibes: true, useChoir: true,
+                sectionMap: ['A1', 'A2', 'B', 'Solo', 'B', 'A2', 'Coda', 'Solo'],
+                harmonySecs: [0, 1, 2, 3, 4, 5], harmonyInterval: 4,
+                scale: SCALES.harmMinor,
+                hmQuirk: { bpmAdd: 14, harmonyAll: true, hmArp: true, brassAnswer: true, slapPopBoost: true },
                 chordsA: [
-                    { root: 0, type: 'min11' }, { root: 0, type: 'sus13' }, { root: 8, type: 'maj7s11' }, { root: 8, type: 'maj9' },
-                    { root: 3, type: 'maj9' }, { root: 10, type: 'dom13' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'mMaj9' }, { root: 6, type: 'maj7s11' }, { root: 8, type: 'maj7s11' }, { root: 7, type: 'alt7' },
+                    { root: 0, type: 'min11' }, { root: 3, type: 'maj7s11' }, { root: 6, type: 'dim7' }, { root: 7, type: 'phrDom' }
                 ],
                 chordsB: [
-                    { root: 5, type: 'min9' }, { root: 10, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 8, type: 'maj7s11' },
-                    { root: 2, type: 'halfDim' }, { root: 7, type: 'alt7' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
+                    { root: 8, type: 'maj7s11' }, { root: 3, type: 'maj9' }, { root: 6, type: 'dim7' }, { root: 7, type: 'alt7' },
+                    { root: 5, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 0, type: 'mMaj9' }, { root: 7, type: 'phrDom' }
                 ],
-                chordsC: [{ root: 0, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 3, type: 'maj9' }, { root: 7, type: 'alt7' }],
-                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-                clavPattern: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-                bassLine: [0, 7, 12, null, 0, 7, 12, null, 8, 15, 20, null, 7, 14, 19, null],
-                bassLineB: [5, 12, 17, null, 10, 17, 22, null, 3, 10, 15, null, 7, 14, 19, null],
+                chordsC: [{ root: 0, type: 'mMaj9' }, { root: 6, type: 'maj7s11' }, { root: 8, type: 'maj7s11' }, { root: 7, type: 'alt7' }],
+                compHits: [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 1],
+                clavPattern: [1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0],
+                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1],
+                bassLine: [0, 12, 7, 12, 6, 18, 12, 6, 8, 20, 15, 8, 7, 19, 11, 7],
+                bassLineB: [8, 20, 15, 8, 3, 15, 10, 3, 6, 18, 12, 6, 7, 19, 14, 11],
                 phrasesA: [
-                    [4, _, _, _, 7, _, 6, _, 4, _, 2, 2.5, 4, _, _, null],
-                    [9, _, _, _, 7, _, 6, _, 4, _, _, _, _, _, null, null],
-                    [4, _, 6, _, 7, _, 9, _, 11, _, _, 9, 7, _, _, null],
-                    [9, 7, 6, 4, 3.5, 2, 0, _, 4, _, _, _, null, null, null, null]
+                    [11, _, 7, 4, 12, _, 8, 5, 11, _, 7, 4, 6, _, _, null],
+                    [0, 4, 7, 11, 14, _, 11, _, 8, _, 12, _, 11, _, _, null],
+                    [14, _, 11, 7, 15, _, 12, 8, 14, _, 11, 7, 6, _, 4, _],
+                    [1, 4, 6, 8, 11, _, 14, _, 7, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [11, _, _, 12, 14, _, 11, _, 9, _, 7, _, 6, _, _, null],
-                    [7, 6, 4, _, 2, 2.5, 4, _, 7, _, _, _, null, null, null, null]
+                    [14, _, _, 11, 15, _, 14, _, 11, _, 8, _, 12, _, 7, _],
+                    [11, 12, 14, 15, 18, _, 14, _, 11, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [0, null, 4, null, 7, null, 4, null, 2, null, 6, null, 9, null, 6, null]
+                    [0, 7, 11, 7, 3, 7, 12, 7, 4, 8, 14, 8, 6, 11, 13, 11]
                 ],
                 soloPhrases: [
-                    [4, 6, 7, 9, 10.5, 11, 9, _, 7, 9, 11, 12, 9, _, _, null],
-                    [14, _, 12, 11, 9, 7, 6, 4, 3.5, 2, 0, 2, 4, _, _, null]
+                    [0, 4, 7, 11, 14, 11, 7, 4, 1, 5, 8, 12, 15, 12, 8, 5],
+                    [18, 15, 14, 11, 12, 8, 7, 4, 6, 8, 11, 14, 7, _, _, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
 
             boss_nexus: {
-                bpm: 142, swing: 0.011, root: 41.20, style: 'clav_funk', drumKit: 'disco_funk',
-                leadVoice: 'fusion_sax', counterVoice: 'steely_guitar', soloVoice: 'steely_guitar', epType: 'wurli', useOrgan: true,
+                // Rewritten Boss 7 (Omega-Leviathan): Punchy Forge/Industrial Behemoth Riff (No cowbell; uses Anvil clangs & angular hooks!)
+                bpm: 150, swing: 0.008, root: 36.71, style: 'industrial_prog', drumKit: 'industrial_siege',
+                leadVoice: 'fusion_sax', counterVoice: 'steely_guitar', soloVoice: 'prog_synth_lead', epType: 'wurli', useOrgan: true,
                 sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
-                harmonySecs: [0, 1, 2, 4], harmonyInterval: 2,
+                harmonySecs: [0, 1, 2, 4, 5], harmonyInterval: 4,
                 scale: SCALES.bluesFunk,
-                hmQuirk: { bpmAdd: 12, brassAnswer: true, slapPopBoost: true, harmonyAll: true },
+                hmQuirk: { bpmAdd: 14, brassAnswer: true, slapPopBoost: true, harmonyAll: true, industrialPerc: true, hmArp: true },
                 chordsA: [
-                    { root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 3, type: 'muMaj' }, { root: 7, type: 'alt7' },
-                    { root: 0, type: 'min11' }, { root: 8, type: 'maj9' }, { root: 5, type: 'dom13' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'min11' }, { root: 3, type: 'muMaj' }, { root: 5, type: 'lydDom' }, { root: 6, type: 'dim7' },
+                    { root: 0, type: 'min11' }, { root: 10, type: 'dom13' }, { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }
                 ],
                 chordsB: [
-                    { root: 8, type: 'maj9' }, { root: 10, type: 'dom13' }, { root: 0, type: 'min11' }, { root: 0, type: 'min9' },
+                    { root: 5, type: 'dom13' }, { root: 6, type: 'dim7' }, { root: 0, type: 'min11' }, { root: 3, type: 'muMaj' },
                     { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
                 ],
-                chordsC: [{ root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }],
+                chordsC: [{ root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 6, type: 'dim7' }, { root: 7, type: 'alt7' }],
                 compHits: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0],
                 clavPattern: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0],
                 brassHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-                bassLine: [0, 12, 0, 10, 5, 12, 7, 10, 0, 12, 10, 7, 5, 7, 3, 5],
-                bassLineB: [8, 20, 8, 15, 10, 22, 10, 17, 0, 12, 7, 10, 8, 7, 5, 7],
+                bassLine: [0, 0, 12, 0, 3, 5, 6, 0, 0, 0, 12, 10, 8, 7, 6, 5],
+                bassLineB: [5, 17, 5, 6, 18, 6, 0, 12, 8, 20, 7, 19, 0, 12, 6, 7],
                 phrasesA: [
-                    [0, _, 1, 1.5, 4, _, 3, 2, 4, _, 5, _, 4, _, _, null],
-                    [4, _, 5, 6, 8, _, _, 6, 5, _, 4, _, 2, _, _, null],
-                    [0, _, 1, 1.5, 4, _, 6, _, 8, _, _, 6, 5, _, 4, _],
-                    [6, 5, 4, 3, 2, _, 1.5, _, 0, _, _, _, null, null, null, null]
+                    [0, _, 4, _, 3, _, 0, _, 6, _, 5, 4, 1, _, 0, _],
+                    [4, _, 8, _, 6, _, 4, _, 9, _, 8, 6, 4, _, _, null],
+                    [0, _, 4, _, 6, _, 8, _, 9, _, 8, 6, 4, _, 6, _],
+                    [8, 6, 5, 4, 3, 1, 0, _, 4, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [6, _, _, 5, 8, _, 6, _, 5, _, 4, _, 2, _, _, null],
-                    [6, _, 8, _, 9, _, 8, 6, 4, _, _, _, null, null, null, null]
+                    [8, _, _, 6, 9, _, 8, _, 6, _, 4, _, 3, _, 4, _],
+                    [6, 8, 9, 11, 8, _, 6, 4, 0, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, 4, null, 3, 2, 0, null, null, null, 6, null, 5, 4, 2, null]
+                    [null, null, 6, null, 5, 4, 0, null, null, null, 8, null, 6, 5, 4, null]
                 ],
                 soloPhrases: [
-                    [0, 1, 2, 3, 4, _, 5, 4, 6, _, 8, _, 6, _, _, null],
-                    [8, _, 9, 8, 6, 5, 4, 3, 2, 3, 4, 2, 0, _, _, null]
+                    [0, 3, 4, 6, 8, _, 9, 8, 6, 4, 3, 4, 6, _, _, null],
+                    [8, 9, 11, 9, 8, 6, 5, 4, 3, 4, 6, 4, 0, _, _, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 1, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
 
             boss_chrono: {
-                bpm: 144, swing: 0.009, root: 58.27, style: 'steely_fusion', drumKit: 'jazz_ride',
-                leadVoice: 'minimoog', counterVoice: 'octave_guitar', soloVoice: 'minimoog', epType: 'wurli', useVibes: true, useOrgan: true,
-                sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
-                harmonySecs: [0, 1, 2, 4], harmonyInterval: 2,
-                scale: SCALES.dorian,
-                hmQuirk: { bpmAdd: 11, latinPerc: true, harmonyAll: true, brassAnswer: true },
+                // Ground-Up Redo Boss 8 (Chronos-Omega): 164 BPM Neo-Classical / Prog-Fusion Temporal Seraph Boss Theme!
+                bpm: 164, swing: 0.005, root: 55.0, style: 'chrono_seraph', drumKit: 'jazz_ride',
+                leadVoice: 'prog_synth_lead', counterVoice: 'fm_epiano', soloVoice: 'minimoog', epType: 'wurli', useVibes: true, useOrgan: true, useChoir: true,
+                sectionMap: ['A1', 'A2', 'B', 'Solo', 'B', 'A2', 'Coda', 'Solo'],
+                harmonySecs: [0, 1, 2, 3, 4, 5], harmonyInterval: 2,
+                scale: SCALES.harmMinor,
+                hmQuirk: { bpmAdd: 14, harmonyAll: true, brassAnswer: true, hmArp: true, slapPopBoost: true },
                 chordsA: [
-                    { root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' },
-                    { root: 3, type: 'maj9' }, { root: 10, type: 'sus13' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'mMaj9' }, { root: 7, type: 'phrDom' }, { root: 8, type: 'maj7s11' }, { root: 5, type: 'min11' },
+                    { root: 2, type: 'halfDim' }, { root: 7, type: 'alt7' }, { root: 0, type: 'mMaj9' }, { root: 6, type: 'dim7' }
                 ],
                 chordsB: [
-                    { root: 8, type: 'maj9' }, { root: 10, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 0, type: 'min11' },
-                    { root: 5, type: 'min9' }, { root: 7, type: 'alt7' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
+                    { root: 5, type: 'min11' }, { root: 10, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 8, type: 'maj7s11' },
+                    { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }, { root: 0, type: 'mMaj9' }, { root: 7, type: 'alt7' }
                 ],
-                chordsC: [{ root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }],
+                chordsC: [{ root: 0, type: 'mMaj9' }, { root: 8, type: 'maj7s11' }, { root: 5, type: 'min11' }, { root: 7, type: 'phrDom' }],
                 compHits: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0],
                 clavPattern: [1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0],
                 brassHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-                bassLine: [0, 12, 10, 7, 5, 12, 10, 7, 3, 15, 12, 10, 7, 10, 5, 2],
-                bassLineB: [8, 20, 15, 12, 10, 22, 17, 14, 3, 15, 10, 7, 5, 7, 10, 7],
+                bassLine: [0, 12, 11, 7, 7, 19, 14, 11, 8, 20, 15, 12, 5, 17, 12, 8],
+                bassLineB: [5, 17, 12, 8, 10, 22, 17, 14, 3, 15, 10, 7, 7, 19, 14, 11],
                 phrasesA: [
-                    [4, _, 6, _, 7, _, 9, _, 8.5, 9, 7, _, 4, _, _, null],
-                    [7, _, 6, _, 4, 3.5, 2, _, 2.5, _, 4, _, 0, _, _, null],
-                    [4, _, 6, _, 7, _, 11, _, 9, _, 7, _, 6, _, _, null],
-                    [9, _, 10.5, 11, 9, _, 7, _, 7, _, _, _, null, null, null, null]
+                    [11, _, 14, 12, 11, _, 8, 7, 6, 7, 8, 11, 7, _, 4, _],
+                    [5, 7, 8, 11, 12, _, 11, 8, 7, _, 6, _, 7, _, _, null],
+                    [11, _, 14, 15, 14, _, 12, 11, 12, _, 8, 7, 8, _, 4, _],
+                    [5, 4, 2, 1, 6, _, 7, _, 0, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [11, _, _, _, 12, _, 11, _, 9, _, _, _, 7, _, _, null],
-                    [11, 10.5, 9, 7, 6, _, 7, _, 7, _, _, _, null, null, null, null]
+                    [14, _, _, 12, 15, _, 14, _, 11, _, 12, _, 8, _, 7, _],
+                    [11, 12, 14, 15, 14, 12, 11, 8, 7, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, 7, _, 6, _, 4, _, null, null, 9, _, 7, _, 4, _]
+                    [4, 7, 11, 7, 6, 8, 11, 8, 5, 8, 12, 8, 4, 7, 11, 7]
                 ],
                 soloPhrases: [
-                    [2, 2.5, 4, 6, 7, _, 9, 7, 6, 7, 9, _, 7, _, _, null],
-                    [11, 10.5, 9, 7, 6, 4, 3.5, 2, 2.5, 4, 6, 7, 4, _, _, null]
+                    [0, 4, 7, 11, 14, 12, 11, 8, 7, 8, 11, 12, 14, _, _, null],
+                    [15, 14, 12, 11, 8, 7, 6, 7, 8, 11, 6, 7, 0, _, _, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
 
             boss_dyson: {
-                bpm: 146, swing: 0.010, root: 65.41, style: 'acid_jazz', drumKit: 'disco_funk',
-                leadVoice: 'octave_guitar', counterVoice: 'fusion_sax', soloVoice: 'steely_guitar', epType: 'rhodes', useVibes: true, useOrgan: true,
+                // Overhauled Boss 9 (Seraphim-Zero): 160 BPM Climactic Solar-God Boss Anthem (Choir + Organ + Twin Guitar/Sax!)
+                bpm: 160, swing: 0.008, root: 65.41, style: 'solar_anthem', drumKit: 'disco_funk',
+                leadVoice: 'prog_synth_lead', counterVoice: 'fusion_sax', soloVoice: 'steely_guitar', epType: 'rhodes', useVibes: true, useOrgan: true, useChoir: true,
                 sectionMap: ['A1', 'B', 'A2', 'Solo', 'B', 'Coda', 'A1', 'Solo'],
-                harmonySecs: [0, 1, 2, 4], harmonyInterval: 2,
+                harmonySecs: [0, 1, 2, 3, 4, 5, 6, 7], harmonyInterval: 2,
                 scale: SCALES.dorian,
-                hmQuirk: { bpmAdd: 13, fourOnFloor: true, brassAnswer: true, harmonyAll: true, slapPopBoost: true },
+                hmQuirk: { bpmAdd: 14, fourOnFloor: true, brassAnswer: true, harmonyAll: true, slapPopBoost: true, hmArp: true },
                 chordsA: [
-                    { root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 8, type: 'maj9' },
-                    { root: 5, type: 'min9' }, { root: 10, type: 'sus13' }, { root: 3, type: 'maj9' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 3, type: 'maj9' }, { root: 10, type: 'dom13' },
+                    { root: 5, type: 'dom13' }, { root: 8, type: 'maj7s11' }, { root: 10, type: 'sus13' }, { root: 7, type: 'alt7' }
                 ],
                 chordsB: [
-                    { root: 8, type: 'maj9' }, { root: 10, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 0, type: 'min11' },
-                    { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }, { root: 0, type: 'sus13' }, { root: 0, type: 'min11' }
+                    { root: 8, type: 'maj7s11' }, { root: 10, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 0, type: 'min11' },
+                    { root: 5, type: 'dom13' }, { root: 8, type: 'maj7s11' }, { root: 10, type: 'sus13' }, { root: 0, type: 'min11' }
                 ],
-                chordsC: [{ root: 0, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 3, type: 'maj9' }, { root: 7, type: 'alt7' }],
+                chordsC: [{ root: 0, type: 'min11' }, { root: 8, type: 'maj7s11' }, { root: 5, type: 'dom13' }, { root: 7, type: 'alt7' }],
                 compHits: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0],
                 clavPattern: [1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0],
                 brassHits: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-                bassLine: [0, 12, null, 7, 5, 17, null, 10, 3, 15, null, 10, 8, 12, 7, 5],
-                bassLineB: [8, 20, null, 15, 10, 22, null, 17, 3, 15, 0, 12, 8, 7, 5, 7],
+                bassLine: [0, 12, 7, 12, 8, 20, 15, 8, 3, 15, 10, 3, 10, 22, 7, 19],
+                bassLineB: [8, 20, 15, 8, 10, 22, 17, 10, 3, 15, 0, 12, 5, 17, 10, 12],
                 phrasesA: [
-                    [4, _, _, 6, 7, _, 9, _, 11, _, 9, _, 7, _, _, null],
-                    [9, _, _, 7, 6, _, 4, 3.5, 2, _, 2.5, _, 4, _, _, null],
-                    [4, _, _, 6, 7, _, 9, _, 11, _, 14, _, 12, _, 11, _],
-                    [11, 10.5, 9, 7, 6, _, 7, _, 7, _, _, _, null, null, null, null]
+                    [7, _, 9, 11, 14, _, 11, _, 9, _, 7, _, 6, _, 4, _],
+                    [6, _, 7, 9, 11, _, 9, _, 7, _, 11, _, 14, _, _, null],
+                    [14, _, 16, 15, 14, _, 11, _, 12, _, 9, _, 7, _, 6, _],
+                    [7, 9, 11, 12, 14, _, 11, _, 7, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [11, _, _, _, 12, _, 14, _, 11, _, _, _, 9, _, _, null],
-                    [12, 11, 9, 7, 6, _, 7, _, 7, _, _, _, null, null, null, null]
+                    [14, _, _, 16, 18, _, 16, _, 14, _, 11, _, 9, _, 11, _],
+                    [16, 14, 12, 11, 9, _, 11, _, 14, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, 11, _, 9, _, 7, _, null, null, 9, _, 7, _, 4, _]
+                    [4, null, 7, null, 11, _, 9, _, 6, null, 9, null, 11, _, 7, _]
                 ],
                 soloPhrases: [
-                    [4, 6, 7, _, 9, 9.5, 11, _, 12, 11, 9, 7, 9, _, _, null],
-                    [14, _, 12, 11, 9, 7, 6, 4, 3.5, 2, 2.5, 4, 7, _, _, null]
+                    [4, 6, 7, 9, 11, 14, 16, 14, 11, 9, 11, 14, 11, _, _, null],
+                    [18, 16, 14, 11, 12, 11, 9, 7, 6, 7, 9, 11, 7, _, _, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
             },
 
             tensor_level: {
-                bpm: 136, swing: 0.014, root: 43.65, style: 'acid_jazz', drumKit: 'latin_funk',
-                leadVoice: 'fusion_sax', counterVoice: 'octave_guitar', soloVoice: 'minimoog', epType: 'rhodes', useVibes: true, useOrgan: true,
+                // Rewritten Tensor Level (20-Floor Odyssey): Hypnotic Dark-Cyberpunk / Progressive DnB-Fusion (Zero Bowser's Castle / Zero Cowbell!)
+                bpm: 140, swing: 0.008, root: 46.25, style: 'tensor_odyssey', drumKit: 'electro_clock',
+                leadVoice: 'octave_guitar', counterVoice: 'fm_epiano', soloVoice: 'fusion_sax', epType: 'rhodes', useVibes: true, useChoir: true,
                 sectionMap: ['A1', 'A2', 'B', 'Breakdown', 'Solo', 'B', 'A2', 'Coda'],
-                harmonySecs: [1, 2, 5, 6], harmonyInterval: 2,
-                scale: SCALES.spanish,
+                harmonySecs: [1, 2, 4, 5, 6, 7], harmonyInterval: 2,
+                scale: SCALES.dorian,
                 chordsA: [
-                    { root: 0, type: 'phrDom' }, { root: 1, type: 'maj7s11' }, { root: 0, type: 'phrDom' }, { root: 5, type: 'min11' },
-                    { root: 8, type: 'maj9' }, { root: 7, type: 'alt7' }, { root: 0, type: 'min9' }, { root: 7, type: 'phrDom' }
+                    { root: 0, type: 'min11' }, { root: 0, type: 'mMaj9' }, { root: 3, type: 'maj7s11' }, { root: 5, type: 'dom13' },
+                    { root: 8, type: 'maj7s11' }, { root: 10, type: 'sus13' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
                 ],
                 chordsB: [
-                    { root: 5, type: 'min11' }, { root: 10, type: 'dom13' }, { root: 1, type: 'maj7s11' }, { root: 0, type: 'phrDom' },
-                    { root: 2, type: 'halfDim' }, { root: 7, type: 'alt7' }, { root: 0, type: 'min9' }, { root: 0, type: 'mMaj9' }
+                    { root: 8, type: 'maj7s11' }, { root: 10, type: 'dom13' }, { root: 0, type: 'min11' }, { root: 5, type: 'lydDom' },
+                    { root: 3, type: 'maj9' }, { root: 8, type: 'maj7s11' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'alt7' }
                 ],
                 chordsC: [
-                    { root: 0, type: 'phrDom' }, { root: 1, type: 'maj7s11' }, { root: 5, type: 'min11' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'min11' }, { root: 3, type: 'maj7s11' }, { root: 8, type: 'maj7s11' }, { root: 5, type: 'dom13' }
                 ],
                 compHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0],
                 clavPattern: [1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0],
-                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-                bassLine: [0, null, 12, null, 1, null, 13, null, 5, null, 12, null, 8, null, 7, 5],
-                bassLineB: [5, null, 17, null, 10, null, 5, null, 1, null, 8, null, 0, null, 7, 12],
+                brassHits: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+                bassLine: [0, null, 12, 7, 0, null, 11, 7, 3, null, 15, 10, 5, 12, 10, 7],
+                bassLineB: [8, null, 20, 15, 10, null, 22, 17, 0, 12, 7, 10, 3, 10, 7, 5],
                 phrasesA: [
-                    [4, _, _, _, 5, _, 4, _, 3, _, 2, _, 1, _, _, null],
-                    [null, null, 0, 1, 2, _, 3, _, 2, _, 1, _, 0, _, _, null],
-                    [4, _, _, _, 6, _, 5, _, 4, _, 2, _, 1, _, _, null],
-                    [2, _, 1, _, 0, _, -1, _, 0, _, _, _, null, null, null, null],
-                    [7, _, _, _, 6, _, 5, _, 4, _, 3, _, 2, _, _, null],
-                    [null, null, 1, 2, 4, _, 3, _, 2, _, _, _, null, null, null, null],
-                    [4, _, 5, _, 7, _, _, _, 8, _, 7, _, 5, _, _, null],
-                    [6, _, 5, _, 4, _, 2, _, 4, _, _, _, null, null, null, null]
+                    [4, _, _, 6, 7, _, 11, _, 9, _, 7, _, 6, _, 4, _],
+                    [null, null, 0, 2, 4, _, 6, _, 7, _, 6, _, 2, _, _, null],
+                    [4, _, _, 6, 7, _, 14, _, 12, _, 11, _, 9, _, 7, _],
+                    [6, _, 7, _, 4, _, 2, _, 0, _, _, _, _, _, null, null],
+                    [9, _, _, 11, 12, _, 11, _, 9, _, 7, _, 6, _, _, null],
+                    [4, _, 6, _, 7, _, 9, _, 6, _, 4, _, _, _, null, null],
+                    [0, 2, 4, 6, 7, _, 9, _, 11, _, 14, _, 12, _, 11, _],
+                    [9, _, 7, 6, 4, _, 6, _, 7, _, _, _, null, null, null, null]
                 ],
                 phrasesB: [
-                    [8, _, _, _, 7, _, 5, _, 4, _, _, _, 2, _, _, null],
-                    [3, _, 4, _, 5, _, _, _, 4, _, 2, _, 1, _, _, null],
-                    [8, _, _, 9, 8, _, 7, _, 5, _, 4, _, 2, _, _, null],
-                    [3, _, 2, _, 1, _, 0, _, _, _, null, null, null, null, null, null]
+                    [11, _, _, _, 12, _, 14, _, 11, _, 9, _, 7, _, _, null],
+                    [6, _, 7, _, 9, _, 11, _, 9, _, 7, _, 4, _, _, null],
+                    [11, _, 14, _, 16, _, 14, _, 12, _, 11, _, 9, _, 7, _],
+                    [9, _, 7, _, 6, _, 4, _, 7, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, null, null, 2, _, 1, _, null, null, null, null, 4, _, 2, _],
-                    [null, null, null, null, 5, _, 4, _, null, null, null, null, 2, _, 0, _]
+                    [0, null, 4, null, 7, _, 6, _, 2, null, 6, null, 9, _, 7, _],
+                    [4, null, 7, null, 11, _, 9, _, 6, null, 9, null, 12, _, 11, _]
                 ],
                 soloPhrases: [
-                    [0, 1, 2, 3, 4, _, 5, 4, 3, 2, 1, 2, 0, _, _, null],
-                    [4, 5, 6, 7, 8, _, 7, 5, 4, _, 5, _, 7, _, _, null],
-                    [9, _, 8, 7, 5, 4, 3, 2, 1, 2, 4, _, 2, _, _, null],
-                    [3, 2, 1, 0, -1, 0, _, _, null, null, null, null, null, null, null, null]
+                    [4, 6, 7, 9, 11, _, 9, 7, 6, 4, 2, 4, 6, _, _, null],
+                    [7, 9, 11, 12, 14, _, 16, 14, 12, 11, 9, 11, 14, _, _, null],
+                    [16, _, 14, 12, 11, 9, 7, 6, 7, 9, 11, _, 7, _, _, null],
+                    [9, 7, 6, 4, 2, 0, 2, 4, 0, _, _, _, null, null, null, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1] }
             },
 
             boss_tensor: {
-                bpm: 152, swing: 0.008, root: 58.27, style: 'steely_fusion', drumKit: 'jazz_ride',
-                leadVoice: 'steely_guitar', counterVoice: 'fusion_sax', soloVoice: 'minimoog', epType: 'wurli', useVibes: true, useOrgan: true,
+                // Rewritten Tensor Final Boss Theme: Syncopated Wide-Interval Hooks, Moving Bass Riff & Emotional Chorus Lift
+                bpm: 158, swing: 0.008, root: 55.0, style: 'omega_symphony', drumKit: 'purdie_shuffle',
+                leadVoice: 'octave_guitar', counterVoice: 'fusion_sax', soloVoice: 'prog_synth_lead', epType: 'rhodes', useVibes: true, useOrgan: true, useChoir: true,
                 sectionMap: ['A1', 'A2', 'B', 'Solo', 'B', 'A2', 'Coda', 'Solo'],
-                harmonySecs: [0, 1, 2, 4, 5], harmonyInterval: 2,
-                scale: SCALES.spanish,
+                harmonySecs: [1, 2, 4, 5, 6], harmonyInterval: 4,
+                scale: SCALES.dorian,
                 chordsA: [
-                    { root: 0, type: 'phrDom' }, { root: 1, type: 'maj7s11' }, { root: 10, type: 'dom13' }, { root: 0, type: 'phrDom' },
-                    { root: 5, type: 'min11' }, { root: 8, type: 'maj9' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'min11' }, { root: 1, type: 'maj7s11' }, { root: 6, type: 'dim7' }, { root: 7, type: 'alt7' },
+                    { root: 0, type: 'mMaj9' }, { root: 3, type: 'maj7s11' }, { root: 2, type: 'halfDim' }, { root: 7, type: 'phrDom' }
                 ],
                 chordsB: [
-                    { root: 8, type: 'maj9' }, { root: 7, type: 'phrDom' }, { root: 0, type: 'min9' }, { root: 5, type: 'min11' },
-                    { root: 1, type: 'maj7s11' }, { root: 7, type: 'alt7' }, { root: 0, type: 'phrDom' }, { root: 0, type: 'min11' }
+                    { root: 8, type: 'maj7s11' }, { root: 10, type: 'lydDom' }, { root: 3, type: 'maj9' }, { root: 9, type: 'alt7' },
+                    { root: 2, type: 'min11' }, { root: 5, type: 'dom13' }, { root: 0, type: 'min11' }, { root: 7, type: 'alt7' }
                 ],
                 chordsC: [
-                    { root: 0, type: 'phrDom' }, { root: 1, type: 'maj7s11' }, { root: 5, type: 'min11' }, { root: 7, type: 'alt7' }
+                    { root: 0, type: 'min11' }, { root: 3, type: 'maj7s11' }, { root: 5, type: 'lydDom' }, { root: 7, type: 'alt7' }
                 ],
-                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-                clavPattern: [1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0],
-                brassHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1],
-                bassLine: [0, 12, null, 7, 1, 13, null, 8, 5, 17, 12, 10, 8, 7, 5, 7],
-                bassLineB: [8, 20, null, 15, 7, 19, null, 14, 1, 13, 8, 12, 0, 12, 7, 10],
+                compHits: [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1],
+                clavPattern: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0],
+                brassHits: [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+                // Melodic Riffing Bassline (arpeggiates & walks instead of static root-octave pumping)
+                bassLine: [0, null, 7, 10, 12, null, 10, 7, 1, null, 8, 12, 13, 12, 8, 5],
+                bassLineB: [8, null, 15, 20, 10, null, 17, 22, 3, null, 10, 15, 9, 7, 5, 3],
+                // Syncopated Hook with Dramatic Rests & Wide Octave/Fifth Intervals
                 phrasesA: [
-                    [7, _, _, 6, 5, _, 4, _, 3, _, 2, _, 4, _, _, null],
-                    [null, null, 2, 4, 5, _, 7, _, 5, _, 4, _, 2, _, _, null],
-                    [7, _, _, 8, 9, _, 8, _, 7, _, 5, _, 4, _, _, null],
-                    [5, _, 4, _, 2, _, 1, _, 0, _, _, _, null, null, null, null],
-                    [9, _, _, 8, 7, _, 5, _, 6, _, 7, _, 4, _, _, null],
-                    [5, _, 7, _, 8, _, 7, _, 4, _, _, _, null, null, null, null],
-                    [7, _, 8, _, 9, _, 11, _, 9, _, 8, _, 7, _, _, null],
-                    [8, _, 7, _, 5, _, 4, _, 4, _, _, _, null, null, null, null]
+                    [0, _, 7, _, 11, _, _, null, 10, _, 7, _, 4, _, _, null],
+                    [null, null, 1, _, 5, _, 8, _, 11, _, _, _, 7, _, _, null],
+                    [0, _, 7, _, 14, _, _, null, 13, _, 11, _, 7, _, 4, _],
+                    [6, _, _, 4, 2, _, 0, _, _, _, null, null, null, null, null, null],
+                    [4, _, 11, _, 14, _, _, null, 13, _, 11, _, 9, _, _, null],
+                    [null, null, 6, _, 9, _, 11, _, 14, _, 11, _, 7, _, _, null],
+                    [0, _, 4, _, 7, _, 11, _, 14, _, 16, _, 18, _, _, null],
+                    [16, _, 14, _, 11, _, 9, _, 7, _, _, _, null, null, null, null]
                 ],
+                // Soaring, Emotional Zed2 / Final Ascent Chorus Melody
                 phrasesB: [
-                    [11, _, _, _, 9, _, 8, _, 7, _, _, _, 4, _, _, null],
-                    [5, _, 7, _, 8, _, 7, _, 5, _, 4, _, 2, _, _, null],
-                    [11, _, 12, _, 11, _, 9, _, 8, _, 7, _, 5, _, _, null],
-                    [7, _, 5, _, 4, _, 2, _, 4, _, _, _, null, null, null, null]
+                    [11, _, _, _, _, _, 14, _, 13, _, _, _, 9, _, _, null],
+                    [7, _, _, 9, 11, _, _, _, 14, _, _, _, 16, _, _, null],
+                    [18, _, _, _, _, _, 16, _, 14, _, _, _, 11, _, 9, _],
+                    [7, _, _, 6, 4, _, 6, _, 7, _, _, _, null, null, null, null]
                 ],
                 counterPhrases: [
-                    [null, null, 4, _, 2, _, 1, _, null, null, 5, _, 4, _, 2, _],
-                    [null, null, 7, _, 5, _, 4, _, null, null, 8, _, 7, _, 4, _]
+                    [null, null, null, null, 7, _, 4, _, null, null, null, null, 11, _, 7, _],
+                    [null, null, 11, _, 9, _, 7, _, null, null, 14, _, 11, _, 9, _]
                 ],
                 soloPhrases: [
-                    [4, 5, 7, _, 8, 7, 5, 4, 3, 2, 1, 2, 4, _, _, null],
-                    [7, 8, 9, 11, _, 9, 8, 7, 8, _, 9, _, 11, _, _, null],
-                    [12, _, 11, 9, 8, 7, 5, 4, 5, _, 7, _, 4, _, _, null],
-                    [5, 4, 2, 1, 0, _, _, _, null, null, null, null, null, null, null, null]
+                    [0, _, 4, 7, 11, _, 9, 7, 6, _, 4, 2, 4, _, _, null],
+                    [4, _, 7, 11, 14, _, 16, 14, 13, _, 11, 9, 11, _, _, null],
+                    [18, _, 16, 14, 11, _, 9, 7, 9, _, 11, 14, 7, _, _, null],
+                    [6, 7, 9, 11, 7, 6, 4, 2, 0, _, _, _, null, null, null, null]
                 ],
-                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1], hat: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] }
+                drums: { kick: [1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0], snare: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1], hat: [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1] }
             }
         };
 
@@ -2886,6 +2901,7 @@
             masterBus: null,
             musicBus: null,
             sfxBus: null,
+            panBuses: null,
             musicVol: 1.0,
             sfxVol: 1.0,
             noiseBuffer: null,
@@ -2903,19 +2919,49 @@
                     const AudioCtx = window.AudioContext || window.webkitAudioContext;
                     if (AudioCtx) {
                         this.ctx = new AudioCtx();
+
+                        // 1. Punchy Master Bus Compressor
                         const comp = this.ctx.createDynamicsCompressor();
-                        comp.threshold.value = -14;
-                        comp.knee.value = 18;
-                        comp.ratio.value = 3.5;
-                        comp.attack.value = 0.005;
-                        comp.release.value = 0.18;
+                        comp.threshold.value = -15;
+                        comp.knee.value = 14;
+                        comp.ratio.value = 5.0;
+                        comp.attack.value = 0.004;
+                        comp.release.value = 0.16;
                         comp.connect(this.ctx.destination);
                         this.masterBus = comp;
 
+                        // 2. Pure, Noise-Free Warm Mastering Bus (Bass Shelf + Analog 6.8kHz Low-Pass Roll-Off, Zero WaveShaper Buzz!)
                         this.musicBus = this.ctx.createGain();
                         this.musicBus.gain.value = this.musicVol;
-                        this.musicBus.connect(this.masterBus);
 
+                        const bassShelf = this.ctx.createBiquadFilter();
+                        bassShelf.type = 'lowshelf';
+                        bassShelf.frequency.value = 110;
+                        bassShelf.gain.value = 2.4;
+
+                        const warmRollOff = this.ctx.createBiquadFilter();
+                        warmRollOff.type = 'lowpass';
+                        warmRollOff.frequency.value = 6800;
+                        warmRollOff.Q.value = 0.5;
+
+                        this.musicBus.connect(bassShelf);
+                        bassShelf.connect(warmRollOff);
+                        warmRollOff.connect(this.masterBus);
+
+                        // Pre-allocated Stereo Panner Buses
+                        this.panBuses = {};
+                        [-0.5, -0.25, 0, 0.25, 0.5].forEach(pv => {
+                            if (this.ctx.createStereoPanner) {
+                                const pn = this.ctx.createStereoPanner();
+                                pn.pan.value = pv;
+                                pn.connect(this.musicBus);
+                                this.panBuses[pv] = pn;
+                            } else {
+                                this.panBuses[pv] = this.musicBus;
+                            }
+                        });
+
+                        // 3. SFX Bus
                         this.sfxBus = this.ctx.createGain();
                         this.sfxBus.gain.value = this.sfxVol;
                         this.sfxBus.connect(this.masterBus);
@@ -2965,6 +3011,15 @@
 
             musicOut() {
                 return this.musicBus || this.masterBus || (this.ctx && this.ctx.destination);
+            },
+
+            makePanner(panVal = 0) {
+                if (!this.panBuses) return this.musicOut();
+                if (panVal <= -0.38) return this.panBuses[-0.5] || this.musicOut();
+                if (panVal <= -0.12) return this.panBuses[-0.25] || this.musicOut();
+                if (panVal >= 0.38) return this.panBuses[0.5] || this.musicOut();
+                if (panVal >= 0.12) return this.panBuses[0.25] || this.musicOut();
+                return this.panBuses[0] || this.musicOut();
             },
 
             setMood(moodKey) {
@@ -3068,28 +3123,29 @@
                     const filter = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
                     const tineGain = this.ctx.createGain();
+                    const panNode = this.makePanner(((Math.round(freq) % 5) - 2) * 0.18);
 
                     oscMain.type = isWurli ? 'triangle' : 'sine';
                     oscMain.frequency.setValueAtTime(freq, time);
 
-                    oscTine.type = isWurli ? 'sawtooth' : 'triangle';
+                    oscTine.type = 'sine';
                     oscTine.frequency.setValueAtTime(freq * (isWurli ? 3.0 : 2.0), time);
-                    tineGain.gain.setValueAtTime(isWurli ? 0.08 : 0.13, time);
-                    tineGain.gain.exponentialRampToValueAtTime(0.005, time + Math.min(0.16, duration));
+                    tineGain.gain.setValueAtTime(isWurli ? 0.12 : 0.16, time);
+                    tineGain.gain.exponentialRampToValueAtTime(0.001, time + Math.min(0.14, duration));
 
                     filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(isWurli ? 1750 : 1300, time);
+                    filter.frequency.setValueAtTime(isWurli ? 1850 : 1400, time);
                     filter.frequency.exponentialRampToValueAtTime(520, time + duration);
 
                     gain.gain.setValueAtTime(0.0001, time);
-                    gain.gain.linearRampToValueAtTime(gainVal, time + 0.012);
+                    gain.gain.linearRampToValueAtTime(gainVal, time + 0.010);
                     gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
 
                     oscMain.connect(filter);
                     oscTine.connect(tineGain);
                     tineGain.connect(filter);
                     filter.connect(gain);
-                    gain.connect(this.musicOut());
+                    gain.connect(panNode);
 
                     const stopAt = time + duration + 0.03;
                     oscMain.onended = () => {
@@ -3109,6 +3165,7 @@
                     const gain = this.ctx.createGain();
                     const lfo = this.ctx.createOscillator();
                     const lfoGain = this.ctx.createGain();
+                    const panNode = this.makePanner(-0.25);
 
                     lfo.type = 'sine';
                     lfo.frequency.setValueAtTime(6.2, time);
@@ -3125,7 +3182,7 @@
                     gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
 
                     filter.connect(gain);
-                    gain.connect(this.musicOut());
+                    gain.connect(panNode);
 
                     const oscs = [];
                     freqs.forEach((f) => {
@@ -3153,6 +3210,51 @@
                 } catch (e) { }
             },
 
+            // Clean Velvet Formant Choir Pad (Uses triangle + sine voices instead of buzzing sawtooths!)
+            playCyberChoirPad(time, freqs, duration, gainVal = 0.010) {
+                if (this.muted || !this.ctx) return;
+                try {
+                    const filter = this.ctx.createBiquadFilter();
+                    const gain = this.ctx.createGain();
+                    const panNode = this.makePanner(0.25);
+
+                    filter.type = 'lowpass';
+                    filter.frequency.setValueAtTime(1350, time);
+                    filter.Q.setValueAtTime(1.2, time);
+
+                    const perVoiceGain = gainVal / Math.max(1, freqs.length);
+                    gain.gain.setValueAtTime(0.0001, time);
+                    gain.gain.linearRampToValueAtTime(perVoiceGain, time + duration * 0.25);
+                    gain.gain.setValueAtTime(perVoiceGain * 0.85, time + duration * 0.75);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+                    filter.connect(gain);
+                    gain.connect(panNode);
+
+                    const oscs = [];
+                    freqs.forEach((f) => {
+                        const o1 = this.ctx.createOscillator();
+                        const o2 = this.ctx.createOscillator();
+                        o1.type = 'triangle';
+                        o2.type = 'sine';
+                        o1.frequency.setValueAtTime(f * 0.998, time);
+                        o2.frequency.setValueAtTime(f * 2.002, time);
+                        o1.connect(filter);
+                        o2.connect(filter);
+                        o1.start(time);
+                        o2.start(time);
+                        o1.stop(time + duration + 0.04);
+                        o2.stop(time + duration + 0.04);
+                        oscs.push(o1, o2);
+                    });
+                    if (oscs[0]) {
+                        oscs[0].onended = () => {
+                            try { oscs.forEach(o => o.disconnect()); filter.disconnect(); gain.disconnect(); } catch (e) { }
+                        };
+                    }
+                } catch (e) { }
+            },
+
             playVibraphone(time, freq, duration, gainVal = 0.015) {
                 if (this.muted || !this.ctx) return;
                 try {
@@ -3160,6 +3262,7 @@
                     const oscHarm = this.ctx.createOscillator();
                     const harmGain = this.ctx.createGain();
                     const gain = this.ctx.createGain();
+                    const panNode = this.makePanner(0.25);
 
                     osc1.type = 'sine';
                     osc1.frequency.setValueAtTime(freq, time);
@@ -3175,7 +3278,7 @@
                     osc1.connect(gain);
                     oscHarm.connect(harmGain);
                     harmGain.connect(gain);
-                    gain.connect(this.musicOut());
+                    gain.connect(panNode);
 
                     const stopAt = time + duration + 0.03;
                     osc1.onended = () => {
@@ -3188,15 +3291,16 @@
                 } catch (e) { }
             },
 
+            // Clean Warm Strings Pad (Triangle + Gentle Low-Pass Sweep, zero raw sawtooth buzz)
             playDiscoStringsPad(time, freqs, duration, gainVal = 0.011) {
                 if (this.muted || !this.ctx) return;
                 try {
                     const filter = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
                     filter.type = 'lowpass';
-                    filter.frequency.setValueAtTime(650, time);
-                    filter.frequency.exponentialRampToValueAtTime(2000, time + duration * 0.45);
-                    filter.frequency.exponentialRampToValueAtTime(850, time + duration);
+                    filter.frequency.setValueAtTime(580, time);
+                    filter.frequency.exponentialRampToValueAtTime(1550, time + duration * 0.45);
+                    filter.frequency.exponentialRampToValueAtTime(720, time + duration);
 
                     gain.gain.setValueAtTime(0.0001, time);
                     gain.gain.linearRampToValueAtTime(gainVal, time + duration * 0.30);
@@ -3208,8 +3312,8 @@
                     const oscs = [];
                     freqs.forEach((f, idx) => {
                         const o = this.ctx.createOscillator();
-                        o.type = 'sawtooth';
-                        o.frequency.setValueAtTime(f * (idx % 2 === 0 ? 1.003 : 0.997), time);
+                        o.type = 'triangle';
+                        o.frequency.setValueAtTime(f * (idx % 2 === 0 ? 1.002 : 0.998), time);
                         o.connect(filter);
                         o.start(time);
                         o.stop(time + duration + 0.04);
@@ -3223,20 +3327,21 @@
                 } catch (e) { }
             },
 
-            playClavinetFunk(time, freq, duration, gainVal = 0.015) {
+            playClavinetFunk(time, freq, duration, gainVal = 0.014) {
                 if (this.muted || !this.ctx) return;
                 try {
                     const osc = this.ctx.createOscillator();
                     const wahFilter = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
+                    const panNode = this.makePanner(0.25);
 
-                    osc.type = 'sawtooth';
+                    osc.type = 'triangle';
                     osc.frequency.setValueAtTime(freq, time);
 
                     wahFilter.type = 'bandpass';
-                    wahFilter.Q.setValueAtTime(3.6, time);
+                    wahFilter.Q.setValueAtTime(3.2, time);
                     wahFilter.frequency.setValueAtTime(480, time);
-                    wahFilter.frequency.exponentialRampToValueAtTime(2250, time + 0.032);
+                    wahFilter.frequency.exponentialRampToValueAtTime(2100, time + 0.032);
                     wahFilter.frequency.exponentialRampToValueAtTime(650, time + duration);
 
                     gain.gain.setValueAtTime(0.0001, time);
@@ -3245,7 +3350,7 @@
 
                     osc.connect(wahFilter);
                     wahFilter.connect(gain);
-                    gain.connect(this.musicOut());
+                    gain.connect(panNode);
 
                     osc.onended = () => {
                         try { osc.disconnect(); wahFilter.disconnect(); gain.disconnect(); } catch (e) { }
@@ -3262,6 +3367,7 @@
                     const osc2 = this.ctx.createOscillator();
                     const filter = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
+                    const panNode = this.makePanner(-0.25);
 
                     osc1.type = 'sawtooth';
                     osc2.type = 'triangle';
@@ -3272,8 +3378,8 @@
                     filter.type = 'lowpass';
                     filter.Q.setValueAtTime(2.0, time);
                     filter.frequency.setValueAtTime(380, time);
-                    filter.frequency.exponentialRampToValueAtTime(2600, time + 0.04);
-                    filter.frequency.exponentialRampToValueAtTime(950, time + duration);
+                    filter.frequency.exponentialRampToValueAtTime(2500, time + 0.04);
+                    filter.frequency.exponentialRampToValueAtTime(920, time + duration);
 
                     gain.gain.setValueAtTime(0.0001, time);
                     gain.gain.linearRampToValueAtTime(gainVal, time + 0.015);
@@ -3282,7 +3388,7 @@
                     osc1.connect(filter);
                     osc2.connect(filter);
                     filter.connect(gain);
-                    gain.connect(this.musicOut());
+                    gain.connect(panNode);
 
                     const stopAt = time + duration + 0.02;
                     osc1.onended = () => {
@@ -3295,7 +3401,8 @@
                 } catch (e) { }
             },
 
-            playJazzBass(time, freq, duration, gainVal = 0.072, isSlapPop = false) {
+            // Clean, Punchy Sub + Triangle Bass (Zero low-frequency sawtooth/square buzz!)
+            playJazzBass(time, freq, duration, gainVal = 0.075, isSlapPop = false) {
                 if (this.muted || !this.ctx) return;
                 try {
                     const oscSub = this.ctx.createOscillator();
@@ -3305,16 +3412,16 @@
 
                     oscSub.type = 'sine';
                     oscSub.frequency.setValueAtTime(freq, time);
-                    oscGrowl.type = isSlapPop ? 'sawtooth' : 'triangle';
-                    oscGrowl.frequency.setValueAtTime(freq, time);
+                    oscGrowl.type = 'triangle';
+                    oscGrowl.frequency.setValueAtTime(freq * (isSlapPop ? 2.0 : 1.0), time);
 
                     filter.type = 'lowpass';
-                    filter.Q.setValueAtTime(isSlapPop ? 3.2 : 1.4, time);
-                    filter.frequency.setValueAtTime(isSlapPop ? 1450 : 540, time);
-                    filter.frequency.exponentialRampToValueAtTime(165, time + duration);
+                    filter.Q.setValueAtTime(isSlapPop ? 2.8 : 1.4, time);
+                    filter.frequency.setValueAtTime(isSlapPop ? 1350 : 540, time);
+                    filter.frequency.exponentialRampToValueAtTime(160, time + duration);
 
                     gain.gain.setValueAtTime(0.0001, time);
-                    gain.gain.linearRampToValueAtTime(gainVal, time + 0.009);
+                    gain.gain.linearRampToValueAtTime(gainVal, time + 0.008);
                     gain.gain.exponentialRampToValueAtTime(0.0001, time + duration);
 
                     oscSub.connect(filter);
@@ -3333,6 +3440,7 @@
                 } catch (e) { }
             },
 
+            // Clean Stereo Unison Lead Synth (No sustained FM sideband buzz!)
             playSmoothLead(time, freq, duration, gainVal = 0.032, voiceType = 'octave_guitar') {
                 if (this.muted || !this.ctx) return;
                 try {
@@ -3341,9 +3449,10 @@
                     const octGain = this.ctx.createGain();
                     const filter = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
+                    const panNode = this.makePanner(voiceType === 'prog_synth_lead' ? 0.25 : -0.25);
 
-                    let attackTime = 0.014;
-                    let sustainLevel = 0.72;
+                    let attackTime = 0.012;
+                    let sustainLevel = 0.74;
 
                     if (voiceType === 'flute_lead') {
                         osc.type = 'sine';
@@ -3353,7 +3462,7 @@
                         filter.type = 'lowpass';
                         filter.frequency.setValueAtTime(1950, time);
                         filter.Q.setValueAtTime(1.2, time);
-                        attackTime = 0.026;
+                        attackTime = 0.024;
                         sustainLevel = 0.82;
                     } else if (voiceType === 'muted_trumpet') {
                         osc.type = 'sawtooth';
@@ -3361,83 +3470,103 @@
                         oscOct.frequency.setValueAtTime(freq * 1.002, time);
                         octGain.gain.setValueAtTime(0.30, time);
                         filter.type = 'bandpass';
-                        filter.Q.setValueAtTime(2.8, time);
+                        filter.Q.setValueAtTime(2.6, time);
                         filter.frequency.setValueAtTime(620, time);
                         filter.frequency.exponentialRampToValueAtTime(1650, time + Math.min(0.08, duration * 0.35));
                         filter.frequency.exponentialRampToValueAtTime(920, time + duration);
-                        attackTime = 0.018;
+                        attackTime = 0.016;
                         sustainLevel = 0.78;
                     } else if (voiceType === 'clean_chorus_gtr') {
                         osc.type = 'triangle';
-                        oscOct.type = 'sawtooth';
+                        oscOct.type = 'triangle';
                         oscOct.frequency.setValueAtTime(freq * 1.004, time);
-                        octGain.gain.setValueAtTime(0.22, time);
+                        octGain.gain.setValueAtTime(0.45, time);
                         filter.type = 'lowpass';
-                        filter.Q.setValueAtTime(1.8, time);
-                        filter.frequency.setValueAtTime(2300, time);
+                        filter.Q.setValueAtTime(1.6, time);
+                        filter.frequency.setValueAtTime(2200, time);
                         filter.frequency.exponentialRampToValueAtTime(750, time + duration);
                         attackTime = 0.008;
-                        sustainLevel = 0.55;
+                        sustainLevel = 0.58;
                     } else if (voiceType === 'octave_guitar') {
                         osc.type = 'triangle';
                         oscOct.type = 'sine';
                         oscOct.frequency.setValueAtTime(freq * 2.0, time);
-                        octGain.gain.setValueAtTime(0.34, time);
+                        octGain.gain.setValueAtTime(0.36, time);
                         filter.type = 'lowpass';
-                        filter.frequency.setValueAtTime(1650, time);
+                        filter.frequency.setValueAtTime(1700, time);
                         filter.frequency.exponentialRampToValueAtTime(780, time + duration);
-                        filter.Q.setValueAtTime(1.5, time);
+                        filter.Q.setValueAtTime(1.4, time);
                         attackTime = 0.010;
-                        sustainLevel = 0.62;
+                        sustainLevel = 0.64;
                     } else if (voiceType === 'fusion_sax') {
                         osc.type = 'sawtooth';
                         oscOct.type = 'triangle';
-                        oscOct.frequency.setValueAtTime(freq * 1.004, time);
+                        oscOct.frequency.setValueAtTime(freq * 1.003, time);
                         octGain.gain.setValueAtTime(0.35, time);
                         filter.type = 'lowpass';
                         filter.frequency.setValueAtTime(950, time);
-                        filter.frequency.exponentialRampToValueAtTime(2450, time + Math.min(0.06, duration * 0.4));
-                        filter.frequency.exponentialRampToValueAtTime(1150, time + duration);
-                        filter.Q.setValueAtTime(2.6, time);
-                        attackTime = 0.018;
+                        filter.frequency.exponentialRampToValueAtTime(2350, time + Math.min(0.06, duration * 0.4));
+                        filter.frequency.exponentialRampToValueAtTime(1100, time + duration);
+                        filter.Q.setValueAtTime(2.4, time);
+                        attackTime = 0.016;
                         sustainLevel = 0.80;
                     } else if (voiceType === 'minimoog') {
                         osc.type = 'sawtooth';
-                        oscOct.type = 'square';
-                        oscOct.frequency.setValueAtTime(freq * 0.997, time);
-                        octGain.gain.setValueAtTime(0.28, time);
+                        oscOct.type = 'triangle';
+                        oscOct.frequency.setValueAtTime(freq * 0.5, time);
+                        octGain.gain.setValueAtTime(0.32, time);
                         filter.type = 'lowpass';
-                        filter.frequency.setValueAtTime(2600, time);
-                        filter.frequency.exponentialRampToValueAtTime(920, time + duration);
-                        filter.Q.setValueAtTime(3.0, time);
-                        attackTime = 0.012;
+                        filter.frequency.setValueAtTime(2500, time);
+                        filter.frequency.exponentialRampToValueAtTime(900, time + duration);
+                        filter.Q.setValueAtTime(2.6, time);
+                        attackTime = 0.010;
                         sustainLevel = 0.78;
                     } else if (voiceType === 'steely_guitar') {
                         osc.type = 'sawtooth';
                         oscOct.type = 'triangle';
                         oscOct.frequency.setValueAtTime(freq * 2.0, time);
-                        octGain.gain.setValueAtTime(0.25, time);
+                        octGain.gain.setValueAtTime(0.26, time);
                         filter.type = 'lowpass';
-                        filter.frequency.setValueAtTime(2250, time);
-                        filter.frequency.exponentialRampToValueAtTime(960, time + duration);
-                        filter.Q.setValueAtTime(2.8, time);
-                        attackTime = 0.012;
+                        filter.frequency.setValueAtTime(2200, time);
+                        filter.frequency.exponentialRampToValueAtTime(940, time + duration);
+                        filter.Q.setValueAtTime(2.4, time);
+                        attackTime = 0.010;
                         sustainLevel = 0.75;
+                    } else if (voiceType === 'prog_synth_lead') {
+                        osc.type = 'sawtooth';
+                        oscOct.type = 'triangle';
+                        oscOct.frequency.setValueAtTime(freq * 1.498, time);
+                        octGain.gain.setValueAtTime(0.28, time);
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(2600, time);
+                        filter.frequency.exponentialRampToValueAtTime(1050, time + duration);
+                        filter.Q.setValueAtTime(2.2, time);
+                        attackTime = 0.010;
+                        sustainLevel = 0.80;
+                    } else if (voiceType === 'fm_epiano') {
+                        osc.type = 'sine';
+                        oscOct.type = 'triangle';
+                        oscOct.frequency.setValueAtTime(freq * 3.0, time);
+                        octGain.gain.setValueAtTime(0.24, time);
+                        octGain.gain.exponentialRampToValueAtTime(0.005, time + Math.min(0.14, duration));
+                        filter.type = 'lowpass';
+                        filter.frequency.setValueAtTime(2400, time);
+                        filter.Q.setValueAtTime(1.1, time);
+                        attackTime = 0.006;
+                        sustainLevel = 0.52;
                     } else {
                         osc.type = 'sawtooth';
-                        oscOct.type = 'square';
+                        oscOct.type = 'triangle';
                         oscOct.frequency.setValueAtTime(freq * 2.0, time);
-                        octGain.gain.setValueAtTime(0.32, time);
+                        octGain.gain.setValueAtTime(0.30, time);
                         filter.type = 'lowpass';
-                        filter.frequency.setValueAtTime(2950, time);
-                        filter.frequency.exponentialRampToValueAtTime(1200, time + duration);
-                        filter.Q.setValueAtTime(2.2, time);
-                        attackTime = 0.009;
-                        sustainLevel = 0.76;
+                        filter.frequency.setValueAtTime(2400, time);
+                        filter.frequency.exponentialRampToValueAtTime(1100, time + duration);
+                        filter.Q.setValueAtTime(2.0, time);
                     }
 
                     osc.frequency.setValueAtTime(freq * 0.993, time);
-                    osc.frequency.exponentialRampToValueAtTime(freq, time + 0.022);
+                    osc.frequency.exponentialRampToValueAtTime(freq, time + 0.020);
 
                     let vibOsc = null;
                     let vibGain = null;
@@ -3465,7 +3594,7 @@
                     oscOct.connect(octGain);
                     octGain.connect(filter);
                     filter.connect(gain);
-                    gain.connect(this.musicOut());
+                    gain.connect(panNode);
 
                     const stopAt = time + duration + 0.03;
                     osc.onended = () => {
@@ -3482,26 +3611,29 @@
                 } catch (e) { }
             },
 
-            playLatinPerc(time, kind = 'conga_hi') {
+            // Clean Tonal Percussion (Zero white-noise shaker hiss!)
+            playAuxPerc(time, kind = 'electro_tom') {
                 if (this.muted || !this.ctx) return;
                 try {
-                    const osc = this.ctx.createOscillator();
-                    const gain = this.ctx.createGain();
-                    osc.type = kind === 'cowbell' ? 'square' : 'sine';
-                    const fStart = kind === 'cowbell' ? 587 : (kind === 'conga_hi' ? 295 : 195);
-                    const fEnd = kind === 'cowbell' ? 540 : (kind === 'conga_hi' ? 245 : 145);
-                    osc.frequency.setValueAtTime(fStart, time);
-                    osc.frequency.exponentialRampToValueAtTime(fEnd, time + 0.065);
-                    gain.gain.setValueAtTime(0.022, time);
-                    gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.075);
-                    osc.connect(gain);
-                    gain.connect(this.musicOut());
-                    osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (e) { } };
-                    osc.start(time);
-                    osc.stop(time + 0.08);
+                    if (kind === 'industrial_clang') {
+                        this.playVibraphone(time, 640, 0.12, 0.014);
+                        this.playVibraphone(time, 905, 0.09, 0.010);
+                    } else if (kind === 'electro_tom') {
+                        const osc = this.ctx.createOscillator();
+                        const gain = this.ctx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(210, time);
+                        osc.frequency.exponentialRampToValueAtTime(55, time + 0.085);
+                        gain.gain.setValueAtTime(0.028, time);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.095);
+                        osc.connect(gain);
+                        gain.connect(this.musicOut());
+                        osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (e) { } };
+                        osc.start(time);
+                        osc.stop(time + 0.10);
+                    }
                 } catch (e) { }
             },
-
             playFemaleVocal(kind) {
                 return this.playZedVocal(kind);
             },
@@ -3710,9 +3842,9 @@
                         const osc = this.ctx.createOscillator();
                         const gain = this.ctx.createGain();
                         osc.type = 'sine';
-                        osc.frequency.setValueAtTime(118, time);
-                        osc.frequency.exponentialRampToValueAtTime(40, time + 0.11);
-                        gain.gain.setValueAtTime(0.16, time);
+                        osc.frequency.setValueAtTime(125, time);
+                        osc.frequency.exponentialRampToValueAtTime(38, time + 0.11);
+                        gain.gain.setValueAtTime(0.17, time);
                         gain.gain.exponentialRampToValueAtTime(0.001, time + 0.13);
                         osc.connect(gain);
                         gain.connect(this.musicOut());
@@ -3720,24 +3852,21 @@
                         osc.start(time);
                         osc.stop(time + 0.14);
                     } else if (kind === 'snare') {
-                        this.playRhodesVoice(time, 285, 0.05, 0.036);
-                        this.playScheduledNoiseAt(time, 0.085, 2800, 720, 'bandpass', 1.4, 0.052, true);
+                        this.playRhodesVoice(time, 260, 0.045, 0.034);
+                        this.playScheduledNoiseAt(time, 0.088, 2900, 750, 'bandpass', 1.4, 0.054, true);
                     } else if (kind === 'rim') {
-                        this.playRhodesVoice(time, 760, 0.028, 0.032, true);
-                        this.playScheduledNoiseAt(time, 0.025, 3400, 1600, 'bandpass', 3.2, 0.028, true);
+                        this.playScheduledNoiseAt(time, 0.028, 3200, 1400, 'bandpass', 3.4, 0.028, true);
                     } else if (kind === 'clap') {
                         this.playScheduledNoiseAt(time, 0.095, 2400, 950, 'bandpass', 2.0, 0.048, true);
                     } else if (kind === 'ghostsnare') {
-                        this.playScheduledNoiseAt(time, 0.042, 2400, 900, 'bandpass', 1.6, 0.019, true);
+                        this.playScheduledNoiseAt(time, 0.042, 2400, 900, 'bandpass', 1.6, 0.018, true);
                     } else if (kind === 'hat') {
-                        this.playScheduledNoiseAt(time, 0.025, 8200, 5600, 'highpass', 0.9, 0.018, true);
+                        this.playScheduledNoiseAt(time, 0.024, 8600, 5800, 'highpass', 0.9, 0.017, true);
                     } else if (kind === 'openhat') {
-                        this.playScheduledNoiseAt(time, 0.14, 7600, 4400, 'highpass', 1.1, 0.022, true);
-                    } else if (kind === 'ride') {
-                        this.playVibraphone(time, 2950, 0.16, 0.008);
-                        this.playScheduledNoiseAt(time, 0.12, 6800, 4800, 'bandpass', 2.4, 0.016, true);
-                    } else if (kind === 'ride_bell') {
-                        this.playVibraphone(time, 1820, 0.22, 0.014);
+                        this.playScheduledNoiseAt(time, 0.14, 7800, 4600, 'highpass', 1.1, 0.021, true);
+                    } else if (kind === 'ride' || kind === 'ride_bell') {
+                        // True shimmering metallic ride cymbal wash (no 1820Hz vibraphone cowbell ping!)
+                        this.playScheduledNoiseAt(time, 0.15, 7400, 5200, 'bandpass', 2.6, 0.017, true);
                     } else if (kind === 'tom_hi' || kind === 'tom_mid' || kind === 'tom_lo') {
                         const osc = this.ctx.createOscillator();
                         const gain = this.ctx.createGain();
@@ -3774,7 +3903,6 @@
                 const activeBpm = this.getActiveBpm();
                 const stepDur = (60.0 / activeBpm) / 4.0;
                 const isLounge = track.style === 'lounge';
-                const isBattleNetwork = track.style === 'network' || track.style === 'network_boss';
                 const isBreakdown = (secName === 'Breakdown');
                 const isChorus = (secName === 'B' || secName === 'Coda');
                 const isSolo = (secName === 'Solo');
@@ -3786,10 +3914,13 @@
                 const barRoot = this.noteFreq(track.root, rawChord.root);
                 const voicing = JAZZ_VOICINGS[rawChord.type] || JAZZ_VOICINGS.min9;
 
-                if (step16 === 0 && !isBreakdown && (barIdx % 2 === 0 || isChorus || isBattleNetwork)) {
+                if (step16 === 0 && !isBreakdown && (barIdx % 2 === 0 || isChorus)) {
                     const strFreqs = voicing.slice(1, 4).map(semi => this.noteFreq(barRoot * 4, semi));
                     const padGain = isLounge ? 0.009 : (isChorus ? 0.013 : 0.010);
                     this.playDiscoStringsPad(time, strFreqs, stepDur * 14.5, padGain);
+                    if (track.useChoir && (isChorus || secName === 'A2' || isSolo)) {
+                        this.playCyberChoirPad(time, strFreqs, stepDur * 14.0, 0.011);
+                    }
                 }
                 if ((track.useOrgan || (hmQuirk && hmQuirk.useOrgan)) && step16 === 0 && (isChorus || barInBlock % 2 === 1)) {
                     const orgFreqs = voicing.slice(0, 4).map(semi => this.noteFreq(barRoot * 2, semi));
@@ -3808,22 +3939,26 @@
                 if ((track.useVibes || (hmQuirk && hmQuirk.useVibes)) && (isChorus || isLounge || secName === 'A2') && (step16 === 0 || step16 === 6)) {
                     const vibeNote = voicing[(step16 / 2 + barInBlock) % voicing.length];
                     const vibeFreq = this.noteFreq(barRoot * 4, vibeNote);
-                    this.playVibraphone(time, vibeFreq, stepDur * 3.8, 0.013);
+                    this.playVibraphone(time, vibeFreq, stepDur * 3.8, 0.012);
                 }
 
                 if (!isLounge && !isBreakdown && track.clavPattern && track.clavPattern[step16]) {
-                    const arpIdx = isBattleNetwork
-                        ? ([0, 1, 2, 3, 4, 3, 2, 1][step16 % 8] % voicing.length)
-                        : ((step16 + barInBlock) % voicing.length);
+                    const arpIdx = (step16 + barInBlock) % voicing.length;
                     const clavNote = voicing[arpIdx];
-                    const clavOct = isBattleNetwork ? 4 : 2;
-                    const clavFreq = this.noteFreq(barRoot * clavOct, clavNote);
-                    this.playClavinetFunk(time, clavFreq, stepDur * (isBattleNetwork ? 0.85 : 0.72), isBattleNetwork ? 0.017 : 0.014);
+                    const clavFreq = this.noteFreq(barRoot * 2, clavNote);
+                    this.playClavinetFunk(time, clavFreq, stepDur * 0.72, 0.014);
+                }
+
+                // Hard Mode 16th-Note Counter-Arpeggiator Layer (makes Hard Mode Level & Boss tracks noticeably more intense!)
+                if (hmQuirk && hmQuirk.hmArp && !isBreakdown && (step16 % 2 === 1 || isChorus)) {
+                    const arpSemi = voicing[(step16 * 2 + barInBlock) % voicing.length];
+                    const arpFreq = this.noteFreq(barRoot * 4, arpSemi);
+                    this.playSmoothLead(time, arpFreq, stepDur * 0.82, 0.013, 'fm_epiano');
                 }
 
                 const wantBrass = !isLounge && !isBreakdown && track.brassHits && (
-                    (track.brassHits[step16] && (barIdx % 2 === 1 || step16 === 0 || isChorus || isBattleNetwork)) ||
-                    (hmQuirk && hmQuirk.brassAnswer && step16 === 14 && barInBlock % 2 === 0)
+                    (track.brassHits[step16] && (barIdx % 2 === 1 || step16 === 0 || isChorus)) ||
+                    (hmQuirk && hmQuirk.brassAnswer && (step16 === 12 || step16 === 14) && barInBlock % 2 === 0)
                 );
                 if (wantBrass) {
                     voicing.slice(1, 4).forEach((semi) => {
@@ -3837,13 +3972,13 @@
                 if (barInBlock === 7 && step16 >= 8 && step16 % 2 === 0) {
                     const walkSteps = [7, 8, 10, 12];
                     bassSemi = walkSteps[(step16 - 8) / 2];
-                } else if (hmQuirk && hmQuirk.slapPopBoost && step16 === 14 && bassSemi === null) {
+                } else if (hmQuirk && hmQuirk.slapPopBoost && (step16 === 6 || step16 === 14) && bassSemi === null) {
                     bassSemi = 12;
                 }
                 if (bassSemi !== null && bassSemi !== undefined) {
                     const bassFreq = this.noteFreq(barRoot, bassSemi % 12 + (bassSemi >= 12 ? 12 : 0));
-                    const isOctavePop = !isLounge && (bassSemi >= 10 || isBattleNetwork);
-                    this.playJazzBass(time, bassFreq, stepDur * (isLounge ? 1.9 : 1.15), isBattleNetwork ? 0.080 : 0.072, isOctavePop);
+                    const isOctavePop = !isLounge && (bassSemi >= 10 || (hmQuirk && hmQuirk.slapPopBoost));
+                    this.playJazzBass(time, bassFreq, stepDur * (isLounge ? 1.9 : 1.15), 0.074, isOctavePop);
                 }
 
                 const keyRootFreq = track.root * 4;
@@ -3867,7 +4002,7 @@
                         phraseIdx = barInBlock % Math.max(1, activePhraseList.length);
                     } else if (secName === 'Solo') {
                         activePhraseList = track.soloPhrases || track.phrasesA || [];
-                        activeVoice = track.soloVoice || activeVoice;
+                        activeVoice = (hmQuirk && hmQuirk.soloOverride) ? hmQuirk.soloOverride : (track.soloVoice || activeVoice);
                         phraseIdx = barInBlock % Math.max(1, activePhraseList.length);
                     }
                 }
@@ -3890,12 +4025,12 @@
                         this.playSmoothLead(time, leadFreq, noteDur, isLounge ? 0.030 : 0.031, activeVoice);
 
                         const useBuiltInHarmony = (track.harmonySecs && track.harmonySecs.includes(blockIdx)) || isChorus || (hmQuirk && hmQuirk.harmonyAll);
-                        if (useBuiltInHarmony && (holdSteps >= 2 || isChorus)) {
+                        if (useBuiltInHarmony && (holdSteps >= 2 || isChorus || isHM)) {
                             const harmInt = track.harmonyInterval || 2;
                             const harmSemis = this.resolveDegreeToSemis(rawNote + harmInt, sc);
                             const harmFreq = this.noteFreq(keyRootFreq, harmSemis);
                             const harmVoice = track.counterVoice || track.answerVoice || activeVoice;
-                            this.playSmoothLead(time + 0.006, harmFreq, noteDur * 0.96, 0.017, harmVoice);
+                            this.playSmoothLead(time + 0.006, harmFreq, noteDur * 0.96, 0.018, harmVoice);
                         }
                     }
                 }
@@ -3949,9 +4084,9 @@
                         this.playScheduledDrum(time, 'ghostsnare');
                     }
 
-                    if (kit === 'jazz_ride' || (isChorus && !isLounge && !isBattleNetwork)) {
+                    if (kit === 'jazz_ride' || (isChorus && !isLounge)) {
                         if (step16 === 0 || step16 === 4 || step16 === 6 || step16 === 8 || step16 === 12 || step16 === 14) {
-                            this.playScheduledDrum(time, (step16 === 6 || step16 === 14) ? 'ride_bell' : 'ride');
+                            this.playScheduledDrum(time, 'ride');
                         }
                         if (step16 === 4 || step16 === 12) this.playScheduledDrum(time, 'hat');
                     } else if (track.drums.hat[step16]) {
@@ -3963,9 +4098,24 @@
                     }
                 }
 
-                if ((hmQuirk && hmQuirk.latinPerc) || kit === 'latin_funk' || track.style === 'clav_funk') {
-                    if (step16 === 3 || step16 === 11) this.playLatinPerc(time, 'conga_hi');
-                    else if (step16 === 6 || step16 === 14) this.playLatinPerc(time, 'conga_lo');
+                // Varied, Context-Appropriate Auxiliary Percussion (Zero Cowbell Spam!)
+                if (kit === 'industrial_siege' || (hmQuirk && hmQuirk.industrialPerc)) {
+                    if (step16 === 4 || (step16 === 12 && barInBlock % 2 === 1)) {
+                        this.playAuxPerc(time, 'industrial_clang');
+                    }
+                } else if (kit === 'electro_clock') {
+                    if (step16 === 3 || step16 === 11) {
+                        this.playAuxPerc(time, 'electro_tom');
+                    } else if (step16 % 2 === 1) {
+                        this.playAuxPerc(time, 'shaker');
+                    }
+                } else if (kit === 'disco_funk' || kit === 'latin_funk') {
+                    if (step16 === 2 || step16 === 6 || step16 === 10 || step16 === 14) {
+                        this.playAuxPerc(time, 'shaker');
+                    }
+                    if (isChorus && step16 === 12) {
+                        this.playAuxPerc(time, 'tambourine');
+                    }
                 }
             },
 
@@ -4381,14 +4531,14 @@
                 boss: {
                     id: 'aetherion', name: 'AETHERION-AI', title: 'Gyroscope Overmind Core',
                     musicKey: 'boss_astral',
-                    hp: 100000, dmg: 250, color: 0xc084fc, scale: 2.25, modelStyle: 'gyro_core', behavior: 'center_singularity', maxPhases: 2,
-                    patterns: ['Orbiting Monolith Eclipse Wheel', 'White-Hole / Black-Hole Polarity', 'Tesseract Gravity Cage']
+                    hp: 70000, dmg: 250, color: 0xc084fc, scale: 2.25, modelStyle: 'gyro_core', behavior: 'center_singularity', maxPhases: 2,
+                    patterns: ['Orbiting Monolith Eclipse Wheel', 'Quantum Blink-Blitz & 360° Nova', 'Staggered Singularity Cascade']
                 },
                 debrief: {
                     client: 'Anomalous Materials Containment // Ticket #612-F',
                     why: 'The physics lab tore a hole in local space while manufacturing Ascension Cores. Also, the station AI core AETHERION is in there and refuses to answer our emails.',
                     hazard: 'Immortal Null-Warden — An unkillable phase-entity slowly stalks you through the sector. Do not waste ammo on it; keep moving and clear the room.',
-                    bossNote: 'Aetherion-AI sweeps 6-spoke monolith lasers, flips gravitational polarity between Black-Hole and White-Hole spheres, and locks you inside destructible wireframe tesseracts.'
+                    bossNote: 'Aetherion-AI sweeps 6-spoke monolith lasers, rapidly warp-blinks across the battlefield firing 360° graviton shotgun novas on each blink, and calls down a staggered chain of singularity implosions.'
                 },
                 desc: '8 Floors'
             },
@@ -21774,68 +21924,117 @@ const LORE_ENTRIES = [
                         setBanner('ORBITING MONOLITH ECLIPSE WHEEL');
                         for (let b = 0; b < 6; b++) {
                             const ang = baseAngle + (b * Math.PI * 2) / 6;
-                            this.spawnWallPiercingLaser(boss.pos.clone(), ang, 0xc084fc, Math.round(boss.dmg * 0.42), 1.25, 2.8 * p3, (hm ? 0.58 : 0.45) * p3);
+                            this.spawnWallPiercingLaser(boss.pos.clone(), ang, 0xc084fc, Math.round(boss.dmg * 0.44), 1.15, 2.9 * p3, (hm ? 0.70 : 0.54) * p3);
                         }
                     } else if (uIdx === 1) {
-                        setBanner('WHITE-HOLE / BLACK-HOLE POLARITY SHIFT');
-                        const bhPos = boss.pos.clone().add(new THREE.Vector3(-9, 0, 0));
-                        const whPos = boss.pos.clone().add(new THREE.Vector3(9, 0, 0));
-                        const bhMesh = new THREE.Mesh(new THREE.SphereGeometry(2.2, 16, 16), new THREE.MeshBasicMaterial({ color: 0x581c87 }));
-                        bhMesh.position.set(bhPos.x, 1.8, bhPos.z);
-                        const whMesh = new THREE.Mesh(new THREE.SphereGeometry(2.2, 16, 16), new THREE.MeshBasicMaterial({ color: 0x22d3ee }));
-                        whMesh.position.set(whPos.x, 1.8, whPos.z);
-                        this.scene.add(bhMesh, whMesh);
+                        // Quantum Blink-Blitz: Rapidly warp-blinks 3x (4x HM) around the arena, firing a 360° Graviton Shotgun Nova on each blink!
+                        setBanner('QUANTUM BLINK-BLITZ & 360° NOVA');
+                        const blinkCount = (hm ? 4 : 3) + (boss.phase >= 3 ? 1 : 0);
+                        const pelletsPerRing = hm ? 16 : 12;
+                        for (let bStep = 0; bStep < blinkCount; bStep++) {
+                            setTimeout(() => {
+                                if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return;
+                                const ang = (bStep / blinkCount) * Math.PI * 2 + Math.random() * 0.6;
+                                const distFromP = 8.5 + (bStep % 2) * 3.5;
+                                const rawX = this.player.pos.x + Math.cos(ang) * distFromP;
+                                const rawZ = this.player.pos.z + Math.sin(ang) * distFromP;
+                                const safeDest = this.findSafeOpenSpot(rawX, rawZ, 1.8, 0);
 
-                        let elapsed = 0;
-                        let sphereDmgTick = 0;
-                        this.bossCustomEffects.push({
-                            life: 4.5,
-                            update: (dt) => {
-                                elapsed += dt;
-                                sphereDmgTick = Math.max(0, sphereDmgTick - dt);
-                                const inv = (hm && elapsed > 2.25) ? -1 : 1;
-                                const toBH = bhPos.clone().sub(this.player.pos).setY(0).normalize();
-                                this.player.pos.addScaledVector(toBH, 6.2 * p3 * inv * dt);
-                                this.resolveWallCollisions(this.player.pos, 0.75);
-                                if (this.player.pos.distanceTo(inv > 0 ? bhPos : whPos) <= 4.2 && sphereDmgTick <= 0) {
-                                    sphereDmgTick = 0.50;
-                                    this.damagePlayer(Math.round(boss.dmg * 0.55));
+                                // Departure flash + warp ribbon
+                                const prevPos = boss.pos.clone().setY(1.4);
+                                this.spawnBurstParticles(prevPos, 0xc084fc, 18);
+                                boss.pos.set(safeDest.x, 0, safeDest.z);
+                                if (this.tensorSanctumLocked) boss.pos.z = Math.min(-4.0, boss.pos.z);
+                                const newPos = boss.pos.clone().setY(1.4);
+
+                                const warpRibbon = new THREE.Line(
+                                    new THREE.BufferGeometry().setFromPoints([prevPos, newPos]),
+                                    new THREE.LineBasicMaterial({ color: 0xe879f9 })
+                                );
+                                this.scene.add(warpRibbon);
+                                setTimeout(() => this.scene.remove(warpRibbon), 240);
+
+                                AudioEngine.sfx('dash');
+                                AudioEngine.sfx('shotgun');
+                                this.spawnSphereExplosionVisual(boss.pos, 3.2, 0xc084fc);
+
+                                const phaseOffset = (bStep % 2) * (Math.PI / pelletsPerRing);
+                                for (let p = 0; p < pelletsPerRing; p++) {
+                                    const shotAng = phaseOffset + (p / pelletsPerRing) * Math.PI * 2;
+                                    const dir = new THREE.Vector3(Math.sin(shotAng), 0, Math.cos(shotAng));
+                                    this.spawnProjectile(
+                                        boss.pos.clone(),
+                                        dir,
+                                        (hm ? 21.0 : 18.0) * p3,
+                                        Math.round(boss.dmg * 0.82),
+                                        false,
+                                        p % 2 === 0 ? 0xc084fc : 0x22d3ee,
+                                        false,
+                                        false,
+                                        0,
+                                        28.0
+                                    );
                                 }
-                                return true;
-                            },
-                            cleanup: () => { this.scene.remove(bhMesh, whMesh); }
-                        });
+                            }, bStep * 560);
+                        }
                     } else {
-                        setBanner('TESSERACT GRAVITY CAGE');
-                        const pt = this.player.pos.clone();
-                        const cubeSize = 10.5 * p3;
-                        const cubeMesh = new THREE.Mesh(
-                            new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize),
-                            new THREE.MeshBasicMaterial({ color: 0xc084fc, wireframe: true, transparent: true, opacity: 0.8 })
-                        );
-                        cubeMesh.position.set(pt.x, cubeSize * 0.5, pt.z);
-                        this.scene.add(cubeMesh);
+                        // Staggered Singularity Cascade: Rapid chain of 5 (7 HM) overlapping graviton implosion rifts that track and pull the player!
+                        setBanner('STAGGERED SINGULARITY CASCADE');
+                        const riftCount = (hm ? 6 : 5) + (boss.phase >= 3 ? 1 : 0);
+                        const riftRad = 5.4 * p3;
+                        for (let rIdx = 0; rIdx < riftCount; rIdx++) {
+                            setTimeout(() => {
+                                if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return;
+                                const leadOffset = this.player.isMoving
+                                    ? new THREE.Vector3(Math.sin(this.player.rotY) * 2.2, 0, Math.cos(this.player.rotY) * 2.2)
+                                    : new THREE.Vector3((Math.random() - 0.5) * 3.0, 0, (Math.random() - 0.5) * 3.0);
+                                const targetPt = this.player.pos.clone().add(leadOffset);
+                                const safePt = this.findSafeOpenSpot(targetPt.x, targetPt.z, 1.2, 0);
+                                const riftPos = new THREE.Vector3(safePt.x, 0, safePt.z);
 
-                        let broken = false;
-                        this.spawnShootableBossProp(pt.x, pt.z, hm ? 4 : 3, 2.5, 4.5, 0xe879f9, 'Tesseract Core', () => { broken = true; });
-                        this.bossCustomEffects.push({
-                            mesh: cubeMesh,
-                            life: 4.5,
-                            update: (dt) => {
-                                if (broken) return false;
-                                cubeMesh.rotation.y += dt * 0.8;
-                                if (Math.abs(this.player.pos.x - pt.x) <= cubeSize * 0.5 && Math.abs(this.player.pos.z - pt.z) <= cubeSize * 0.5) {
-                                    this.player.blizzardSlowTimer = 0.5;
-                                }
-                                return true;
-                            },
-                            cleanup: () => {
-                                this.scene.remove(cubeMesh);
-                                if (hm && !broken && !this.isDefeatPending && this.player.pos.distanceTo(pt) <= cubeSize * 0.6) {
-                                    this.damagePlayer(Math.round(boss.dmg * 1.35));
-                                }
-                            }
-                        });
+                                const wellGrp = new THREE.Group();
+                                wellGrp.position.copy(riftPos);
+                                const coreOrb = new THREE.Mesh(
+                                    new THREE.OctahedronGeometry(0.75, 1),
+                                    new THREE.MeshBasicMaterial({ color: 0xe879f9, wireframe: true })
+                                );
+                                coreOrb.position.y = 1.3;
+                                const pullRing = new THREE.Mesh(
+                                    new THREE.RingGeometry(riftRad - 0.25, riftRad, 32),
+                                    new THREE.MeshBasicMaterial({ color: 0xc084fc, side: THREE.DoubleSide, transparent: true, opacity: 0.75 })
+                                );
+                                pullRing.rotation.x = -Math.PI / 2;
+                                pullRing.position.y = 0.08;
+                                wellGrp.add(coreOrb, pullRing);
+                                this.scene.add(wellGrp);
+
+                                this.bossCustomEffects.push({
+                                    mesh: wellGrp,
+                                    life: 0.95,
+                                    update: (dt) => {
+                                        coreOrb.rotation.y += dt * 8.0;
+                                        pullRing.scale.multiplyScalar(Math.max(0.25, 1 - dt * 0.85));
+                                        const dP = this.player.pos.distanceTo(riftPos);
+                                        if (dP > 0.6 && dP <= riftRad + 1.5 && this.player.dashActiveTimer <= 0) {
+                                            const pullVec = riftPos.clone().sub(this.player.pos).setY(0).normalize();
+                                            this.player.pos.addScaledVector(pullVec, 3.75 * p3 * dt);
+                                            this.resolveWallCollisions(this.player.pos, 0.75);
+                                        }
+                                        return true;
+                                    },
+                                    cleanup: () => this.scene.remove(wellGrp)
+                                });
+
+                                this.spawnTelegraph(riftPos.x, riftPos.z, riftRad, 0.95, Math.round(boss.dmg * 1.2), () => {
+                                    if (this.isDefeatPending || !this.activeBoss) return;
+                                    AudioEngine.sfx('arcane');
+                                    this.spawnSphereExplosionVisual(riftPos, riftRad * 0.88, 0xc084fc);
+                                    if (hm && rIdx % 2 === 0) {
+                                        this.spawnLingeringHazardPool(riftPos.x, riftPos.z, 3.4, 3.2, Math.round(boss.dmg * 0.26), 0xc084fc, true, 0);
+                                    }
+                                });
+                            }, rIdx * 380);
+                        }
                     }
                 } else if (secIdx === 6) {
                     if (uIdx === 0) {
@@ -25272,7 +25471,30 @@ const LORE_ENTRIES = [
                             en.strafeDir *= -1;
                             en.moveModeTimer = 1.8 + Math.random() * 1.4;
                         }
-                        if (en.behavior === 'center_singularity' || en.behavior === 'solar_architect' || en.behavior === 'tensor_architect') {
+                        if (en.behavior === 'center_singularity') {
+                            en.aetherBlinkTimer = (en.aetherBlinkTimer ?? 3.4) - dt;
+                            if (en.aetherBlinkTimer <= 0) {
+                                en.aetherBlinkTimer = (this.isHardMode ? 2.8 : 3.6) + Math.random() * 1.2;
+                                const blinkAng = Math.random() * Math.PI * 2;
+                                const blinkDist = 9.5 + Math.random() * 6.5;
+                                const bSpot = this.findSafeOpenSpot(
+                                    this.player.pos.x + Math.cos(blinkAng) * blinkDist,
+                                    this.player.pos.z + Math.sin(blinkAng) * blinkDist,
+                                    1.8,
+                                    0
+                                );
+                                this.spawnBurstParticles(en.pos.clone().setY(1.4), 0xc084fc, 16);
+                                en.pos.set(bSpot.x, 0, bSpot.z);
+                                AudioEngine.sfx('dash');
+                                this.spawnBurstParticles(en.pos.clone().setY(1.4), 0x22d3ee, 16);
+                                for (let k = 0; k < 8; k++) {
+                                    const sAng = (k / 8) * Math.PI * 2;
+                                    this.spawnProjectile(en.pos.clone(), new THREE.Vector3(Math.sin(sAng), 0, Math.cos(sAng)), 17.5, Math.round(en.dmg * 0.75), false, 0xc084fc, false, false, 0, 24.0);
+                                }
+                            } else {
+                                en.pos.addScaledVector(perp, en.speed * 0.90 * slowMult * dt);
+                            }
+                        } else if (en.behavior === 'solar_architect' || en.behavior === 'tensor_architect') {
                             const centerPos = (en.behavior === 'tensor_architect') ? new THREE.Vector3(0, 0, -68) : new THREE.Vector3(0, 0, 0);
                             const toCenter = centerPos.sub(en.pos).setY(0);
                             if (toCenter.length() > 6.5) en.pos.addScaledVector(toCenter.normalize(), en.speed * 1.05 * slowMult * dt);
@@ -26823,7 +27045,7 @@ const LORE_ENTRIES = [
             },
 
             formatCoreCostBadge(coreCost, lvl) {
-                if (!coreCost) return '';
+                if (!coreCost || typeof coreCost !== 'object') return '';
                 const cores = Game.state.cores || {};
                 const mult = 1 + lvl;
                 return Object.entries(coreCost).map(([ck, baseAmt]) => {
@@ -26835,12 +27057,14 @@ const LORE_ENTRIES = [
             },
 
             canAffordCores(coreCost, lvl) {
+                if (!coreCost || typeof coreCost !== 'object') return false;
                 const cores = Game.state.cores || {};
                 const mult = 1 + lvl;
                 return Object.entries(coreCost).every(([ck, baseAmt]) => (cores[ck] || 0) >= baseAmt * mult);
             },
 
             deductCores(coreCost, lvl) {
+                if (!coreCost || typeof coreCost !== 'object') return;
                 const cores = Game.state.cores;
                 const mult = 1 + lvl;
                 Object.entries(coreCost).forEach(([ck, baseAmt]) => {
@@ -28803,7 +29027,7 @@ const LORE_ENTRIES = [
                                 </button>
                             </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                                ${SOUL_WELL_UPGRADES.filter(sw => !sw.isProto).map(sw => {
+                                ${SOUL_WELL_UPGRADES.filter(sw => !sw.isProto && sw.coreCost).map(sw => {
                         const owned = st.soulWell[sw.id] || 0;
                         const canAfford = this.canAffordCores(sw.coreCost, owned);
                         const shapeCells = Game.getAugmentShapeCells(sw.id, 0);
