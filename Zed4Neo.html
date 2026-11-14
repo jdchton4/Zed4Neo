@@ -3007,10 +3007,12 @@
                         for (let i = 0; i < len; i++) ch[i] = Math.random() * 2 - 1;
 
                         this.shaperCurve = new Float32Array(256);
-                        for (let i = 0; i < 256; i++) {
-                            const x = (i * 2) / 256 - 1;
-                            this.shaperCurve[i] = Math.tanh(x * 1.45);
-                        }
+                      this.gunShaperCurve = new Float32Array(256);
+                      for (let i = 0; i < 256; i++) {
+                          const x = (i * 2) / 256 - 1;
+                          this.shaperCurve[i] = Math.tanh(x * 1.45);
+                          this.gunShaperCurve[i] = Math.tanh(x * 4.2);
+                      }
                     }
                 }
                 if (this.ctx && this.ctx.state === 'suspended') {
@@ -4240,7 +4242,7 @@
                 }
             },
 
-            playTone(freqStart, freqEnd, duration, type = 'sine', gainVal = 0.2, release = 0.2, filterFreq = 2000) {
+            playTone(freqStart, freqEnd, duration, type = 'sine', gainVal = 0.2, release = 0.2, filterFreq = 2400) {
                 if (this.muted) return;
                 this.init();
                 if (!this.ctx) return;
@@ -4259,15 +4261,17 @@
                     filter.type = 'lowpass';
                     filter.frequency.setValueAtTime(filterFreq, now);
 
-                    gain.gain.setValueAtTime(0.001, now);
-                    gain.gain.linearRampToValueAtTime(gainVal, now + 0.01);
+                    const holdAt = now + Math.max(0.02, duration * 0.45);
+                    gain.gain.setValueAtTime(0.0001, now);
+                    gain.gain.linearRampToValueAtTime(gainVal, now + 0.008);
+                    gain.gain.setValueAtTime(gainVal * 0.85, holdAt);
                     gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + release);
 
                     osc.connect(filter);
                     filter.connect(gain);
                     gain.connect(this.out());
 
-                    const stopAt = now + duration + release + 0.02;
+                    const stopAt = now + duration + release + 0.03;
                     osc.onended = () => { try { osc.disconnect(); filter.disconnect(); gain.disconnect(); } catch (e) { } };
                     osc.start(now);
                     osc.stop(stopAt);
@@ -4282,12 +4286,12 @@
             },
 
             playSteelResonance(baseFreq = 520, duration = 0.18, gainVal = 0.2) {
-                this.playTone(baseFreq, baseFreq * 0.92, duration, 'triangle', gainVal, 0.12, 3200);
-                this.playTone(baseFreq * 1.414, baseFreq * 1.35, duration * 0.75, 'sine', gainVal * 0.6, 0.1, 3800);
+                this.playTone(baseFreq, baseFreq * 0.94, duration, 'triangle', gainVal, 0.12, 3400);
+                this.playTone(baseFreq * 1.414, baseFreq * 1.36, duration * 0.75, 'sine', gainVal * 0.65, 0.1, 3800);
             },
 
-            // Broadband Shaped Noise Burst (Used for supersonic cracks, powder blasts, & explosion roars)
-            playNoiseCrack(dur, fStart, fEnd, fType = 'bandpass', qVal = 1.0, gainVal = 0.5, delay = 0, saturate = false) {
+            // Clean Broadband Noise Burst (No WaveShaper aliasing/scratching; smooth 4ms attack + solid hold plateau)
+            playNoiseCrack(dur, fStart, fEnd, fType = 'lowpass', qVal = 0.9, gainVal = 0.55, delay = 0) {
                 if (this.muted) return;
                 this.init();
                 if (!this.ctx || !this.noiseBuffer) return;
@@ -4299,69 +4303,74 @@
                     const filter = this.ctx.createBiquadFilter();
                     filter.type = fType;
                     filter.Q.setValueAtTime(qVal, t0);
-                    filter.frequency.setValueAtTime(Math.max(25, fStart), t0);
-                    filter.frequency.exponentialRampToValueAtTime(Math.max(25, fEnd), t0 + dur);
+                    filter.frequency.setValueAtTime(Math.max(30, fStart), t0);
+                    filter.frequency.exponentialRampToValueAtTime(Math.max(30, fEnd), t0 + dur);
+
+                    const bodyShelf = this.ctx.createBiquadFilter();
+                    bodyShelf.type = 'lowshelf';
+                    bodyShelf.frequency.setValueAtTime(280, t0);
+                    bodyShelf.gain.setValueAtTime(5.5, t0);
 
                     const gain = this.ctx.createGain();
+                    const holdAt = Math.min(dur * 0.28, 0.045);
                     gain.gain.setValueAtTime(0.0001, t0);
-                    gain.gain.linearRampToValueAtTime(gainVal, t0 + 0.0025);
+                    gain.gain.linearRampToValueAtTime(gainVal, t0 + 0.004);
+                    gain.gain.setValueAtTime(gainVal * 0.75, t0 + Math.max(0.006, holdAt));
                     gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
 
                     noise.connect(filter);
-                    let shaper = null;
-                    if (saturate && this.shaperCurve) {
-                        shaper = this.ctx.createWaveShaper();
-                        shaper.curve = this.shaperCurve;
-                        filter.connect(shaper);
-                        shaper.connect(gain);
-                    } else {
-                        filter.connect(gain);
-                    }
+                    filter.connect(bodyShelf);
+                    bodyShelf.connect(gain);
                     gain.connect(this.out());
 
                     noise.onended = () => {
-                        try {
-                            noise.disconnect(); filter.disconnect(); gain.disconnect();
-                            if (shaper) shaper.disconnect();
-                        } catch (e) { }
+                        try { noise.disconnect(); filter.disconnect(); bodyShelf.disconnect(); gain.disconnect(); } catch (e) { }
                     };
-                    noise.start(t0, Math.random() * 1.25, dur + 0.02);
-                    noise.stop(t0 + dur + 0.02);
+                    noise.start(t0, Math.random() * 1.25, dur + 0.04);
+                    noise.stop(t0 + dur + 0.04);
                 } catch (e) { }
             },
 
-            // Clean Low-End Recoil Pressure Thump (Pure Sine with tight gain envelope — zero sawtooth buzz!)
-            playGunThump(fStart, fEnd, dur, gainVal = 0.35, delay = 0) {
+            // Warm Chamber Recoil Thump (Triangle through smooth 360Hz lowpass — clean chest punch, zero buzz/scratch)
+            playGunThump(fStart, fEnd, dur, gainVal = 0.45, delay = 0) {
                 if (this.muted) return;
                 this.init();
                 if (!this.ctx) return;
                 try {
                     const t0 = this.ctx.currentTime + (delay || 0);
                     const osc = this.ctx.createOscillator();
+                    const lp = this.ctx.createBiquadFilter();
                     const gain = this.ctx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(Math.max(20, fStart), t0);
-                    osc.frequency.exponentialRampToValueAtTime(Math.max(18, fEnd), t0 + dur);
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(Math.max(30, fStart), t0);
+                    osc.frequency.exponentialRampToValueAtTime(Math.max(24, fEnd), t0 + dur);
 
+                    lp.type = 'lowpass';
+                    lp.frequency.setValueAtTime(360, t0);
+                    lp.Q.setValueAtTime(1.1, t0);
+
+                    const holdAt = Math.min(dur * 0.28, 0.028);
                     gain.gain.setValueAtTime(0.0001, t0);
-                    gain.gain.linearRampToValueAtTime(gainVal, t0 + 0.003);
+                    gain.gain.linearRampToValueAtTime(gainVal, t0 + 0.004);
+                    gain.gain.setValueAtTime(gainVal * 0.72, t0 + Math.max(0.006, holdAt));
                     gain.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
 
-                    osc.connect(gain);
+                    osc.connect(lp);
+                    lp.connect(gain);
                     gain.connect(this.out());
-                    osc.onended = () => { try { osc.disconnect(); gain.disconnect(); } catch (e) { } };
+                    osc.onended = () => { try { osc.disconnect(); lp.disconnect(); gain.disconnect(); } catch (e) { } };
                     osc.start(t0);
-                    osc.stop(t0 + dur + 0.02);
+                    osc.stop(t0 + dur + 0.03);
                 } catch (e) { }
             },
 
-            // Dry Mechanical Bolt / Slide / Latch Click (Tight high-Q filtered noise transient, no arcade chimes)
-            playMechClick(centerFreq = 3000, dur = 0.015, gainVal = 0.25, delay = 0) {
-                this.playNoiseCrack(dur, centerFreq, centerFreq * 0.72, 'bandpass', 3.4, gainVal, delay, false);
+            // Clean Metallic Bolt / Latch Click (Zero WaveShaper clipping or pops)
+            playMechClick(centerFreq = 2200, dur = 0.026, gainVal = 0.28, delay = 0) {
+                this.playNoiseCrack(dur, centerFreq, centerFreq * 0.65, 'bandpass', 1.8, gainVal, delay);
             },
 
-            // AM-Modulated Spinning Sawblade / Servo / Electrical Arc Generator
-            playModulatedMechSound(carrierFreq, carrierEnd, modFreq, dur, gainVal = 0.30, type = 'sawtooth') {
+            // Balanced AM-Modulated Spinning Sawblade / Servo / Electrical Arc Generator
+            playModulatedMechSound(carrierFreq, carrierEnd, modFreq, dur, gainVal = 0.20, type = 'sawtooth') {
                 if (this.muted) return;
                 this.init();
                 if (!this.ctx) return;
@@ -4383,14 +4392,14 @@
 
                     modOsc.type = 'sawtooth';
                     modOsc.frequency.setValueAtTime(modFreq, now);
-                    modGain.gain.setValueAtTime(gainVal * 0.45, now);
+                    modGain.gain.setValueAtTime(gainVal * 0.40, now);
 
                     filter.type = 'bandpass';
-                    filter.Q.setValueAtTime(2.4, now);
-                    filter.frequency.setValueAtTime(carrierFreq * 1.8, now);
-                    filter.frequency.exponentialRampToValueAtTime(Math.max(120, carrierEnd * 1.4), now + dur);
+                    filter.Q.setValueAtTime(2.2, now);
+                    filter.frequency.setValueAtTime(carrierFreq * 1.5, now);
+                    filter.frequency.exponentialRampToValueAtTime(Math.max(120, carrierEnd * 1.3), now + dur);
 
-                    masterG.gain.setValueAtTime(0.001, now);
+                    masterG.gain.setValueAtTime(0.0001, now);
                     masterG.gain.linearRampToValueAtTime(gainVal, now + 0.012);
                     masterG.gain.exponentialRampToValueAtTime(0.0001, now + dur);
 
@@ -4414,236 +4423,262 @@
                 switch (name) {
                     case 'cleave':
                     case 'rifle':
-                        // 5.56mm Service Carbine: Supersonic snap + crisp powder bark + dry bolt cycle + tight room tail
-                        this.playNoiseCrack(0.022, 3400, 1100, 'highpass', 0.75, 0.52, 0, true);
-                        this.playNoiseCrack(0.13, 1950, 260, 'bandpass', 0.85, 0.62, 0, true);
-                        this.playGunThump(135, 44, 0.050, 0.28);
-                        this.playMechClick(3200, 0.014, 0.22, 0.016);
-                        this.playNoiseCrack(0.22, 950, 150, 'lowpass', 0.7, 0.24, 0.02, false);
+                        this.playNoiseCrack(0.045, 2200, 480, 'bandpass', 0.85, 0.56, 0);
+                        this.playNoiseCrack(0.24, 1850, 150, 'lowpass', 1.3, 0.72, 0);
+                        this.playGunThump(165, 48, 0.09, 0.58);
+                        this.playMechClick(2200, 0.022, 0.22, 0.02);
                         break;
                     case 'heavy_rifle':
-                        // Heavy 7.62mm Battle Rifle: Deeper crack, punchier chamber bark, heavy bolt slam
-                        this.playNoiseCrack(0.030, 2900, 820, 'highpass', 0.75, 0.60, 0, true);
-                        this.playNoiseCrack(0.19, 1550, 155, 'bandpass', 0.85, 0.74, 0, true);
-                        this.playGunThump(115, 34, 0.070, 0.40);
-                        this.playMechClick(2350, 0.018, 0.28, 0.020);
-                        this.playNoiseCrack(0.30, 760, 110, 'lowpass', 0.7, 0.30, 0.025, false);
+                        this.playNoiseCrack(0.055, 1900, 380, 'bandpass', 0.85, 0.64, 0);
+                        this.playNoiseCrack(0.32, 1550, 110, 'lowpass', 1.4, 0.82, 0);
+                        this.playGunThump(140, 36, 0.12, 0.70);
+                        this.playMechClick(1850, 0.026, 0.24, 0.024);
+                        break;
+                    case 'minigun':
+                        this.playNoiseCrack(0.030, 2100, 520, 'bandpass', 0.85, 0.46, 0);
+                        this.playNoiseCrack(0.14, 1650, 175, 'lowpass', 1.3, 0.62, 0);
+                        this.playGunThump(155, 50, 0.07, 0.50);
                         break;
                     case 'suppressed':
-                        // Suppressed Subsonic Carbine: Dry muffled gas thwip + crisp mechanical bolt click (zero chimes!)
-                        this.playNoiseCrack(0.062, 2250, 480, 'bandpass', 1.35, 0.44, 0, false);
-                        this.playGunThump(145, 54, 0.036, 0.24);
-                        this.playMechClick(3600, 0.013, 0.26, 0.010);
+                        this.playNoiseCrack(0.09, 1750, 300, 'lowpass', 1.3, 0.54, 0);
+                        this.playGunThump(170, 58, 0.06, 0.42);
+                        this.playMechClick(2600, 0.020, 0.26, 0.012);
                         break;
                     case 'dagger':
                     case 'smg':
-                        // High-Cyclic CQB SMG: Tight, dry rapid-fire ballistic crack (no 8-bit pitch sweep)
-                        this.playNoiseCrack(0.016, 3800, 1450, 'highpass', 0.8, 0.40, 0, true);
-                        this.playNoiseCrack(0.075, 2350, 420, 'bandpass', 0.95, 0.48, 0, true);
-                        this.playGunThump(165, 60, 0.032, 0.22);
-                        this.playMechClick(3900, 0.010, 0.16, 0.012);
+                        this.playNoiseCrack(0.032, 2400, 580, 'bandpass', 0.85, 0.48, 0);
+                        this.playNoiseCrack(0.15, 2100, 240, 'lowpass', 1.3, 0.62, 0);
+                        this.playGunThump(180, 60, 0.065, 0.46);
                         break;
                     case 'pistol':
-                        // Tactical Sidearm: Sharp, dry 9mm/.45 crack + slide snap
-                        this.playNoiseCrack(0.018, 3600, 1250, 'highpass', 0.8, 0.46, 0, true);
-                        this.playNoiseCrack(0.10, 2100, 320, 'bandpass', 0.95, 0.54, 0, true);
-                        this.playGunThump(155, 54, 0.040, 0.26);
-                        this.playMechClick(3500, 0.012, 0.22, 0.014);
+                        this.playNoiseCrack(0.035, 2300, 520, 'bandpass', 0.85, 0.52, 0);
+                        this.playNoiseCrack(0.18, 1950, 190, 'lowpass', 1.3, 0.68, 0);
+                        this.playGunThump(170, 54, 0.075, 0.52);
+                        this.playMechClick(2400, 0.020, 0.22, 0.016);
                         break;
                     case 'magnum':
-                        // .50-Cal Hand Cannon: Heavy crack + booming low-end punch + heavy slide clack
-                        this.playNoiseCrack(0.032, 3400, 780, 'highpass', 0.8, 0.62, 0, true);
-                        this.playNoiseCrack(0.26, 1750, 135, 'lowpass', 0.85, 0.72, 0, true);
-                        this.playGunThump(118, 32, 0.080, 0.44);
-                        this.playMechClick(2600, 0.020, 0.28, 0.022);
+                        this.playNoiseCrack(0.055, 2100, 360, 'bandpass', 0.85, 0.66, 0);
+                        this.playNoiseCrack(0.36, 1500, 95, 'lowpass', 1.3, 0.84, 0);
+                        this.playGunThump(138, 34, 0.13, 0.72);
+                        this.playMechClick(2000, 0.024, 0.24, 0.024);
                         break;
                     case 'hammer':
                     case 'shotgun':
-                        // 12-Gauge Buckshot Blast: Wide explosive wall of noise + deep sub-kick + long room boom
-                        this.playNoiseCrack(0.036, 3100, 520, 'highpass', 0.7, 0.64, 0, true);
-                        this.playNoiseCrack(0.36, 1380, 75, 'lowpass', 0.8, 0.82, 0, true);
-                        this.playGunThump(102, 26, 0.105, 0.50);
-                        this.playNoiseCrack(0.42, 680, 85, 'lowpass', 0.7, 0.34, 0.035, false);
+                        this.playNoiseCrack(0.060, 1800, 280, 'bandpass', 0.8, 0.68, 0);
+                        this.playNoiseCrack(0.46, 1300, 68, 'lowpass', 1.2, 0.88, 0);
+                        this.playGunThump(120, 28, 0.15, 0.80);
                         break;
                     case 'sniper':
-                        // Heavy Anti-Materiel Rifle: Blinding supersonic whip-crack + massive cannon thump + 0.68s cavern echo
-                        this.playNoiseCrack(0.036, 4800, 950, 'highpass', 0.75, 0.74, 0, true);
-                        this.playNoiseCrack(0.25, 2200, 130, 'bandpass', 0.7, 0.82, 0, true);
-                        this.playGunThump(96, 24, 0.12, 0.56);
-                        this.playNoiseCrack(0.68, 880, 62, 'lowpass', 0.7, 0.42, 0.03, false);
-                        this.playMechClick(2100, 0.022, 0.26, 0.028);
+                        this.playNoiseCrack(0.065, 2800, 340, 'bandpass', 0.8, 0.76, 0);
+                        this.playNoiseCrack(0.70, 1850, 58, 'lowpass', 1.2, 0.90, 0);
+                        this.playGunThump(118, 24, 0.17, 0.84);
+                        this.playMechClick(1800, 0.026, 0.26, 0.030);
+                        break;
+                    case 'cannon':
+                        this.playNoiseCrack(0.075, 2200, 260, 'bandpass', 0.8, 0.80, 0);
+                        this.playNoiseCrack(0.84, 1450, 48, 'lowpass', 1.2, 0.94, 0);
+                        this.playGunThump(102, 22, 0.22, 0.90);
+                        this.playSteelResonance(420, 0.16, 0.20);
                         break;
                     case 'arcane':
                     case 'railgun':
-                        // Hyper-Velocity Railgun: Supersonic air-tear crack + magnetic capacitor snap + deep impact thump
-                        this.playNoiseCrack(0.028, 5200, 1100, 'highpass', 0.85, 0.60, 0, true);
-                        this.playNoiseCrack(0.34, 2600, 140, 'bandpass', 1.2, 0.58, 0, true);
-                        this.playGunThump(115, 26, 0.10, 0.46);
-                        this.playTone(580, 120, 0.12, 'triangle', 0.18, 0.14, 2000);
+                        this.playNoiseCrack(0.045, 3200, 520, 'bandpass', 0.9, 0.58, 0);
+                        this.playNoiseCrack(0.40, 2200, 110, 'lowpass', 1.3, 0.72, 0);
+                        this.playGunThump(132, 28, 0.14, 0.68);
+                        this.playTone(680, 140, 0.18, 'triangle', 0.26, 0.18, 2200);
                         break;
                     case 'explosion':
-                        // High-Explosive Detonation: Initial shock crack + clean sub-bass pressure drop + deep rolling fireball
-                        this.playNoiseCrack(0.042, 2600, 340, 'highpass', 0.7, 0.66, 0, true);
-                        this.playGunThump(86, 20, 0.22, 0.62);
-                        this.playNoiseCrack(0.75, 760, 42, 'lowpass', 0.75, 0.84, 0, true);
-                        this.playNoiseCrack(0.55, 1350, 160, 'bandpass', 0.9, 0.38, 0.07, false);
+                        // Clean, heavy concussive blast (no grating static)
+                        this.playNoiseCrack(0.065, 1600, 220, 'lowpass', 0.85, 0.65, 0);
+                        this.playGunThump(92, 22, 0.24, 0.74);
+                        this.playNoiseCrack(0.82, 720, 42, 'lowpass', 0.95, 0.86, 0);
+                        this.playNoiseCrack(0.58, 1050, 130, 'bandpass', 0.9, 0.36, 0.07);
                         break;
                     case 'buzzsaw_throw':
-                        this.playModulatedMechSound(680, 960, 58, 0.28, 0.34, 'sawtooth');
-                        this.playNoiseCrack(0.18, 3200, 680, 'bandpass', 2.0, 0.34);
-                        this.playSteelResonance(1180, 0.10, 0.16);
+                        this.playModulatedMechSound(640, 880, 56, 0.24, 0.20, 'sawtooth');
+                        this.playNoiseCrack(0.18, 2600, 620, 'bandpass', 1.6, 0.30);
+                        this.playSteelResonance(1080, 0.10, 0.14);
                         break;
                     case 'buzzsaw_hit':
-                        this.playModulatedMechSound(1120, 540, 75, 0.18, 0.36, 'sawtooth');
-                        this.playNoiseCrack(0.14, 4200, 850, 'bandpass', 2.4, 0.44, 0, true);
-                        this.playSteelResonance(1420, 0.08, 0.20);
+                        this.playModulatedMechSound(1050, 520, 72, 0.16, 0.22, 'sawtooth');
+                        this.playNoiseCrack(0.14, 3000, 720, 'bandpass', 1.6, 0.36);
+                        this.playSteelResonance(1320, 0.08, 0.16);
                         break;
                     case 'cryo_shatter':
-                        this.playNoiseCrack(0.32, 5200, 1200, 'bandpass', 2.2, 0.46);
+                        this.playNoiseCrack(0.32, 3600, 950, 'bandpass', 1.5, 0.40);
                         this.playSteelResonance(1850, 0.22, 0.22);
                         setTimeout(() => this.playSteelResonance(2480, 0.26, 0.20), 45);
                         setTimeout(() => this.playSteelResonance(3120, 0.20, 0.16), 95);
                         break;
                     case 'gravity_well':
-                        this.playGunThump(130, 28, 0.55, 0.48);
-                        this.playTone(58, 125, 0.42, 'triangle', 0.32, 0.32, 340);
-                        this.playNoiseCrack(0.45, 480, 65, 'lowpass', 2.4, 0.40);
+                        this.playGunThump(130, 28, 0.55, 0.55);
+                        this.playTone(58, 125, 0.42, 'triangle', 0.30, 0.32, 340);
+                        this.playNoiseCrack(0.45, 480, 65, 'lowpass', 1.6, 0.40);
                         break;
                     case 'electric_zap':
-                        this.playModulatedMechSound(420, 180, 120, 0.22, 0.32, 'square');
-                        this.playNoiseCrack(0.16, 4800, 950, 'bandpass', 2.8, 0.46, 0, true);
+                        this.playModulatedMechSound(420, 180, 120, 0.20, 0.22, 'square');
+                        this.playNoiseCrack(0.16, 3600, 850, 'bandpass', 1.8, 0.38);
                         break;
                     case 'harpoon_launch':
-                        this.playNoiseCrack(0.18, 1800, 160, 'lowpass', 1.3, 0.56, 0, true);
-                        this.playGunThump(145, 42, 0.08, 0.36);
-                        this.playMechClick(2200, 0.025, 0.28, 0.04);
-                        this.playMechClick(2900, 0.020, 0.22, 0.09);
+                        this.playNoiseCrack(0.22, 1600, 160, 'lowpass', 1.2, 0.58, 0);
+                        this.playGunThump(155, 44, 0.10, 0.48);
+                        this.playMechClick(2000, 0.025, 0.28, 0.04);
+                        this.playMechClick(2600, 0.022, 0.24, 0.09);
                         break;
                     case 'deploy_mech':
-                        this.playMechClick(1800, 0.030, 0.28, 0);
-                        this.playModulatedMechSound(320, 640, 42, 0.16, 0.20, 'triangle');
-                        this.playMechClick(2600, 0.025, 0.30, 0.10);
+                        this.playMechClick(1800, 0.030, 0.32, 0);
+                        this.playModulatedMechSound(320, 640, 42, 0.16, 0.18, 'triangle');
+                        this.playMechClick(2500, 0.028, 0.34, 0.10);
                         break;
                     case 'stealth_cloak':
-                        this.playNoiseCrack(0.26, 2400, 280, 'bandpass', 3.0, 0.34);
-                        this.playTone(460, 110, 0.26, 'sine', 0.24, 0.20, 900);
+                        this.playNoiseCrack(0.26, 2200, 280, 'bandpass', 1.8, 0.34);
+                        this.playTone(460, 110, 0.26, 'sine', 0.30, 0.20, 900);
                         break;
                     case 'flame_whoosh':
-                        this.playNoiseCrack(0.48, 1100, 160, 'bandpass', 1.2, 0.56, 0, true);
-                        this.playGunThump(85, 32, 0.14, 0.28);
+                        this.playNoiseCrack(0.48, 1050, 160, 'lowpass', 1.1, 0.58, 0);
+                        this.playGunThump(85, 32, 0.14, 0.34);
                         break;
                     case 'nanite_swarm':
-                        this.playModulatedMechSound(280, 340, 88, 0.36, 0.26, 'sawtooth');
-                        this.playNoiseCrack(0.32, 2800, 850, 'bandpass', 2.6, 0.30);
+                        this.playModulatedMechSound(280, 340, 88, 0.34, 0.20, 'sawtooth');
+                        this.playNoiseCrack(0.32, 2400, 780, 'bandpass', 1.8, 0.28);
                         break;
                     case 'kunai_throw':
-                        this.playNoiseCrack(0.065, 4200, 780, 'bandpass', 2.2, 0.38);
-                        this.playSteelResonance(880, 0.06, 0.18);
+                        this.playNoiseCrack(0.075, 3200, 720, 'bandpass', 1.5, 0.38);
+                        this.playSteelResonance(880, 0.06, 0.20);
                         break;
                     case 'assassin_slash':
-                        this.playNoiseCrack(0.18, 3800, 220, 'bandpass', 1.6, 0.60, 0, true);
-                        this.playGunThump(150, 36, 0.07, 0.38);
+                        this.playNoiseCrack(0.18, 3000, 220, 'bandpass', 1.3, 0.58, 0);
+                        this.playGunThump(150, 36, 0.08, 0.44);
                         this.playSteelResonance(720, 0.12, 0.26);
                         break;
+                    case 'lance_charge_1':
+                        this.playTone(340, 440, 0.14, 'triangle', 0.34, 0.14, 2000);
+                        this.playMechClick(2100, 0.020, 0.26, 0);
+                        break;
+                    case 'lance_charge_2':
+                        this.playTone(520, 680, 0.16, 'triangle', 0.38, 0.16, 2600);
+                        this.playMechClick(2600, 0.022, 0.28, 0);
+                        break;
+                    case 'lance_charge_3':
+                        this.playTone(880, 1120, 0.22, 'triangle', 0.44, 0.24, 3400);
+                        this.playSteelResonance(1320, 0.16, 0.30);
+                        break;
                     case 'oom':
-                        // Dry empty-chamber firing pin click
-                        this.playMechClick(3200, 0.012, 0.32, 0);
-                        this.playGunThump(110, 65, 0.030, 0.14);
+                        // Loud, unmistakable Insufficient Energy / Cooldown Denied double-beep
+                        this.playTone(260, 240, 0.08, 'triangle', 0.46, 0.05, 1600);
+                        setTimeout(() => this.playTone(185, 165, 0.12, 'triangle', 0.48, 0.08, 1400), 85);
+                        this.playMechClick(2400, 0.020, 0.26, 0);
                         break;
                     case 'reload':
-                        // Tactile magazine lock + metallic bolt rack (no chime!)
-                        this.playMechClick(2100, 0.020, 0.30, 0);
-                        this.playNoiseCrack(0.045, 1600, 420, 'bandpass', 1.8, 0.26, 0.02);
-                        this.playMechClick(3200, 0.022, 0.34, 0.14);
-                        this.playNoiseCrack(0.055, 2400, 680, 'bandpass', 1.8, 0.28, 0.15);
+                        // Clean, audible mag-out & bolt rack
+                        this.playMechClick(1850, 0.030, 0.38, 0);
+                        this.playNoiseCrack(0.060, 1500, 420, 'lowpass', 1.2, 0.38, 0.02);
+                        this.playMechClick(2650, 0.032, 0.42, 0.14);
+                        this.playNoiseCrack(0.070, 2100, 580, 'lowpass', 1.2, 0.40, 0.15);
+                        break;
+                    case 'reload_done':
+                        // Loud Bolt-Lock + Bright Tactical Chamber-Ready Chime!
+                        this.playMechClick(2800, 0.028, 0.40, 0);
+                        this.playTone(880, 880, 0.12, 'triangle', 0.38, 0.18, 3000);
+                        setTimeout(() => this.playTone(1174.66, 1174.66, 0.16, 'sine', 0.34, 0.22, 3400), 55);
+                        break;
+                    case 'area_clear':
+                        // Bright, unmistakable 3-Note Room-Clear Chime!
+                        [440.0, 554.37, 659.25].forEach((f, idx) => {
+                            setTimeout(() => this.playTone(f, f, 0.26, 'triangle', 0.38, 0.36, 2600), idx * 75);
+                        });
                         break;
                     case 'hit':
-                        // Dry ballistic flesh/armor impact thud
-                        this.playNoiseCrack(0.045, 1400, 180, 'lowpass', 1.3, 0.34);
-                        this.playGunThump(125, 42, 0.045, 0.24);
+                        // Clear ballistic hit thud
+                        this.playNoiseCrack(0.065, 1650, 220, 'lowpass', 1.1, 0.52, 0);
+                        this.playGunThump(150, 52, 0.060, 0.40);
+                        this.playMechClick(2200, 0.018, 0.26, 0);
+                        break;
+                    case 'crit':
+                        // Unmistakable Critical Hit: heavy armor crunch + bright metallic crit ring!
+                        this.playNoiseCrack(0.11, 2400, 240, 'lowpass', 1.2, 0.62, 0);
+                        this.playGunThump(175, 42, 0.085, 0.52);
+                        this.playSteelResonance(1480, 0.13, 0.36);
+                        this.playMechClick(3000, 0.024, 0.34, 0.01);
                         break;
                     case 'playerHit':
-                        this.playGunThump(105, 28, 0.14, 0.46);
-                        this.playNoiseCrack(0.16, 1250, 140, 'bandpass', 1.6, 0.48, 0, true);
+                        this.playGunThump(105, 28, 0.14, 0.54);
+                        this.playNoiseCrack(0.18, 1250, 140, 'lowpass', 1.3, 0.54, 0);
                         if (Math.random() < 0.85) this.playZedVocal('hit');
                         break;
                     case 'playerDeathGore':
-                        this.playNoiseCrack(0.12, 4200, 850, 'bandpass', 3.0, 0.42);
-                        this.playNoiseCrack(0.24, 2400, 300, 'bandpass', 1.8, 0.40);
-                        this.playGunThump(180, 36, 0.16, 0.34);
+                        this.playNoiseCrack(0.12, 3400, 850, 'bandpass', 1.8, 0.44);
+                        this.playNoiseCrack(0.24, 2200, 300, 'lowpass', 1.4, 0.46);
+                        this.playGunThump(180, 36, 0.16, 0.42);
                         this.playZedVocal('death');
                         setTimeout(() => {
-                            this.playNoiseCrack(0.18, 2800, 240, 'bandpass', 2.4, 0.34);
-                            this.playGunThump(110, 28, 0.18, 0.34);
+                            this.playNoiseCrack(0.18, 2400, 240, 'lowpass', 1.6, 0.38);
+                            this.playGunThump(110, 28, 0.18, 0.40);
                         }, 260);
                         setTimeout(() => {
-                            this.playNoiseCrack(0.16, 1400, 140, 'bandpass', 2.0, 0.30);
-                            this.playGunThump(72, 22, 0.22, 0.36);
+                            this.playNoiseCrack(0.16, 1400, 140, 'lowpass', 1.5, 0.34);
+                            this.playGunThump(72, 22, 0.22, 0.42);
                         }, 540);
                         break;
                     case 'shieldHit':
-                        this.playNoiseCrack(0.09, 2200, 380, 'bandpass', 2.0, 0.34);
-                        this.playTone(340, 130, 0.10, 'triangle', 0.26, 0.10, 1200);
+                        this.playNoiseCrack(0.10, 2000, 380, 'bandpass', 1.5, 0.40);
+                        this.playTone(360, 140, 0.11, 'triangle', 0.32, 0.12, 1400);
                         break;
                     case 'shieldBreak':
-                        this.playNoiseCrack(0.26, 3200, 160, 'bandpass', 1.4, 0.54, 0, true);
-                        this.playGunThump(140, 38, 0.14, 0.40);
-                        this.playTone(460, 75, 0.24, 'triangle', 0.28, 0.20, 1600);
-                        break;
-                    case 'crit':
-                        // Heavy armor-piercing crunch
-                        this.playNoiseCrack(0.09, 2600, 220, 'bandpass', 1.2, 0.48, 0, true);
-                        this.playGunThump(155, 38, 0.07, 0.36);
-                        this.playMechClick(2800, 0.018, 0.24, 0.01);
+                        this.playNoiseCrack(0.26, 2600, 160, 'lowpass', 1.3, 0.58, 0);
+                        this.playGunThump(140, 38, 0.14, 0.48);
+                        this.playTone(460, 75, 0.24, 'triangle', 0.34, 0.22, 1600);
                         break;
                     case 'dash':
-                        this.playNoiseCrack(0.18, 1150, 160, 'bandpass', 1.7, 0.40);
-                        this.playGunThump(135, 48, 0.12, 0.22);
+                        this.playNoiseCrack(0.18, 1250, 160, 'lowpass', 1.4, 0.44);
+                        this.playGunThump(135, 48, 0.12, 0.30);
                         if (Math.random() < 0.85) this.playZedVocal('dash');
                         break;
                     case 'zed2Dash':
-                        this.playNoiseCrack(0.22, 1450, 220, 'bandpass', 2.2, 0.42);
-                        this.playGunThump(165, 58, 0.14, 0.24);
+                        this.playNoiseCrack(0.22, 1450, 220, 'lowpass', 1.5, 0.46);
+                        this.playGunThump(165, 58, 0.14, 0.32);
                         break;
                     case 'loot':
-                        this.playMechClick(2400, 0.018, 0.24, 0);
-                        this.playMechClick(3400, 0.022, 0.26, 0.065);
+                        // Loud, crisp 2-Note Supply / Credit Chime
+                        this.playTone(587.33, 587.33, 0.16, 'triangle', 0.38, 0.34, 2600);
+                        setTimeout(() => this.playTone(880.0, 880.0, 0.24, 'triangle', 0.42, 0.42, 3000), 65);
+                        this.playMechClick(2600, 0.018, 0.22, 0);
                         break;
                     case 'levelup':
                         [220.0, 277.18, 329.63, 440.0, 659.25].forEach((f, idx) => {
                             setTimeout(() => {
-                                this.playTone(f, f, 0.55, 'triangle', 0.18, 0.55, 1600);
+                                this.playTone(f, f, 0.55, 'triangle', 0.34, 0.55, 2200);
                             }, idx * 65);
                         });
                         break;
                     case 'anvil':
-                        this.playNoiseCrack(0.18, 2200, 240, 'bandpass', 1.5, 0.34, 0, true);
-                        this.playGunThump(110, 34, 0.14, 0.38);
-                        this.playSteelResonance(460, 0.24, 0.30);
+                        this.playNoiseCrack(0.18, 1900, 240, 'lowpass', 1.3, 0.42, 0);
+                        this.playGunThump(110, 34, 0.14, 0.46);
+                        this.playSteelResonance(460, 0.24, 0.32);
                         break;
                     case 'potion':
-                        this.playNoiseCrack(0.15, 2600, 480, 'bandpass', 2.0, 0.28);
-                        this.playTone(180, 320, 0.22, 'triangle', 0.20, 0.26, 1100);
+                        this.playNoiseCrack(0.16, 2400, 480, 'bandpass', 1.6, 0.36);
+                        this.playTone(240, 460, 0.24, 'sine', 0.34, 0.28, 1600);
                         if (Math.random() < 0.85) this.playZedVocal('stim');
                         break;
                     case 'bossRoar':
-                        this.playGunThump(75, 26, 0.85, 0.55);
-                        this.playNoiseCrack(0.85, 520, 55, 'lowpass', 1.8, 0.60, 0, true);
+                        this.playGunThump(75, 26, 0.85, 0.62);
+                        this.playNoiseCrack(0.85, 520, 55, 'lowpass', 1.5, 0.64, 0);
                         break;
                     case 'laserBeam':
-                        this.playTone(540, 140, 0.45, 'triangle', 0.36, 0.38, 2400);
-                        this.playNoiseCrack(0.42, 3000, 320, 'bandpass', 2.2, 0.44, 0, true);
+                        this.playTone(540, 140, 0.45, 'triangle', 0.38, 0.38, 2400);
+                        this.playNoiseCrack(0.42, 2600, 320, 'bandpass', 1.6, 0.42, 0);
                         break;
                     case 'perfectDodge':
-                        this.playNoiseCrack(0.14, 1900, 420, 'bandpass', 2.2, 0.30);
-                        this.playMechClick(3200, 0.020, 0.26, 0.01);
+                        this.playNoiseCrack(0.14, 1800, 420, 'bandpass', 1.6, 0.32);
+                        this.playTone(580, 1160, 0.22, 'sine', 0.40, 0.28, 3200);
                         break;
                     case 'sonar':
-                        this.playTone(920, 440, 0.38, 'sine', 0.28, 0.32, 2200);
+                        this.playTone(980, 480, 0.36, 'sine', 0.40, 0.34, 2600);
                         break;
                     case 'cardThrow':
-                        this.playNoiseCrack(0.05, 3600, 950, 'bandpass', 2.4, 0.32);
-                        this.playMechClick(3800, 0.012, 0.20, 0.005);
+                        this.playNoiseCrack(0.055, 3200, 900, 'bandpass', 1.6, 0.36);
+                        this.playMechClick(3200, 0.016, 0.24, 0.005);
                         break;
                 }
             }
@@ -16504,7 +16539,7 @@ const LORE_ENTRIES = [
 
                 if (isZed2Boss) {
                     maxHp = 1000000;
-                    finalDmg = 520;
+                    finalDmg = 1000;
                     finalSpeed = 7.8;
                     bossMaxPhases = 5;
                 } else if (isTensorPrimeBoss) {
@@ -16617,7 +16652,7 @@ const LORE_ENTRIES = [
                     shieldTimer: 0,
                     attackTimer: 0.9 + Math.random() * 0.6,
                     atkAnimTimer: 0,
-                    atkRate: isTensorPrimeBoss ? 1.6 : (isZed2Boss ? 2.4 : (isBoss ? ((this.isHardMode || this.isTensorRun) ? 1.32 : 1.0) : ramp.atk)),
+                    atkRate: isTensorPrimeBoss ? 1.6 : (isZed2Boss ? 2.6 : (isBoss ? ((this.isHardMode || this.isTensorRun) ? 1.32 : 1.0) : ramp.atk)),
                     tactRate: isBoss ? ((this.isHardMode || this.isTensorRun) ? 1.30 : 1.0) : ramp.tact,
                     tacticalTimer: 2.0 + Math.random() * 1.8,
                     lungeTimer: 0,
@@ -17118,24 +17153,29 @@ const LORE_ENTRIES = [
                 } else if (arch.id === 'staff' || arch.id === 'xr0_eclipse') {
                     AudioEngine.sfx('railgun');
                     this.screenShake = Math.max(this.screenShake, lanceStage === 3 ? 0.28 : 0.16);
-                } else if (arch.weaponClass === 'Sniper') {
-                    AudioEngine.sfx('sniper');
-                    this.screenShake = Math.max(this.screenShake, 0.22);
-                } else if (arch.isGrenadeLauncher) {
-                    AudioEngine.sfx('harpoon_launch');
-                    this.screenShake = Math.max(this.screenShake, 0.18);
-                } else if (arch.weaponClass === 'Shotgun') {
-                    AudioEngine.sfx('shotgun');
-                    this.screenShake = Math.max(this.screenShake, 0.20);
-                } else if (arch.isSuppressed) {
-                    AudioEngine.sfx('suppressed');
-                } else if (arch.id === 'de50_magnum') {
-                    AudioEngine.sfx('magnum');
-                    this.screenShake = Math.max(this.screenShake, 0.15);
-                } else if (arch.id === 'mk23_soc') {
-                    AudioEngine.sfx('pistol');
-                } else if (arch.weaponClass === 'SMG' || arch.id === 'g18_autopistol') {
-                    AudioEngine.sfx('smg');
+                } else if (arch.id === 'ntw20_titan') {
+                  AudioEngine.sfx('cannon');
+                  this.screenShake = Math.max(this.screenShake, 0.32);
+              } else if (arch.weaponClass === 'Sniper') {
+                  AudioEngine.sfx('sniper');
+                  this.screenShake = Math.max(this.screenShake, 0.24);
+              } else if (arch.isGrenadeLauncher) {
+                  AudioEngine.sfx('harpoon_launch');
+                  this.screenShake = Math.max(this.screenShake, 0.18);
+              } else if (arch.weaponClass === 'Shotgun') {
+                  AudioEngine.sfx('shotgun');
+                  this.screenShake = Math.max(this.screenShake, 0.20);
+              } else if (arch.isSuppressed) {
+                  AudioEngine.sfx('suppressed');
+              } else if (arch.id === 'de50_magnum') {
+                  AudioEngine.sfx('magnum');
+                  this.screenShake = Math.max(this.screenShake, 0.15);
+              } else if (arch.id === 'mk23_soc') {
+                  AudioEngine.sfx('pistol');
+              } else if (arch.isMinigun) {
+                  AudioEngine.sfx('minigun');
+              } else if (arch.weaponClass === 'SMG' || arch.id === 'g18_autopistol') {
+                  AudioEngine.sfx('smg');
                 } else if (arch.id === 'vk47_heavy' || arch.id === 'br55_burst') {
                     AudioEngine.sfx('heavy_rifle');
                 } else {
@@ -20543,14 +20583,15 @@ const LORE_ENTRIES = [
                         this.spawnPortal(en.pos.x, en.pos.z, true);
                     }
                 } else if (this.enemies.length === 0 && !this.floorPortalSpawned) {
-                    if (this.isTensorRun && this.dungeonFloor === 20 && this.tensorBreachGate) {
-                        this.openTensorFloor22NorthernBreach();
-                    } else {
-                        this.floorPortalSpawned = true;
-                        if (this.runStats) this.runStats.floorsCleared++;
-                        this.spawnPortal(0, 0, false);
-                    }
-                }
+                  AudioEngine.sfx('area_clear');
+                  if (this.isTensorRun && this.dungeonFloor === 20 && this.tensorBreachGate) {
+                      this.openTensorFloor22NorthernBreach();
+                  } else {
+                      this.floorPortalSpawned = true;
+                      if (this.runStats) this.runStats.floorsCleared++;
+                      this.spawnPortal(0, 0, false);
+                  }
+              }
 
                 this.updateDungeonObjectiveText();
                 this.saveGame();
@@ -24813,12 +24854,19 @@ const LORE_ENTRIES = [
                 const activeWepItem = this.getActiveWeaponItem();
 
                 if (arch.isChargeLance) {
-                    const chargeRate = (activeWepItem?.isNeo || activeWepItem?.isTranscended) ? 1.54 : 1.18;
-                    if (this.player.isADS && this.player.reloadTimer <= 0 && this.player.ammo > 0) {
-                        this.player.lanceCharge = Math.min(1.0, (this.player.lanceCharge || 0) + dt * chargeRate);
-                    } else {
-                        this.player.lanceCharge = Math.max(0, (this.player.lanceCharge || 0) - dt * 1.6);
-                    }
+                  const chargeRate = (activeWepItem?.isNeo || activeWepItem?.isTranscended) ? 1.54 : 1.18;
+                  if (this.player.isADS && this.player.reloadTimer <= 0 && this.player.ammo > 0) {
+                      this.player.lanceCharge = Math.min(1.0, (this.player.lanceCharge || 0) + dt * chargeRate);
+                      const cNow = this.player.lanceCharge;
+                      const curStage = cNow >= 0.99 ? 3 : (cNow >= 0.66 ? 2 : (cNow >= 0.33 ? 1 : 0));
+                      if (curStage > (this.player._lastLanceStage || 0)) {
+                          AudioEngine.sfx(`lance_charge_${curStage}`);
+                      }
+                      this.player._lastLanceStage = curStage;
+                  } else {
+                      this.player.lanceCharge = Math.max(0, (this.player.lanceCharge || 0) - dt * 1.6);
+                      this.player._lastLanceStage = 0;
+                  }
                     const wHolder = this.player.weaponPivot && this.player.weaponPivot.children[0];
                     if (wHolder && wHolder.userData && wHolder.userData.chargeCoils) {
                         const cVal = this.player.lanceCharge || 0;
@@ -25757,14 +25805,14 @@ const LORE_ENTRIES = [
 
 
                 if (this.player.reloadTimer > 0) {
-                    this.player.reloadTimer = Math.max(0, this.player.reloadTimer - dt);
-                    if (this.player.reloadTimer === 0) {
-                        this.player.ammo = this.player.maxAmmo;
-                        AudioEngine.sfx('loot');
-                        this.spawnFloatingText(this.player.pos, 'MAGAZINE READY', '#38bdf8', 'text-xs');
-                    }
-                    UI.updateHUD();
-                }
+                  this.player.reloadTimer = Math.max(0, this.player.reloadTimer - dt);
+                  if (this.player.reloadTimer === 0) {
+                      this.player.ammo = this.player.maxAmmo;
+                      AudioEngine.sfx('reload_done');
+                      this.spawnFloatingText(this.player.pos, 'MAGAZINE READY', '#38bdf8', 'text-xs');
+                  }
+                  UI.updateHUD();
+              }
 
                 for (let i = 0; i < 5; i++) {
                     if (this.player.skillCooldowns[i] > 0) {
