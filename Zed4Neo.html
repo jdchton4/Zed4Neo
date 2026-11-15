@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Three.js r128 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- PeerJS WebRTC P2P Networking -->
+    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Chakra Petch, Rajdhani & Inter for Crisp, Legible Tactical Telemetry -->
@@ -4598,7 +4600,7 @@
                         // Unmistakable Critical Hit: heavy armor crunch + bright metallic crit ring!
                         this.playNoiseCrack(0.11, 2400, 240, 'lowpass', 1.2, 0.62, 0);
                         this.playGunThump(175, 42, 0.085, 0.52);
-                        this.playSteelResonance(1480, 0.13, 0.36);
+                        this.playSteelResonance(740, 0.13, 0.36);
                         this.playMechClick(3000, 0.024, 0.34, 0.01);
                         break;
                     case 'playerHit':
@@ -5554,7 +5556,7 @@
     {
         id: 'hvtStrike', branch: 'Recon', type: 'active', quickCast: false, previewType: 'groundAoE', range: 16.0, aoeRadius: 4.5, defaultSlot: -1,
         name: 'HVT Orbital Execution', evoName: 'AMP // Triple-Tap Armor-Buster', ovrName: 'OVR // 5x Dyson Orbital Lance', icon: 'fa-satellite-dish', color: 'text-emerald-400',
-        maxRank: 5, mpCost: 44, cooldown: 22.0,
+        maxRank: 5, mpCost: 44, cooldown: 55.0,
         evoDesc: 'RANK 6 AMP: 3x Orbital Strikes (+25% vs Boss/Elite), brands HVT (+18% Vuln 12s) & arcs to 1 extra foe.',
         ovrDesc: 'RANK 7 OVERLOAD: 5x Orbital Strikes (+35% vs Boss/Elite + Missing-HP Execute), +32% Vuln (16s) & arcs to 2 foes!',
         desc: (r) => (typeof Game !== 'undefined' && Game.getSkillRealDesc) ? Game.getSkillRealDesc('hvtStrike', r) : 'Lock the highest-HP hostile in the circle with a 3D orbital reticle and call down an ion lance.'
@@ -7214,7 +7216,7 @@ const LORE_ENTRIES = [
             },
 
             // =========================================================================
-            // NAVICUST AUGMENT GRID HELPERS (5x5 -> 11x11 based on Operative Rank)
+            // AUGMENT GRID HELPERS (5x5 -> 11x11 based on Operative Rank)
             // =========================================================================
             getAugmentGridDims() {
                 const rNum = this.getOperativeRankInfo().rankNumber;
@@ -18243,8 +18245,8 @@ const LORE_ENTRIES = [
                     }
                     case 'hvtStrike': {
                         if (isAmp) {
-                            const taps = isOvr ? 4 : 2;
-                            const tapDmg = Math.round(pDmg * (isOvr ? (2.60 + 7 * 0.52) : (2.20 + 6 * 0.45)) * (isOvr ? 1.35 : 1.25) * (nonLin * 0.32));
+                            const taps = isOvr ? 3 : 2;
+                            const tapDmg = Math.round(pDmg * (isOvr ? (2.40 + 7 * 0.52) : (2 + 6 * 0.45)) * (isOvr ? 1.35 : 1.25) * (nonLin * 0.32));
                             return `Orbital Target-Lock: ${taps}x ${tapDmg.toLocaleString()} Ion Strikes (${(tapDmg * taps).toLocaleString()} Total Boss Dmg), +${isOvr ? 32 : 18}% Vuln & arcs to ${isOvr ? 2 : 1} foe${isOvr ? 's' : ''}!`;
                         }
                         const sDmg = Math.round(pDmg * (3.20 + r * 0.75) * 1.15 * (nonLin * 0.65));
@@ -21757,8 +21759,9 @@ const LORE_ENTRIES = [
                 }, 1200);
             },
 
-            executeZed2Ability(zed2) {
-                if (this.isDefeatPending || !this.activeBoss || zed2.hp <= 0 || this.zed2DefeatCutsceneActive) return;
+            executeZed2Ability(zed2, _fromNet = null) {
+             if (this.isDefeatPending || !this.activeBoss || zed2.hp <= 0 || this.zed2DefeatCutsceneActive) return;
+             if (window.Coop && Coop.interceptBossAbility(this, zed2, 'zed2', null, null, _fromNet)) return;
 
                 const bar1Skills = ['repulsor_knockback', 'cryo_grenade', 'tesla_obelisk', 'valkyrie_napalm'];
                 const bar3Skills = ['drone_squadron', 'payload_sniper', 'time_anchor', 'grav_harpoon'];
@@ -22055,8 +22058,9 @@ const LORE_ENTRIES = [
                 return propObj;
             },
 
-            executeTensorPrimeAbility(boss) {
+            executeTensorPrimeAbility(boss, _fromNet = null) {
                 if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return;
+                if (window.Coop && Coop.interceptBossAbility(this, boss, 'tensor_prime', null, null, _fromNet)) return;
                 if (!this.bossCustomEffects) this.bossCustomEffects = [];
 
                 if (!boss.tensorRunLoadout) {
@@ -22131,7 +22135,7 @@ const LORE_ENTRIES = [
                 // ==================== A4: ANNIHILATION IRIS VICE (Yellow Ring -> 3.0m Min Radius in 2.0s) ====================
                 // ==================== A4: ANNIHILATION IRIS VICE (4 Arc Segments + 4 Wide Escape Gaps + Dash-Through) ====================
                 else if (tid === 'A4_iris_vice') {
-                    setBanner('ANNIHILATION IRIS VICE — ESCAPE THROUGH THE GAPS!');
+                    setBanner('ANNIHILATION IRIS VICE');
                     const center = this.player.pos.clone();
                     let curR = 13.5;
                     const minR = 3.0;
@@ -22693,19 +22697,20 @@ const LORE_ENTRIES = [
                 }
             },
 
-            executeBossPattern(boss, forcedSecIdx = null, forcedUltIdx = null) {
+            executeBossPattern(boss, forcedSecIdx = null, forcedUltIdx = null, _fromNet = null) {
                 if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return;
                 if (!this.bossCustomEffects) this.bossCustomEffects = [];
 
                 if (boss.isZed2Boss) {
-                    this.executeZed2Ability(boss);
+                    this.executeZed2Ability(boss, _fromNet);
                     return;
                 }
 
                 if (boss.isTensorPrimeBoss && forcedSecIdx === null) {
-                    this.executeTensorPrimeAbility(boss);
+                    this.executeTensorPrimeAbility(boss, _fromNet);
                     return;
                 }
+                if (window.Coop && Coop.interceptBossAbility(this, boss, 'sector_boss', forcedSecIdx, forcedUltIdx, _fromNet)) return;
                 let secIdx = forcedSecIdx !== null
                     ? forcedSecIdx
                     : (this.isTensorRun ? Math.min(8, Math.floor((this.dungeonFloor - 1) / 2)) : this.activeBiomeIndex);
@@ -26684,13 +26689,18 @@ const LORE_ENTRIES = [
                         }
                     }
 
+                    if (window.Coop && Coop.isClient() && !en.isDummy) {
+                        Coop.interpolateClientEnemy(en, dt);
+                        return;
+                    }
                     const enOnRampNow = !en.isBoss && this.isPointOnRamp(en.pos.x, en.pos.z, 0.55);
                     if (!en.isBoss) {
                         const enFloorY = this.getFloorElevationAt(en.pos.x, en.pos.z, en.pos.y || 0, false);
                         en.pos.y = enOnRampNow ? enFloorY : THREE.MathUtils.lerp(en.pos.y || 0, enFloorY, 18 * dt);
                     }
 
-                    const primaryTargetPos = tauntingCharmedEnemy ? tauntingCharmedEnemy.pos : (tauntingBot ? tauntingBot.pos : this.player.pos);
+                    const coopTgtPos = (window.Coop && Coop.isActive()) ? Coop.getEnemyTargetPos(en) : this.player.pos;
+                    const primaryTargetPos = tauntingCharmedEnemy ? tauntingCharmedEnemy.pos : (tauntingBot ? tauntingBot.pos : coopTgtPos);
                     const dist = Math.hypot(en.pos.x - primaryTargetPos.x, en.pos.z - primaryTargetPos.z);
                     const playerStealthed = !tauntingBot && !tauntingCharmedEnemy && (this.player.stealthTimer > 0);
 
@@ -27499,6 +27509,7 @@ const LORE_ENTRIES = [
                             } else if (ae.type === 'arch_destructible' && Math.hypot(p.pos.x - ae.pos.x, p.pos.z - ae.pos.z) <= 1.75) {
                                 ae.hitsLeft = Math.max(0, (ae.hitsLeft || 1) - 1);
                                 p.life = 0;
+                                if (window.Coop && Coop.isActive() && !p._fromCoopRemote) Coop.sendPropHit(ae);
                                 if (ae.pipFill) {
                                     ae.pipFill.scale.x = Math.max(0.01, ae.hitsLeft / Math.max(1, ae.maxHits));
                                 }
@@ -27802,6 +27813,9 @@ const LORE_ENTRIES = [
                                         break;
                                     }
                                 }
+                            }
+                            if (p.life > 0 && window.Coop && Coop.isActive() && Coop.checkRemoteAegisIntercept(p)) {
+                                p.life = 0;
                             }
                             if (p.life > 0 && this.player.aegisTimer > 0 && this.player.aegisHp > 0 && p.pos.distanceTo(this.player.pos) <= 1.75) {
                                 if (this.player.aegisReflect) {
@@ -31520,7 +31534,7 @@ const LORE_ENTRIES = [
         const st = Game.state;
         const cur = st.skills[skillId] || 0;
         // Rank 5 of Neural Chassis Compression requires Sector IV (index 3) Normal Mode completed!
-        if (skillId === 'cyberneticArchitect' && cur === 4 && !(st.clearedBiomes && st.clearedBiomes[3])) {
+        if (skillId === 'cyberneticArchitect' && cur === 4 && !(st.clearedBiomes && st.clearedHardBiomes[3])) {
             AudioEngine.sfx('oom');
             Game.spawnFloatingText(Game.player.pos, 'COMPLETE SECTOR IV TO UNLOCK RANK 5 (VALKYRIE-ZERO CORE)!', '#f87171', 'text-xs', true, 1.5);
             return;
@@ -33913,7 +33927,6 @@ const LORE_ENTRIES = [
                     return;
                 }
                 if (menuOpen) {
-                    if (e.code === 'KeyH') { menuTab = 'tutorial'; renderMenu(); }
                     if (e.code === 'KeyO') { menuTab = 'settings'; renderMenu(); }
                     if (tag !== 'SELECT' && tag !== 'INPUT') e.preventDefault();
                     e.stopPropagation(); return;
@@ -33987,6 +34000,2500 @@ const LORE_ENTRIES = [
             wireSplash();
 
             window.ZedEnhanced = { cfg, stats, session, ACH, checkAch, resetStatsAndAch, openMenu, closeMenu, activateOD, announce, toast, version: '2.6' };
+        })();
+    </script>
+    <script id="zn-coop">
+        /**
+         * ============================================================================
+         * ZED4NEO // 4-PLAYER P2P ONLINE CO-OP MODULE v2 (Full World & FX Sync)
+         * ============================================================================
+         */
+        (function () {
+            'use strict';
+            if (typeof Game === 'undefined' || typeof UI === 'undefined' || typeof THREE === 'undefined') return;
+
+            const DMG_MULTS = [1.0, 1.6, 2.2, 2.5]; // 1P: 1.0x, 2P: 1.6x, 3P: 2.2x, 4P: 2.5x
+            const HP_MULTS  = [1.0, 2.2, 3.4, 4.6]; // 1P: 1.0x, 2P: 2.2x, 3P: 3.4x, 4P: 4.6x
+            const SPAWN_OFFSETS = [
+                [0, 0],
+                [-1.6, 0],
+                [1.6, 0],
+                [0, -1.6]
+            ];
+
+            const styleEl = document.createElement('style');
+            styleEl.textContent = `
+                #coop-squad-hud {
+                    position: fixed;
+                    left: 14px;
+                    top: 238px;
+                    z-index: 33;
+                    display: none;
+                    flex-direction: column;
+                    gap: 6px;
+                    width: 215px;
+                    pointer-events: none;
+                    font-family: 'Chakra Petch', sans-serif;
+                }
+                #coop-squad-hud.on { display: flex; }
+                .coop-mate-card {
+                    background: linear-gradient(90deg, rgba(5, 9, 17, 0.92), rgba(11, 18, 31, 0.85));
+                    border: 1px solid #0284c7;
+                    padding: 5px 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.85);
+                }
+                .coop-mate-card.dead {
+                    border-color: #ef4444;
+                    opacity: 0.75;
+                }
+                #coop-spectator-banner {
+                    position: fixed;
+                    left: 50%;
+                    bottom: 120px;
+                    transform: translateX(-50%);
+                    z-index: 38;
+                    display: none;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 4px;
+                    padding: 10px 24px;
+                    background: rgba(15, 5, 10, 0.94);
+                    border: 2px solid #ef4444;
+                    box-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
+                    font-family: 'Chakra Petch', sans-serif;
+                    pointer-events: auto;
+                }
+                #coop-spectator-banner.on { display: flex; }
+            `;
+            document.head.appendChild(styleEl);
+
+            const Coop = {
+                peer: null,
+                myPeerId: null,
+                roomCode: '',
+                callsign: localStorage.getItem('z4n_callsign') || ('OPERATIVE-' + Math.floor(100 + Math.random() * 900)),
+                role: 'solo', // 'solo' | 'host' | 'client'
+                hostConn: null,
+                clientConns: new Map(),
+                remotePlayers: new Map(),
+                partyOrder: [],
+                lockedPartySize: 1,
+                floorSeed: 1337,
+                pendingSnapshot: null,
+                enemySeq: 0,
+                propSeq: 0,
+                gimSeq: 0,
+                syncAccum: 0,
+                enemySyncAccum: 0,
+                inSyncedBossUlt: false,
+                suppressNetFx: false,
+                activeAiEnemy: null,
+                cutsceneVotes: new Set(),
+                spectating: false,
+                spectateTargetId: null,
+                remoteVisualEffects: [],
+
+                isActive() {
+                    return this.role === 'host' || this.role === 'client';
+                },
+                isHost() {
+                    return this.role === 'host';
+                },
+                isClient() {
+                    return this.role === 'client';
+                },
+                getPartySize() {
+                    if (!this.isActive()) return 1;
+                    if (Game.mode === 'dungeon' && this.lockedPartySize > 1) return this.lockedPartySize;
+                    return Math.min(4, 1 + this.remotePlayers.size);
+                },
+                getMultipliers() {
+                    const n = Math.max(1, Math.min(4, this.getPartySize()));
+                    return {
+                        hp: HP_MULTS[n - 1] || 1.0,
+                        dmg: DMG_MULTS[n - 1] || 1.0,
+                        count: n
+                    };
+                },
+                getMySlotIndex() {
+                    if (!this.isActive()) return 0;
+                    const idx = this.partyOrder.indexOf(this.myPeerId);
+                    return idx >= 0 ? idx : (this.isHost() ? 0 : 1);
+                },
+
+                mulberry32(a) {
+                    return function () {
+                        let t = a += 0x6D2B79F5;
+                        t = Math.imul(t ^ (t >>> 15), t | 1);
+                        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+                        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+                    };
+                },
+
+                withSeededRandom(seed, fn) {
+                    const origRandom = Math.random;
+                    Math.random = this.mulberry32(seed >>> 0);
+                    try {
+                        return fn();
+                    } finally {
+                        Math.random = origRandom;
+                    }
+                },
+
+                getLocalProfileSummary() {
+                    Game.ensureCosmeticsState();
+                    const st = Game.state;
+                    const rInfo = Game.getOperativeRankInfo();
+                    return {
+                        peerId: this.myPeerId,
+                        name: this.callsign,
+                        level: st.level || 1,
+                        rankTitle: rInfo.title,
+                        rankNumber: rInfo.rankNumber,
+                        fxClass: rInfo.fxClass,
+                        cosmetics: Object.assign({}, st.cosmetics.equipped),
+                        weapon: st.equipped.weapon ? { archetype: st.equipped.weapon.archetype, isNeo: st.equipped.weapon.isNeo, isTranscended: st.equipped.weapon.isTranscended, name: st.equipped.weapon.name, rarity: st.equipped.weapon.rarity, mk: st.equipped.weapon.mk } : null,
+                        secondary: st.equipped.secondary ? { archetype: st.equipped.secondary.archetype, isNeo: st.equipped.secondary.isNeo, isTranscended: st.equipped.secondary.isTranscended, name: st.equipped.secondary.name, rarity: st.equipped.secondary.rarity, mk: st.equipped.secondary.mk } : null,
+                        activeWeaponSlot: Game.player.activeWeaponSlot || 'weapon',
+                        unlockedBiomes: st.unlockedBiomes || 1,
+                        clearedBiomes: Object.assign({}, st.clearedBiomes || {}),
+                        clearedHardBiomes: Object.assign({}, st.clearedHardBiomes || {}),
+                        tensorUnlocked: Game.isTensorUnlocked()
+                    };
+                },
+
+                canPartyDeploy(sectorIdx, isHardMode = false) {
+                    if (!this.isActive()) return { ok: true };
+                    const members = [this.getLocalProfileSummary(), ...Array.from(this.remotePlayers.values()).map(rp => rp.profile).filter(Boolean)];
+                    for (const m of members) {
+                        if (sectorIdx === 9) {
+                            if (!m.tensorUnlocked) return { ok: false, reason: `${m.name} has not unlocked the Annihilation Tensor` };
+                        } else if (isHardMode) {
+                            if (!m.clearedBiomes || !m.clearedBiomes[sectorIdx]) {
+                                return { ok: false, reason: `${m.name} has not cleared Sector ${sectorIdx + 1} Normal` };
+                            }
+                        } else {
+                            if ((m.unlockedBiomes || 1) < sectorIdx + 1) {
+                                return { ok: false, reason: `${m.name} has not unlocked Sector ${sectorIdx + 1}` };
+                            }
+                        }
+                    }
+                    return { ok: true };
+                },
+
+                // ==================== PEERJS CONNECTION MANAGEMENT ====================
+                hostLobby() {
+                    if (typeof Peer === 'undefined') {
+                        alert('PeerJS library failed to load. Check your internet connection.');
+                        return;
+                    }
+                    this.leaveLobby(true);
+                    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+                    let code = '';
+                    for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+                    this.roomCode = code;
+                    this.role = 'host';
+                    const fullPeerId = 'z4n-coop-' + code;
+
+                    this.peer = new Peer(fullPeerId);
+                    this.peer.on('open', (id) => {
+                        this.myPeerId = id;
+                        this.partyOrder = [id];
+                        AudioEngine.sfx('loot');
+                        Game.spawnFloatingText(Game.player.pos, `CO-OP LOBBY HOSTED: ${code}`, '#22d3ee', 'text-sm', true);
+                        this.refreshModalIfOpen();
+                        this.updateSquadHUD();
+                    });
+                    this.peer.on('connection', (conn) => {
+                        conn.on('open', () => {
+                            if (this.clientConns.size >= 3 || Game.mode === 'dungeon') {
+                                conn.send({ t: 'REJECT', reason: Game.mode === 'dungeon' ? 'Run already in progress' : 'Lobby is full (4/4)' });
+                                setTimeout(() => conn.close(), 300);
+                                return;
+                            }
+                            this.clientConns.set(conn.peer, conn);
+                            if (!this.partyOrder.includes(conn.peer)) this.partyOrder.push(conn.peer);
+                            conn.on('data', (data) => this.onNetworkData(conn.peer, data));
+                            conn.on('close', () => this.onPeerDisconnect(conn.peer));
+                            conn.on('error', () => this.onPeerDisconnect(conn.peer));
+                        });
+                    });
+                    this.peer.on('error', (err) => {
+                        console.warn('[Coop Host Error]', err);
+                        Game.spawnFloatingText(Game.player.pos, 'NETWORK ERROR: ' + (err.type || 'Check Connection'), '#f87171', 'text-xs', true);
+                    });
+                    this.refreshModalIfOpen();
+                },
+
+                joinLobby(inputCode) {
+                    if (typeof Peer === 'undefined') {
+                        alert('PeerJS library failed to load. Check your internet connection.');
+                        return;
+                    }
+                    const clean = String(inputCode || '').trim().toUpperCase().replace(/^ZED-/, '');
+                    if (clean.length < 4) return;
+                    this.leaveLobby(true);
+                    this.roomCode = clean;
+                    this.role = 'client';
+
+                    this.peer = new Peer();
+                    this.peer.on('open', (id) => {
+                        this.myPeerId = id;
+                        const conn = this.peer.connect('z4n-coop-' + clean, { reliable: true });
+                        this.hostConn = conn;
+                        conn.on('open', () => {
+                            AudioEngine.sfx('loot');
+                            conn.send({ t: 'HELLO', profile: this.getLocalProfileSummary() });
+                            Game.spawnFloatingText(Game.player.pos, `CONNECTED TO SQUAD ${clean}!`, '#34d399', 'text-sm', true);
+                            this.refreshModalIfOpen();
+                        });
+                        conn.on('data', (data) => this.onNetworkData(conn.peer, data));
+                        conn.on('close', () => {
+                            Game.spawnFloatingText(Game.player.pos, 'HOST DISCONNECTED — RETURNING TO SOLO', '#f87171', 'text-sm', true);
+                            this.leaveLobby();
+                        });
+                        conn.on('error', () => this.leaveLobby());
+                    });
+                    this.peer.on('error', (err) => {
+                        console.warn('[Coop Client Error]', err);
+                        Game.spawnFloatingText(Game.player.pos, 'COULD NOT JOIN LOBBY CODE: ' + clean, '#f87171', 'text-xs', true);
+                        this.leaveLobby();
+                    });
+                    this.refreshModalIfOpen();
+                },
+
+                leaveLobby(silent = false) {
+                    if (this.hostConn) { try { this.hostConn.close(); } catch (e) {} this.hostConn = null; }
+                    this.clientConns.forEach(c => { try { c.close(); } catch (e) {} });
+                    this.clientConns.clear();
+                    if (this.peer) { try { this.peer.destroy(); } catch (e) {} this.peer = null; }
+                    this.remotePlayers.forEach(rp => this.disposeRemotePlayer(rp));
+                    this.remotePlayers.clear();
+                    this.partyOrder = [];
+                    this.role = 'solo';
+                    this.roomCode = '';
+                    this.lockedPartySize = 1;
+                    this.spectating = false;
+                    this.spectateTargetId = null;
+                    if (Game.player) {
+                        Game.player.isCoopDead = false;
+                        if (Game.player.mesh) Game.player.mesh.visible = true;
+                    }
+                    this.updateSquadHUD();
+                    this.updateSpectatorBanner();
+                    if (!silent) this.refreshModalIfOpen();
+                },
+
+                onPeerDisconnect(peerId) {
+                    this.clientConns.delete(peerId);
+                    this.partyOrder = this.partyOrder.filter(id => id !== peerId);
+                    const rp = this.remotePlayers.get(peerId);
+                    if (rp) {
+                        Game.spawnFloatingText(Game.player.pos, `${rp.profile?.name || 'Teammate'} disconnected`, '#f87171', 'text-xs', true);
+                        this.disposeRemotePlayer(rp);
+                        this.remotePlayers.delete(peerId);
+                    }
+                    if (this.isHost()) {
+                        this.broadcastRoster();
+                        if (Game.mode === 'dungeon' && !this.anyPlayerAlive()) {
+                            this.broadcast({ t: 'PARTY_WIPE' });
+                            this.triggerTotalPartyWipe();
+                        }
+                    }
+                    this.updateSquadHUD();
+                    this.refreshModalIfOpen();
+                },
+
+                sendToHost(packet) {
+                    if (this.isClient() && this.hostConn && this.hostConn.open) {
+                        try { this.hostConn.send(packet); } catch (e) {}
+                    }
+                },
+
+                broadcast(packet, excludePeerId = null) {
+                    if (this.isHost()) {
+                        this.clientConns.forEach((conn, pid) => {
+                            if (pid !== excludePeerId && conn && conn.open) {
+                                try { conn.send(packet); } catch (e) {}
+                            }
+                        });
+                    } else if (this.isClient()) {
+                        this.sendToHost(packet);
+                    }
+                },
+
+                broadcastRoster() {
+                    if (!this.isHost()) return;
+                    const profiles = [this.getLocalProfileSummary()];
+                    this.remotePlayers.forEach(rp => {
+                        if (rp.profile) profiles.push(rp.profile);
+                    });
+                    this.broadcast({
+                        t: 'ROSTER',
+                        partyOrder: this.partyOrder,
+                        profiles
+                    });
+                },
+
+                // ==================== FLOOR SNAPSHOT BUILDER & APPLICATOR ====================
+                captureHostFloorSnapshot() {
+                    return {
+                        floorSeed: this.floorSeed,
+                        arenaSize: Game.currentArenaSize || 88,
+                        layoutId: Game.currentLayoutId ?? 0,
+                        layoutName: Game.currentLayoutName || '',
+                        startSpot: {
+                            x: +(Game.floorStartPos ? Game.floorStartPos.x : Game.player.pos.x).toFixed(2),
+                            z: +(Game.floorStartPos ? Game.floorStartPos.z : Game.player.pos.z).toFixed(2)
+                        },
+                        exitPos: Game.floorExitPos ? { x: +Game.floorExitPos.x.toFixed(2), z: +Game.floorExitPos.z.toFixed(2) } : null,
+                        enemies: Game.enemies.filter(e => !e.isDummy).map(e => ({
+                            netId: e.netId,
+                            type: e.type,
+                            x: +e.pos.x.toFixed(2),
+                            y: +(e.pos.y || 0).toFixed(2),
+                            z: +e.pos.z.toFixed(2),
+                            level: e.level,
+                            isBoss: Boolean(e.isBoss),
+                            isElite: Boolean(e.isElite && !e.isMiniBoss),
+                            isMiniBoss: Boolean(e.isMiniBoss),
+                            maxHp: e.maxHp,
+                            dmg: e.dmg
+                        })),
+                        eggSacs: Game.gimmickEntities.filter(g => g.type === 'egg_sac').map((g, idx) => {
+                            g.netGimId = 'egg_' + idx;
+                            return { netGimId: g.netGimId, x: +g.pos.x.toFixed(2), y: +(g.pos.y || 0).toFixed(2), z: +g.pos.z.toFixed(2) };
+                        }),
+                        chests: Game.interactables.filter(i => (i.label || '').includes('Supply Cache')).map(i => ({
+                            x: +i.pos.x.toFixed(2),
+                            z: +i.pos.z.toFixed(2)
+                        })),
+                        shrines: Game.interactables.filter(i => (i.label || '').includes('Med-Beacon')).map(i => ({
+                            x: +i.pos.x.toFixed(2),
+                            z: +i.pos.z.toFixed(2)
+                        }))
+                    };
+                },
+
+                applyFloorSnapshotOnClient(snap) {
+                    if (!snap) return;
+                    Game.currentArenaSize = snap.arenaSize;
+                    Game.currentLayoutId = snap.layoutId;
+                    if (snap.layoutName) Game.currentLayoutName = snap.layoutName;
+                    if (snap.startSpot) Game.floorStartPos = { x: snap.startSpot.x, z: snap.startSpot.z };
+                    if (snap.exitPos) Game.floorExitPos = { x: snap.exitPos.x, z: snap.exitPos.z };
+
+                    // 1. Replace client's randomly spawned enemies with Host's exact enemy list
+                    Game.enemies.slice().forEach(en => {
+                        if (!en.isDummy) Game.scene.remove(en.mesh);
+                    });
+                    Game.enemies = Game.enemies.filter(e => e.isDummy);
+                    Game.activeBoss = null;
+
+                    this._allowingRemoteSpawn = true;
+                    (snap.enemies || []).forEach(ed => {
+                        origSpawnEnemy.call(Game, ed.type, ed.x, ed.z, ed.level, ed.isBoss, ed.isElite, ed.isMiniBoss, ed.y);
+                        const spawned = Game.enemies[Game.enemies.length - 1];
+                        if (spawned) {
+                            spawned.netId = ed.netId;
+                            spawned.maxHp = ed.maxHp;
+                            spawned.hp = ed.maxHp;
+                            spawned.baseMaxHp = ed.maxHp;
+                            spawned.dmg = ed.dmg;
+                            spawned.pos.set(ed.x, ed.y || 0, ed.z);
+                            if (spawned.isBoss) UI.updateBossHUD();
+                        }
+                    });
+                    this._allowingRemoteSpawn = false;
+                    Game.enemiesRemaining = Game.enemies.length;
+
+                    // 2. Replace client's egg_sacs with Host's exact egg_sacs
+                    if (Array.isArray(snap.eggSacs)) {
+                        for (let i = Game.gimmickEntities.length - 1; i >= 0; i--) {
+                            if (Game.gimmickEntities[i].type === 'egg_sac') {
+                                Game.scene.remove(Game.gimmickEntities[i].mesh);
+                                Game.gimmickEntities.splice(i, 1);
+                            }
+                        }
+                        snap.eggSacs.forEach(es => {
+                            const grp = new THREE.Group();
+                            grp.position.set(es.x, es.y || 0, es.z);
+                            const pod = new THREE.Mesh(
+                                new THREE.SphereGeometry(0.75, 12, 12),
+                                new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669, emissiveIntensity: 0.6, roughness: 0.3 })
+                            );
+                            pod.scale.set(1, 1.35, 1);
+                            pod.position.y = 0.75;
+                            grp.add(pod);
+                            Game.scene.add(grp);
+                            Game.gimmickEntities.push({
+                                type: 'egg_sac',
+                                netGimId: es.netGimId,
+                                mesh: grp,
+                                pos: new THREE.Vector3(es.x, es.y || 0, es.z),
+                                triggered: false
+                            });
+                        });
+                    }
+                    Game.updateDungeonObjectiveText();
+                },
+
+                // ==================== REMOTE PLAYER 3D RIG & COSMETICS ====================
+                ensureRemotePlayer(peerId, profile) {
+                    let rp = this.remotePlayers.get(peerId);
+                    if (!rp) {
+                        const rig = Game.buildOperativeRig(false);
+                        rig.group.position.copy(Game.player.pos);
+
+                        const npGroup = new THREE.Group();
+                        npGroup.position.y = 2.28;
+                        const bgBar = new THREE.Mesh(new THREE.PlaneGeometry(1.25, 0.24), new THREE.MeshBasicMaterial({ color: 0x020617, side: THREE.DoubleSide, transparent: true, opacity: 0.85 }));
+                        const shldFill = new THREE.Mesh(new THREE.PlaneGeometry(1.18, 0.07), new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide }));
+                        shldFill.position.set(0, 0.045, 0.01);
+                        const hpFill = new THREE.Mesh(new THREE.PlaneGeometry(1.18, 0.08), new THREE.MeshBasicMaterial({ color: 0x10b981, side: THREE.DoubleSide }));
+                        hpFill.position.set(0, -0.045, 0.01);
+
+                        const lblCanvas = document.createElement('canvas');
+                        lblCanvas.width = 256; lblCanvas.height = 64;
+                        const lblTex = new THREE.CanvasTexture(lblCanvas);
+                        const lblSprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: lblTex, transparent: true }));
+                        lblSprite.scale.set(1.9, 0.48, 1);
+                        lblSprite.position.y = 0.32;
+
+                        npGroup.add(bgBar, shldFill, hpFill, lblSprite);
+                        rig.group.add(npGroup);
+                        Game.scene.add(rig.group);
+
+                        rp = {
+                            peerId,
+                            profile: profile || { peerId, name: 'OPERATIVE', level: 1, cosmetics: {} },
+                            rig,
+                            npGroup,
+                            shldFill,
+                            hpFill,
+                            lblCanvas,
+                            lblTex,
+                            pos: new THREE.Vector3(0, 0, 4),
+                            targetPos: new THREE.Vector3(0, 0, 4),
+                            rotY: 0,
+                            targetRotY: 0,
+                            hp: 100,
+                            maxHp: 100,
+                            armorShield: 50,
+                            maxArmorShield: 50,
+                            isMoving: false,
+                            isSprinting: false,
+                            isADS: false,
+                            dashActiveTimer: 0,
+                            ghostTick: 0,
+                            stealthTimer: 0,
+                            swingAnimTimer: 0,
+                            walkCycle: 0,
+                            isCoopDead: false,
+                            deathAnimTimer: 0,
+                            aegisTimer: 0,
+                            aegisHp: 0,
+                            aegisMaxHp: 100,
+                            aegisReflect: false,
+                            aegisReflectMult: 2.2,
+                            aegisMesh: null
+                        };
+                        this.remotePlayers.set(peerId, rp);
+                    }
+                    if (profile) {
+                        rp.profile = profile;
+                        this.applyRemoteAppearance(rp);
+                    }
+                    return rp;
+                },
+
+                applyRemoteAppearance(rp) {
+                    if (!rp || !rp.rig || !rp.profile) return;
+                    const prof = rp.profile;
+
+                    const ctx = rp.lblCanvas.getContext('2d');
+                    ctx.clearRect(0, 0, 256, 64);
+                    ctx.font = 'bold 26px "Chakra Petch", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillStyle = '#000000';
+                    ctx.fillText(prof.name || 'OPERATIVE', 130, 42);
+                    ctx.fillStyle = '#38bdf8';
+                    ctx.fillText(prof.name || 'OPERATIVE', 128, 40);
+                    rp.lblTex.needsUpdate = true;
+
+                    Game.ensureCosmeticsState();
+                    const savedEq = Object.assign({}, Game.state.cosmetics.equipped);
+                    try {
+                        Game.state.cosmetics.equipped = Object.assign({ face: null, hair: null, hat: null, outfit: null, accessory: null }, prof.cosmetics || {});
+                        Game.applyCosmeticsToRig(rp.rig);
+                    } finally {
+                        Game.state.cosmetics.equipped = savedEq;
+                    }
+
+                    const wp = rp.rig.weaponPivot;
+                    const hp = rp.rig.holsterPivot;
+                    if (wp) {
+                        while (wp.children.length > 0) wp.remove(wp.children[0]);
+                        const actSlot = prof.activeWeaponSlot === 'secondary' ? 'secondary' : 'weapon';
+                        const wItem = prof[actSlot] || prof.weapon;
+                        if (wItem) wp.add(Game.buildWeaponMeshForItem(wItem, false, false));
+                    }
+                    if (hp) {
+                        while (hp.children.length > 0) hp.remove(hp.children[0]);
+                        const inactSlot = prof.activeWeaponSlot === 'secondary' ? 'weapon' : 'secondary';
+                        const hItem = prof[inactSlot];
+                        if (hItem) hp.add(Game.buildWeaponMeshForItem(hItem, true, false));
+                    }
+                },
+
+                disposeRemotePlayer(rp) {
+                    if (!rp) return;
+                    if (rp.rig && rp.rig.group) Game.scene.remove(rp.rig.group);
+                    if (rp.aegisMesh) Game.scene.remove(rp.aegisMesh);
+                },
+
+                // ==================== UNIFORM ENEMY & BOSS TARGETING ====================
+                getAllLivingPlayers() {
+                    const list = [];
+                    if (!Game.player.isCoopDead && Game.player.hp > 0 && !Game.isDefeatPending) {
+                        list.push({
+                            peerId: this.myPeerId || 'local',
+                            pos: Game.player.pos,
+                            rotY: Game.player.rotY,
+                            isMoving: Game.player.isMoving,
+                            stealthTimer: Game.player.stealthTimer || 0,
+                            isLocal: true
+                        });
+                    }
+                    this.remotePlayers.forEach(rp => {
+                        if (!rp.isCoopDead && rp.hp > 0) {
+                            list.push({
+                                peerId: rp.peerId,
+                                pos: rp.pos,
+                                rotY: rp.rotY,
+                                isMoving: rp.isMoving,
+                                stealthTimer: rp.stealthTimer || 0,
+                                isLocal: false,
+                                rpRef: rp
+                            });
+                        }
+                    });
+                    return list;
+                },
+
+                anyPlayerAlive() {
+                    return this.getAllLivingPlayers().length > 0;
+                },
+
+                getPlayerByPeerId(peerId) {
+                    if (!peerId || peerId === this.myPeerId || peerId === 'local') {
+                        return { peerId: this.myPeerId || 'local', pos: Game.player.pos, rotY: Game.player.rotY, isMoving: Game.player.isMoving, isLocal: true };
+                    }
+                    const rp = this.remotePlayers.get(peerId);
+                    if (rp) {
+                        return { peerId: rp.peerId, pos: rp.pos, rotY: rp.rotY, isMoving: rp.isMoving, isLocal: false, rpRef: rp };
+                    }
+                    return { peerId: 'local', pos: Game.player.pos, rotY: Game.player.rotY, isMoving: Game.player.isMoving, isLocal: true };
+                },
+
+                updateHostTargetRanking(dt) {
+                    if (!this.isHost() || Game.mode !== 'dungeon') return;
+                    const living = this.getAllLivingPlayers().filter(p => (p.stealthTimer || 0) <= 0);
+                    if (living.length === 0) return;
+
+                    Game.enemies.forEach(en => {
+                        if (en.isDummy || en.hp <= 0) return;
+                        en.coopRetargetTimer = (en.coopRetargetTimer || 0) - dt;
+                        const currentValid = living.some(p => p.peerId === en.targetPeerId);
+                        if (en.coopRetargetTimer <= 0 || !currentValid) {
+                            const ranked = living.map(p => ({
+                                peerId: p.peerId,
+                                dist: Math.hypot(p.pos.x - en.pos.x, p.pos.z - en.pos.z)
+                            })).sort((a, b) => a.dist - b.dist);
+
+                            const switchRange = en.isBoss ? 34.0 : 20.0;
+                            if (ranked.length >= 2 && ranked[1].dist <= switchRange) {
+                                const pickSecond = (en.targetPeerId === ranked[0].peerId) ? (Math.random() < 0.48) : (Math.random() < 0.30);
+                                en.targetPeerId = ranked[pickSecond ? 1 : 0].peerId;
+                            } else {
+                                en.targetPeerId = ranked[0].peerId;
+                            }
+                            en.coopRetargetTimer = en.isBoss ? (2.8 + Math.random() * 2.2) : (2.4 + Math.random() * 2.6);
+                        }
+                    });
+                },
+
+                getEnemyTargetPos(en) {
+                    this.activeAiEnemy = en;
+                    if (!this.isActive() || !en || !en.targetPeerId) return Game.player.pos;
+                    const tgt = this.getPlayerByPeerId(en.targetPeerId);
+                    return tgt ? tgt.pos : Game.player.pos;
+                },
+
+                interceptBossAbility(game, boss, kind, forcedSecIdx, forcedUltIdx, _fromNet) {
+                    if (!this.isActive()) return false;
+                    if (this.isClient() && !_fromNet) return true;
+                    if (this.isHost() && !_fromNet) {
+                        const seed = (Math.random() * 0xFFFFFFFF) >>> 0;
+                        const uIdx = forcedUltIdx !== null ? forcedUltIdx : (((boss.ultCycleIdx || 0) + 1) % 3);
+                        const secIdx = forcedSecIdx !== null ? forcedSecIdx : (game.isTensorRun ? Math.min(8, Math.floor((game.dungeonFloor - 1) / 2)) : game.activeBiomeIndex);
+                        const targetPeerId = boss.targetPeerId || this.myPeerId;
+                        const pkt = {
+                            t: 'BOSS_ULT',
+                            netId: boss.netId,
+                            kind,
+                            secIdx,
+                            uIdx,
+                            targetPeerId,
+                            seed,
+                            bx: boss.pos.x,
+                            bz: boss.pos.z,
+                            phase: boss.phase || 1
+                        };
+                        this.broadcast(pkt);
+                        this.runSyncedBossAbility(boss, pkt);
+                        return true;
+                    }
+                    return false;
+                },
+
+                runSyncedBossAbility(boss, pkt) {
+                    if (!boss || boss.hp <= 0) return;
+                    boss.pos.x = pkt.bx;
+                    boss.pos.z = pkt.bz;
+                    boss.phase = pkt.phase || boss.phase;
+                    const tgt = this.getPlayerByPeerId(pkt.targetPeerId);
+
+                    const realPos = Game.player.pos.clone();
+                    const realRotY = Game.player.rotY;
+                    this.inSyncedBossUlt = true;
+                    this.withSeededRandom(pkt.seed, () => {
+                        try {
+                            if (!tgt.isLocal) {
+                                Game.player.pos.copy(tgt.pos);
+                                Game.player.rotY = tgt.rotY;
+                            }
+                            if (pkt.kind === 'zed2') {
+                                Game.executeZed2Ability(boss, true);
+                            } else if (pkt.kind === 'tensor_prime') {
+                                Game.executeTensorPrimeAbility(boss, true);
+                            } else {
+                                Game.executeBossPattern(boss, pkt.secIdx, pkt.uIdx, true);
+                            }
+                        } finally {
+                            if (!tgt.isLocal) {
+                                Game.player.pos.copy(realPos);
+                                Game.player.rotY = realRotY;
+                            }
+                            this.inSyncedBossUlt = false;
+                        }
+                    });
+                },
+
+                interpolateClientEnemy(en, dt) {
+                    if (en.netTargetPos) {
+                        en.pos.lerp(en.netTargetPos, Math.min(1, 16 * dt));
+                    }
+                    if (typeof en.netTargetRotY === 'number') {
+                        en.mesh.rotation.y = en.netTargetRotY;
+                    }
+                    if (en.bodyRig) {
+                        en.walkCycle = (en.walkCycle || 0) + dt * 5.0;
+                        const wc = en.walkCycle;
+                        const ap = en.animParts;
+                        if (ap) {
+                            if (ap.legs && ap.legs.length >= 2) {
+                                ap.legs[0].rotation.x = Math.sin(wc) * 0.35;
+                                ap.legs[1].rotation.x = -Math.sin(wc) * 0.35;
+                            }
+                            if (ap.rotors) ap.rotors.forEach(rt => { rt.rotation.z += dt * 3.0; });
+                            if (ap.orbiters) ap.orbiters.forEach(orb => { orb.rotation.y += dt * 1.4; });
+                        }
+                    }
+                },
+
+                checkRemoteAegisIntercept(p) {
+                    for (const [, rp] of this.remotePlayers) {
+                        if (!rp.isCoopDead && rp.aegisTimer > 0 && rp.aegisHp > 0 && p.pos.distanceTo(rp.pos) <= 1.75) {
+                            if (rp.aegisReflect) {
+                                const dStats = Game.getDerivedStats();
+                                Game.spawnProjectile(p.pos.clone(), p.dir.clone().negate(), 48, Math.round(dStats.abilityTechDmg * (rp.aegisReflectMult || 2.2)), true, 0xfacc15, false, false, 0, 24.0);
+                            }
+                            AudioEngine.sfx('shieldHit');
+                            Game.spawnBurstParticles(p.pos.clone().setY(1.1), 0x34d399, 6);
+                            this.broadcast({ t: 'AEGIS_ABSORB', targetPeerId: rp.peerId, dmg: p.dmg });
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+
+                sendPropHit(ae) {
+                    const pkt = {
+                        t: 'PROP_HIT',
+                        netPropId: ae.netPropId,
+                        x: +(ae.pos.x).toFixed(2),
+                        z: +(ae.pos.z).toFixed(2),
+                        hitsLeft: ae.hitsLeft
+                    };
+                    if (this.isHost()) this.broadcast(pkt);
+                    else this.sendToHost(pkt);
+                },
+
+                applyRemotePropHit(pkt) {
+                    if (!Game.archEntities) return;
+                    for (let aIdx = Game.archEntities.length - 1; aIdx >= 0; aIdx--) {
+                        const ae = Game.archEntities[aIdx];
+                        if (ae.type !== 'arch_destructible') continue;
+                        if ((pkt.netPropId && ae.netPropId === pkt.netPropId) || Math.hypot(ae.pos.x - pkt.x, ae.pos.z - pkt.z) <= 1.5) {
+                            ae.hitsLeft = pkt.hitsLeft;
+                            if (ae.pipFill) ae.pipFill.scale.x = Math.max(0.01, ae.hitsLeft / Math.max(1, ae.maxHits));
+                            if (ae.hitsLeft <= 0) {
+                                if (typeof ae.onBreak === 'function') ae.onBreak();
+                                AudioEngine.sfx('shotgun');
+                                this.suppressNetFx = true;
+                                Game.spawnSphereExplosionVisual(ae.pos, ae.blastRadius || 3.5, ae.coreColor || 0xf97316);
+                                this.suppressNetFx = false;
+                                const cIdx = Game.wallColliders.indexOf(ae.colBox);
+                                if (cIdx !== -1) Game.wallColliders.splice(cIdx, 1);
+                                Game.scene.remove(ae.mesh);
+                                Game.archEntities.splice(aIdx, 1);
+                            }
+                            break;
+                        }
+                    }
+                },
+
+                // Spawn visual-only 3D meshes for remote teammate abilities!
+                spawnRemoteSkillVisual(data) {
+                    const skId = data.skillId;
+                    const rnk = data.rank || 1;
+                    const isAmp = rnk >= 6;
+                    const isOvr = rnk >= 7;
+                    const targetPt = new THREE.Vector3(data.x || 0, data.y || 0, data.z || 0);
+                    const startPt = new THREE.Vector3(data.sx || 0, data.sy || 0, data.sz || 0);
+
+                    if (skId === 'claymoreMine') {
+                        AudioEngine.sfx('reload');
+                        const blastR = isOvr ? 6.8 : (isAmp ? 5.8 : +(4.6 + rnk * 0.15).toFixed(1));
+                        const lCol = data.isAlt ? 0x38bdf8 : (isOvr ? 0xf43f5e : (isAmp ? 0x22d3ee : 0xf59e0b));
+                        const mGroup = Game.buildClaymoreMineMesh(blastR, 3.0, lCol);
+                        mGroup.position.copy(targetPt);
+                        mGroup.rotation.y = data.rotY || 0;
+                        Game.scene.add(mGroup);
+                        setTimeout(() => Game.scene.remove(mGroup), 12000);
+                    } else if (skId === 'repulsorPulse') {
+                        AudioEngine.sfx('shotgun');
+                        const rad = isOvr ? 8.5 : (isAmp ? 6.2 : 4.8);
+                        const rCol = isOvr ? 0xf43f5e : (isAmp ? 0x22d3ee : 0xf97316);
+                        this.suppressNetFx = true;
+                        Game.spawnSphereExplosionVisual(startPt, rad * 0.75, rCol);
+                        this.suppressNetFx = false;
+                    } else if (skId === 'orbitalNapalm') {
+                        AudioEngine.sfx('shotgun');
+                        const aimDir = targetPt.clone().sub(startPt).setY(0);
+                        if (aimDir.lengthSq() < 0.01) aimDir.set(Math.sin(data.rotY || 0), 0, Math.cos(data.rotY || 0));
+                        aimDir.normalize();
+                        const jetGrp = new THREE.Group();
+                        const jetHull = new THREE.Mesh(new THREE.ConeGeometry(0.65, 3.8, 6), new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85 }));
+                        jetHull.rotation.x = Math.PI / 2;
+                        const jetWings = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.08, 1.2), new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8 }));
+                        jetGrp.add(jetHull, jetWings);
+                        jetGrp.position.copy(startPt).addScaledVector(aimDir, -6.0).setY((targetPt.y || 0) + 13.5);
+                        jetGrp.rotation.y = Math.atan2(aimDir.x, aimDir.z);
+                        Game.scene.add(jetGrp);
+                        if (!Game.bossCustomEffects) Game.bossCustomEffects = [];
+                        Game.bossCustomEffects.push({
+                            mesh: jetGrp,
+                            life: 0.9,
+                            update: (dt) => { jetGrp.position.addScaledVector(aimDir, 36.0 * dt); return true; },
+                            cleanup: () => Game.scene.remove(jetGrp)
+                        });
+                    } else if (skId === 'vortexSingularity') {
+                        AudioEngine.sfx('arcane');
+                        const pullRad = isOvr ? 10.5 : (isAmp ? 8.2 : 6.2);
+                        const dur = isOvr ? 5.5 : (isAmp ? 4.0 : 3.6);
+                        const bhGroup = new THREE.Group();
+                        bhGroup.position.copy(targetPt);
+                        const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(0.65, 16, 16), new THREE.MeshBasicMaterial({ color: 0x090212 }));
+                        coreSphere.position.y = 1.1;
+                        const accretion = new THREE.Mesh(new THREE.TorusGeometry(1.25, 0.12, 10, 28), new THREE.MeshBasicMaterial({ color: isOvr ? 0xf43f5e : 0xc084fc }));
+                        accretion.rotation.x = Math.PI / 2; accretion.position.y = 1.1;
+                        const outerRing = new THREE.Mesh(new THREE.RingGeometry(pullRad - 0.2, pullRad, 32), new THREE.MeshBasicMaterial({ color: 0xc084fc, side: THREE.DoubleSide, transparent: true, opacity: 0.55 }));
+                        outerRing.rotation.x = -Math.PI / 2; outerRing.position.y = 0.08;
+                        bhGroup.add(coreSphere, accretion, outerRing);
+                        Game.scene.add(bhGroup);
+                        setTimeout(() => Game.scene.remove(bhGroup), dur * 1000);
+                    } else if (skId === 'teslaPylon') {
+                        AudioEngine.sfx('arcane');
+                        const tCol = data.isAlt ? 0xfacc15 : (isOvr ? 0xf43f5e : 0x22d3ee);
+                        const pGrp = new THREE.Group();
+                        pGrp.position.copy(targetPt);
+                        const base = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.55, 1.8, 8), new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.88 }));
+                        base.position.y = 0.9;
+                        const coil = new THREE.Mesh(new THREE.OctahedronGeometry(0.40, 1), new THREE.MeshBasicMaterial({ color: tCol, wireframe: true }));
+                        coil.position.y = 2.15;
+                        const ring = new THREE.Mesh(new THREE.RingGeometry(5.2, 5.5, 28), new THREE.MeshBasicMaterial({ color: tCol, side: THREE.DoubleSide, transparent: true, opacity: 0.40 }));
+                        ring.rotation.x = -Math.PI / 2; ring.position.y = 0.06;
+                        pGrp.add(base, coil, ring);
+                        Game.scene.add(pGrp);
+                        setTimeout(() => Game.scene.remove(pGrp), (isOvr ? 14 : 10) * 1000);
+                    } else if (skId === 'hvtStrike') {
+                        AudioEngine.sfx('railgun');
+                        const sCol = isOvr ? 0xf43f5e : (isAmp ? 0xe879f9 : 0x34d399);
+                        const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 16, 16), new THREE.MeshBasicMaterial({ color: sCol, transparent: true, opacity: 0.65 }));
+                        beam.position.copy(targetPt).add(new THREE.Vector3(0, 8, 0));
+                        Game.scene.add(beam);
+                        setTimeout(() => Game.scene.remove(beam), 520);
+                    } else if (skId === 'sonarPulse') {
+                        AudioEngine.sfx('sonar');
+                        const sSphere = new THREE.Mesh(new THREE.SphereGeometry(8.0, 16, 12), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.55 }));
+                        sSphere.position.copy(startPt).add(new THREE.Vector3(0, 1, 0));
+                        Game.scene.add(sSphere);
+                        setTimeout(() => Game.scene.remove(sSphere), 450);
+                    } else if (skId === 'arcOverload' || skId === 'nanitePlague') {
+                        AudioEngine.sfx('arcane');
+                        this.suppressNetFx = true;
+                        Game.spawnSphereExplosionVisual(targetPt, 4.0, skId === 'nanitePlague' ? 0x84cc16 : 0x38bdf8);
+                        this.suppressNetFx = false;
+                    }
+                },
+
+                voteSkipCutscene() {
+                    if (!this.isActive()) return false;
+                    this.cutsceneVotes.add(this.myPeerId);
+                    const pkt = { t: 'CS_VOTE', peerId: this.myPeerId };
+                    if (this.isHost()) {
+                        this.broadcast(pkt);
+                        this.checkCutsceneSkipVotes();
+                    } else {
+                        this.sendToHost(pkt);
+                    }
+                    this.updateCutsceneSkipButtonLabel();
+                    return true;
+                },
+
+                checkCutsceneSkipVotes() {
+                    const reqVotes = Math.min(2, this.getPartySize());
+                    this.updateCutsceneSkipButtonLabel();
+                    if (this.isHost() && this.cutsceneVotes.size >= reqVotes) {
+                        this.broadcast({ t: 'CS_SKIP_EXEC' });
+                        this.forceExecuteCutsceneSkip();
+                    }
+                },
+
+                updateCutsceneSkipButtonLabel() {
+                    const reqVotes = Math.min(2, this.getPartySize());
+                    const banner = document.getElementById('cutscene-overlay-banner');
+                    if (!banner) return;
+                    const btn = banner.querySelector('button');
+                    if (btn && this.isActive()) {
+                        btn.textContent = `VOTE TO SKIP (${this.cutsceneVotes.size}/${reqVotes}) [SPACE]`;
+                    }
+                },
+
+                forceExecuteCutsceneSkip() {
+                    this.cutsceneVotes.clear();
+                    if (Game.cutsceneState) {
+                        origEndSectorCutscene.call(Game);
+                    } else if (Game.zed2DefeatCutsceneActive) {
+                        origFinishZed2Cutscene.call(Game);
+                    }
+                },
+
+                // ==================== NETWORK PACKET ROUTER ====================
+                onNetworkData(senderPeerId, data) {
+                    if (!data || !data.t) return;
+
+                    if (this.isHost() && [
+                        'PL_STATE', 'PROJ', 'FX_EXPLODE', 'FX_CANISTER', 'DASH_FX', 'SKILL_FX',
+                        'AEGIS_STATE', 'AEGIS_ABSORB', 'PROP_HIT', 'INTER_USE', 'PORTAL_USE', 'PL_DIED', 'CS_VOTE'
+                    ].includes(data.t)) {
+                        this.broadcast(data, senderPeerId);
+                    }
+
+                    switch (data.t) {
+                        case 'REJECT':
+                            alert('Could not join lobby: ' + (data.reason || 'Unavailable'));
+                            this.leaveLobby();
+                            break;
+
+                        case 'HELLO':
+                            if (this.isHost()) {
+                                this.ensureRemotePlayer(senderPeerId, data.profile);
+                                this.broadcastRoster();
+                                Game.spawnFloatingText(Game.player.pos, `${data.profile?.name || 'Operative'} joined the squad!`, '#38bdf8', 'text-sm', true);
+                                this.updateSquadHUD();
+                                this.refreshModalIfOpen();
+                            }
+                            break;
+
+                        case 'ROSTER':
+                            if (this.isClient()) {
+                                this.partyOrder = data.partyOrder || [];
+                                const seenIds = new Set();
+                                (data.profiles || []).forEach(prof => {
+                                    if (prof.peerId && prof.peerId !== this.myPeerId) {
+                                        seenIds.add(prof.peerId);
+                                        this.ensureRemotePlayer(prof.peerId, prof);
+                                    }
+                                });
+                                Array.from(this.remotePlayers.keys()).forEach(pid => {
+                                    if (!seenIds.has(pid)) {
+                                        this.disposeRemotePlayer(this.remotePlayers.get(pid));
+                                        this.remotePlayers.delete(pid);
+                                    }
+                                });
+                                this.updateSquadHUD();
+                                this.refreshModalIfOpen();
+                            }
+                            break;
+
+                        case 'PROFILE_UPD': {
+                            this.ensureRemotePlayer(data.profile?.peerId || senderPeerId, data.profile);
+                            if (this.isHost()) this.broadcastRoster();
+                            this.updateSquadHUD();
+                            this.refreshModalIfOpen();
+                            break;
+                        }
+
+                        case 'PL_STATE': {
+                            const pid = data.id || senderPeerId;
+                            if (pid === this.myPeerId) return;
+                            const rp = this.remotePlayers.get(pid);
+                            if (!rp) return;
+                            rp.targetPos.set(data.x || 0, data.y || 0, data.z || 0);
+                            if (rp.pos.distanceTo(rp.targetPos) > 15) rp.pos.copy(rp.targetPos);
+                            rp.targetRotY = data.ry || 0;
+                            rp.hp = data.hp ?? rp.hp;
+                            rp.maxHp = data.mhp ?? rp.maxHp;
+                            rp.armorShield = data.sh ?? rp.armorShield;
+                            rp.maxArmorShield = data.msh ?? rp.maxArmorShield;
+                            rp.isMoving = Boolean(data.mv);
+                            rp.isSprinting = Boolean(data.sp);
+                            rp.isADS = Boolean(data.ads);
+                            rp.dashActiveTimer = data.dsh || 0;
+                            rp.stealthTimer = data.stl || 0;
+                            if (data.slot && rp.profile && rp.profile.activeWeaponSlot !== data.slot) {
+                                rp.profile.activeWeaponSlot = data.slot;
+                                this.applyRemoteAppearance(rp);
+                            }
+                            break;
+                        }
+
+                        case 'START_RUN':
+                            if (this.isClient()) {
+                                this.lockedPartySize = data.partySize || this.getPartySize();
+                                this.floorSeed = data.floorSeed;
+                                this.pendingSnapshot = data.snapshot || null;
+                                Game.forcedLayoutId = data.layoutId;
+                                UI.closeModal();
+                                if (data.isTensorRun || data.sectorIdx === 9) {
+                                    origDeployToTensor.call(UI);
+                                } else {
+                                    origDeployToSector.call(UI, data.sectorIdx, data.floor || 1, data.isHardMode);
+                                }
+                            }
+                            break;
+
+                        case 'CHANGE_FLOOR':
+                            if (this.isClient()) {
+                                this.floorSeed = data.floorSeed;
+                                this.pendingSnapshot = data.snapshot || null;
+                                Game.forcedLayoutId = data.layoutId;
+                                Game.dungeonFloor = data.floor;
+                                Game.buildDungeonFloor();
+                            }
+                            break;
+
+                        case 'PROJ': {
+                            if (data.sender === this.myPeerId) return;
+                            const startPos = new THREE.Vector3(data.x, data.y, data.z);
+                            const dir = new THREE.Vector3(data.dx, 0, data.dz);
+                            origSpawnProjectile.call(
+                                Game,
+                                startPos, dir, data.spd, data.fromPlayer ? 0 : data.dmg,
+                                data.fromPlayer, data.col, data.pierce, false, 0, data.rng, false,
+                                data.dart ? { rank: 1, mode: 'shock' } : null,
+                                {
+                                    _fromCoopRemote: true,
+                                    isPlayingCard: data.card,
+                                    cardData: data.cardData || null,
+                                    isRicochetSaw: data.saw,
+                                    isKunai: data.kunai,
+                                    isPlayerHarpoon: data.harpoon
+                                }
+                            );
+                            const spawned = Game.projectiles[Game.projectiles.length - 1];
+                            if (spawned) spawned._fromCoopRemote = true;
+                            const rp = this.remotePlayers.get(data.sender);
+                            if (rp) rp.swingAnimTimer = 0.14;
+                            break;
+                        }
+
+                        case 'FX_EXPLODE':
+                            if (data.sender === this.myPeerId) return;
+                            this.suppressNetFx = true;
+                            origSpawnSphereExplosion.call(Game, new THREE.Vector3(data.x, data.y, data.z), data.rad, data.col);
+                            this.suppressNetFx = false;
+                            break;
+
+                        case 'FX_CANISTER':
+                            if (data.sender === this.myPeerId) return;
+                            this.suppressNetFx = true;
+                            origSpawnArcingCanister.call(
+                                Game,
+                                new THREE.Vector3(data.sx, data.sy, data.sz),
+                                new THREE.Vector3(data.dx, data.dy, data.dz),
+                                data.dur,
+                                data.col,
+                                () => {
+                                    this.suppressNetFx = true;
+                                    origSpawnSphereExplosion.call(Game, new THREE.Vector3(data.dx, data.dy, data.dz), data.rad || 4.0, data.col);
+                                    this.suppressNetFx = false;
+                                }
+                            );
+                            this.suppressNetFx = false;
+                            break;
+
+                        case 'DASH_FX': {
+                            if (data.sender === this.myPeerId) return;
+                            const rp = this.remotePlayers.get(data.sender);
+                            if (rp) {
+                                rp.dashActiveTimer = 0.16;
+                                AudioEngine.sfx('dash');
+                                Game.spawnBurstParticles(rp.pos.clone().setY((rp.pos.y || 0) + 0.9), 0x22d3ee, 14);
+                            }
+                            break;
+                        }
+
+                        case 'SKILL_FX':
+                            if (data.sender === this.myPeerId) return;
+                            this.spawnRemoteSkillVisual(data);
+                            break;
+
+                        case 'EGG_POP_REQ':
+                            if (this.isHost()) {
+                                const g = Game.gimmickEntities.find(x => x.type === 'egg_sac' && !x.triggered && (x.netGimId === data.netGimId || Math.hypot(x.pos.x - data.x, x.pos.z - data.z) <= 2.5));
+                                if (g) this.hostPopEggSac(g);
+                            }
+                            break;
+
+                        case 'EGG_POP':
+                            if (this.isClient()) {
+                                const g = Game.gimmickEntities.find(x => x.type === 'egg_sac' && !x.triggered && (x.netGimId === data.netGimId || Math.hypot(x.pos.x - data.x, x.pos.z - data.z) <= 2.5));
+                                if (g) {
+                                    g.triggered = true;
+                                    Game.scene.remove(g.mesh);
+                                    AudioEngine.sfx('shotgun');
+                                    Game.spawnBurstParticles(g.pos.clone().add(new THREE.Vector3(0, 0.8, 0)), 0x10b981, 22);
+                                }
+                            }
+                            break;
+
+                        case 'PL_HURT':
+                            if (data.targetPeerId === this.myPeerId && !Game.player.isCoopDead) {
+                                this._fromAuthoritativeHit = true;
+                                Game.damagePlayer(data.dmg);
+                                this._fromAuthoritativeHit = false;
+                            }
+                            break;
+
+                        case 'EN_SYNC':
+                            if (this.isClient() && Array.isArray(data.list)) {
+                                data.list.forEach(item => {
+                                    const en = Game.enemies.find(e => e.netId === item[0]);
+                                    if (en) {
+                                        if (!en.netTargetPos) en.netTargetPos = new THREE.Vector3(item[1], item[2], item[3]);
+                                        else en.netTargetPos.set(item[1], item[2], item[3]);
+                                        en.netTargetRotY = item[4];
+                                        en.hp = item[5];
+                                        en.maxHp = item[6];
+                                        if (en.hpFillMesh) en.hpFillMesh.scale.x = Math.max(0.001, en.hp / Math.max(1, en.maxHp));
+                                        if (en.isBoss && item[7] && en.phase !== item[7]) {
+                                            en.phase = item[7];
+                                            if (en.isZed2Boss) Game.updateZed2BossWeaponMesh(en);
+                                        }
+                                        en.stunTimer = item[8] || 0;
+                                        en.slowTimer = item[9] || 0;
+                                        en.shieldTimer = item[10] || 0;
+                                        en.targetPeerId = item[11] || null;
+                                        en.alerted = true;
+                                    }
+                                });
+                                if (Game.activeBoss) UI.updateBossHUD();
+                            }
+                            break;
+
+                        case 'EN_SPAWN':
+                            if (this.isClient()) {
+                                if (!Game.enemies.some(e => e.netId === data.netId)) {
+                                    this._allowingRemoteSpawn = true;
+                                    origSpawnEnemy.call(Game, data.type, data.x, data.z, data.level, data.isBoss, data.isElite, data.isMiniBoss, data.elevY);
+                                    this._allowingRemoteSpawn = false;
+                                    const spawned = Game.enemies[Game.enemies.length - 1];
+                                    if (spawned) {
+                                        spawned.netId = data.netId;
+                                        spawned.maxHp = data.maxHp;
+                                        spawned.hp = data.maxHp;
+                                        spawned.dmg = data.dmg;
+                                        spawned.alerted = true;
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 'EN_HIT':
+                            if (this.isHost()) {
+                                const en = Game.enemies.find(e => e.netId === data.netId);
+                                if (en && en.hp > 0) {
+                                    if (data.stun) en.stunTimer = Math.max(en.stunTimer || 0, data.stun);
+                                    if (data.slow) en.slowTimer = Math.max(en.slowTimer || 0, data.slow);
+                                    if (data.poisonTimer) {
+                                        en.poisonTimer = Math.max(en.poisonTimer || 0, data.poisonTimer);
+                                        en.poisonDps = Math.max(en.poisonDps || 0, data.poisonDps || 10);
+                                    }
+                                    this.applyAuthoritativeDamage(en, data.dmg, data.isCrit, senderPeerId);
+                                } else {
+                                    // Enemy is already dead or doesn't exist on Host -> tell Client to remove phantom immediately!
+                                    this.broadcast({ t: 'EN_DIE', netId: data.netId, killerId: senderPeerId });
+                                }
+                            }
+                            break;
+
+                        case 'EN_DMG_FX':
+                            if (this.isClient()) {
+                                const en = Game.enemies.find(e => e.netId === data.netId);
+                                if (en) {
+                                    en.hp = data.hp;
+                                    en.maxHp = data.maxHp;
+                                    if (en.hpFillMesh) en.hpFillMesh.scale.x = Math.max(0.001, en.hp / Math.max(1, en.maxHp));
+                                    if (en.isBoss) {
+                                        if (data.phase && en.phase !== data.phase) {
+                                            en.phase = data.phase;
+                                            if (en.isZed2Boss) Game.updateZed2BossWeaponMesh(en);
+                                        }
+                                        UI.updateBossHUD();
+                                    }
+                                    if (data.attackerId !== this.myPeerId) {
+                                        Game.spawnFloatingText(
+                                            en.pos.clone().add(new THREE.Vector3((Math.random() - 0.5) * 0.8, 1.5, 0)),
+                                            data.isCrit ? `${data.dmg}!` : `${data.dmg}`,
+                                            data.isCrit ? '#fbbf24' : '#cbd5e1',
+                                            data.isCrit ? 'text-base' : 'text-xs',
+                                            true
+                                        );
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 'EN_DIE':
+                            if (this.isClient()) {
+                                const en = Game.enemies.find(e => e.netId === data.netId);
+                                if (en) {
+                                    en.hp = 0;
+                                    if (en.isZed2Boss) {
+                                        Game.startZed2DefeatCutscene(en);
+                                    } else {
+                                        this._authoritativeKill = true;
+                                        origHandleEnemyDeath.call(Game, en);
+                                        this._authoritativeKill = false;
+                                    }
+                                }
+                            }
+                            break;
+
+                        case 'EN_TEL':
+                            if (this.isClient()) {
+                                origSpawnTelegraph.call(Game, data.x, data.z, data.rad, data.dur, data.dmg);
+                            }
+                            break;
+
+                        case 'EN_LASER':
+                            if (this.isClient()) {
+                                origSpawnLaser.call(Game, new THREE.Vector3(data.x, data.y || 0, data.z), data.ang, data.col, data.dmg, data.tDur, data.aDur, data.rotSpd);
+                            }
+                            break;
+
+                        case 'EN_POOL':
+                            if (this.isClient()) {
+                                origSpawnPool.call(Game, data.x, data.z, data.rad, data.dur, data.dmg, data.col, data.slow, data.y, data.fromPlayer);
+                            }
+                            break;
+
+                        case 'BOSS_ULT':
+                            if (this.isClient()) {
+                                const boss = Game.activeBoss || Game.enemies.find(e => e.isBoss);
+                                if (boss) this.runSyncedBossAbility(boss, data);
+                            }
+                            break;
+
+                        case 'AEGIS_STATE': {
+                            const rp = this.remotePlayers.get(data.peerId || senderPeerId);
+                            if (rp) {
+                                rp.aegisTimer = data.timer;
+                                rp.aegisHp = data.hp;
+                                rp.aegisMaxHp = data.maxHp || data.hp;
+                                rp.aegisReflect = Boolean(data.reflect);
+                                rp.aegisReflectMult = data.reflectMult || 2.2;
+                                if (rp.aegisTimer > 0 && rp.aegisHp > 0) {
+                                    if (!rp.aegisMesh) {
+                                        const built = Game.buildSegmentedAegisDomeMesh(data.col || 0x10b981, 0x34d399);
+                                        rp.aegisMesh = built.domeGrp;
+                                        Game.scene.add(rp.aegisMesh);
+                                    }
+                                } else if (rp.aegisMesh) {
+                                    Game.scene.remove(rp.aegisMesh);
+                                    rp.aegisMesh = null;
+                                }
+                            }
+                            break;
+                        }
+
+                        case 'AEGIS_ABSORB':
+                            if (data.targetPeerId === this.myPeerId && Game.player.aegisTimer > 0 && Game.player.aegisHp > 0) {
+                                Game.player.aegisHp = Math.max(0, Game.player.aegisHp - (data.dmg || 20));
+                                if (Game.player.aegisHp <= 0) Game.expireAegisDome(true);
+                                UI.updateHUD();
+                            }
+                            break;
+
+                        case 'PROP_HIT':
+                            this.applyRemotePropHit(data);
+                            break;
+
+                        case 'INTER_USE': {
+                            const inter = Game.interactables.find(i => Math.hypot(i.pos.x - data.x, i.pos.z - data.z) <= 2.2);
+                            if (inter && typeof inter.onInteract === 'function') {
+                                this._fromRemoteInteract = true;
+                                inter.onInteract();
+                                this._fromRemoteInteract = false;
+                            }
+                            break;
+                        }
+
+                        case 'PORTAL_USE':
+                            if (data.isExtraction) {
+                                this._fromRemotePortal = true;
+                                Game.isDefeatPending = false;
+                                Game.player.isCoopDead = false;
+                                Game.returnToSanctuary(true);
+                                this._fromRemotePortal = false;
+                            } else if (this.isHost()) {
+                                Game.dungeonFloor = data.nextFloor || (Game.dungeonFloor + 1);
+                                Game.buildDungeonFloor();
+                            }
+                            break;
+
+                        case 'PL_DIED': {
+                            const rp = this.remotePlayers.get(data.peerId || senderPeerId);
+                            if (rp && !rp.isCoopDead) {
+                                rp.isCoopDead = true;
+                                rp.hp = 0;
+                                rp.deathAnimTimer = 0.001;
+                                AudioEngine.sfx('playerDeathGore');
+                                Game.spawnBurstParticles(rp.pos.clone().setY((rp.pos.y || 0) + 0.9), 0xdc2626, 28);
+                                const puddle = new THREE.Mesh(
+                                    new THREE.CircleGeometry(1.4, 20),
+                                    new THREE.MeshBasicMaterial({ color: 0x7f1d1d, side: THREE.DoubleSide, transparent: true, opacity: 0.9 })
+                                );
+                                puddle.rotation.x = -Math.PI / 2;
+                                puddle.position.set(rp.pos.x, (rp.pos.y || 0) + 0.03, rp.pos.z);
+                                Game.scene.add(puddle);
+                                Game.worldMeshes.push(puddle);
+                                Game.spawnFloatingText(rp.pos, `${rp.profile?.name || 'TEAMMATE'} DOWN!`, '#ef4444', 'text-sm', true);
+                                this.updateSquadHUD();
+
+                                if (this.isHost() && !this.anyPlayerAlive()) {
+                                    this.broadcast({ t: 'PARTY_WIPE' });
+                                    this.triggerTotalPartyWipe();
+                                }
+                            }
+                            break;
+                        }
+
+                        case 'PARTY_WIPE':
+                            this.triggerTotalPartyWipe();
+                            break;
+
+                        case 'CS_VOTE':
+                            this.cutsceneVotes.add(data.peerId || senderPeerId);
+                            this.checkCutsceneSkipVotes();
+                            break;
+
+                        case 'CS_SKIP_EXEC':
+                            this.forceExecuteCutsceneSkip();
+                            break;
+                    }
+                },
+
+                hostPopEggSac(g) {
+                    if (!g || g.triggered) return;
+                    g.triggered = true;
+                    Game.scene.remove(g.mesh);
+                    AudioEngine.sfx('shotgun');
+                    Game.spawnBurstParticles(g.pos.clone().add(new THREE.Vector3(0, 0.8, 0)), 0x10b981, 22);
+                    this.broadcast({ t: 'EGG_POP', netGimId: g.netGimId, x: +g.pos.x.toFixed(2), z: +g.pos.z.toFixed(2) });
+
+                    const gimMult = Game.getGimmickDmgMult();
+                    const blizDmg = Math.round(45 * gimMult);
+                    if (Math.hypot(Game.player.pos.x - g.pos.x, Game.player.pos.z - g.pos.z) <= 3.8) {
+                        this._fromAuthoritativeHit = true;
+                        Game.damagePlayer(blizDmg);
+                        this._fromAuthoritativeHit = false;
+                    }
+                    this.remotePlayers.forEach(rp => {
+                        if (!rp.isCoopDead && Math.hypot(rp.pos.x - g.pos.x, rp.pos.z - g.pos.z) <= 3.8) {
+                            this.broadcast({ t: 'PL_HURT', targetPeerId: rp.peerId, dmg: blizDmg });
+                        }
+                    });
+
+                    Game.spawnEnemy('crawler', g.pos.x, g.pos.z, (Game.isTensorRun ? 40 : BIOMES[Game.activeBiomeIndex].recLevel) + Game.dungeonFloor, false, false, false, g.pos.y || 0);
+                    const hatched = Game.enemies[Game.enemies.length - 1];
+                    if (hatched) hatched.alerted = true;
+                },
+
+                applyAuthoritativeDamage(en, finalDmg, isCrit, attackerPeerId) {
+                    if (!en || en.hp <= 0) return;
+                    const hpMult = this.getMultipliers().hp;
+                    en.hp -= finalDmg;
+                    const ratio = Math.max(0, en.hp / Math.max(1, en.maxHp));
+                    if (en.hpFillMesh) en.hpFillMesh.scale.x = Math.max(0.001, ratio);
+                    if (en.isBoss) UI.updateBossHUD();
+
+                    if (en.hp <= 0) {
+                        if (en.isBoss && en.phase < (en.maxPhases || 2)) {
+                            en.phase++;
+                            if (en.isZed2Boss) {
+                                en.maxHp = Math.round(1000000 * hpMult);
+                                en.hp = en.maxHp;
+                                en.shieldTimer = 1.6;
+                                en.specialTimer = 0.35;
+                                Game.updateZed2BossWeaponMesh(en);
+                            } else if (en.isTensorPrimeBoss) {
+                                const pIdx = en.phase - 1;
+                                const hpWeights = [0.04, 0.05, 0.06, 0.07, 0.08, 0.10, 0.11, 0.13, 0.16, 0.20];
+                                const dmgMults = [0.75, 0.82, 0.90, 0.98, 1.05, 1.12, 1.20, 1.30, 1.40, 1.55];
+                                en.maxHp = Math.round((en.tensorTotalHp || 9000000 * hpMult) * (hpWeights[pIdx] || 0.10));
+                                en.hp = en.maxHp;
+                                en.dmg = Math.round((en.tensorBaseDmg || 780) * (dmgMults[pIdx] || 1.0));
+                                en.shieldTimer = 1.7;
+                                en.specialTimer = 1.0;
+                            } else {
+                                const phaseMult = en.phase === 3 ? 1.20 : 1.15;
+                                en.maxHp = Math.round((en.baseMaxHp || en.maxHp) * phaseMult);
+                                en.hp = en.maxHp;
+                                en.shieldTimer = 2.0;
+                                en.specialTimer = 0.8;
+                            }
+                            if (en.hpFillMesh) en.hpFillMesh.scale.x = 1.0;
+                            if (en.isBoss) UI.updateBossHUD();
+                            this.broadcast({
+                                t: 'EN_DMG_FX',
+                                netId: en.netId,
+                                dmg: finalDmg,
+                                isCrit,
+                                hp: en.hp,
+                                maxHp: en.maxHp,
+                                phase: en.phase,
+                                attackerId: attackerPeerId
+                            });
+                            return;
+                        }
+                        this.broadcast({ t: 'EN_DIE', netId: en.netId, killerId: attackerPeerId });
+                        if (en.isZed2Boss) {
+                            Game.startZed2DefeatCutscene(en);
+                        } else {
+                            this._authoritativeKill = true;
+                            origHandleEnemyDeath.call(Game, en);
+                            this._authoritativeKill = false;
+                        }
+                    } else {
+                        this.broadcast({
+                            t: 'EN_DMG_FX',
+                            netId: en.netId,
+                            dmg: finalDmg,
+                            isCrit,
+                            hp: en.hp,
+                            maxHp: en.maxHp,
+                            phase: en.phase,
+                            attackerId: attackerPeerId
+                        });
+                    }
+                },
+
+                triggerTotalPartyWipe() {
+                    this.spectating = false;
+                    this.updateSpectatorBanner();
+                    Game.player.isCoopDead = false;
+                    if (Game.player.mesh) Game.player.mesh.visible = true;
+                    if (!Game.isDefeatPending) {
+                        origGameOver.call(Game);
+                    }
+                },
+
+                cycleSpectateTarget(dir = 1) {
+                    const livingRemote = Array.from(this.remotePlayers.values()).filter(rp => !rp.isCoopDead && rp.hp > 0);
+                    if (livingRemote.length === 0) return;
+                    const curIdx = livingRemote.findIndex(rp => rp.peerId === this.spectateTargetId);
+                    const nextIdx = (curIdx + dir + livingRemote.length) % livingRemote.length;
+                    this.spectateTargetId = livingRemote[nextIdx].peerId;
+                    this.updateSpectatorBanner();
+                },
+
+                updateSpectatorBanner() {
+                    let banner = document.getElementById('coop-spectator-banner');
+                    if (!banner) {
+                        banner = document.createElement('div');
+                        banner.id = 'coop-spectator-banner';
+                        document.body.appendChild(banner);
+                    }
+                    if (!this.spectating || !Game.player.isCoopDead || Game.mode !== 'dungeon') {
+                        banner.classList.remove('on');
+                        return;
+                    }
+                    const livingRemote = Array.from(this.remotePlayers.values()).filter(rp => !rp.isCoopDead && rp.hp > 0);
+                    if (!livingRemote.some(rp => rp.peerId === this.spectateTargetId) && livingRemote[0]) {
+                        this.spectateTargetId = livingRemote[0].peerId;
+                    }
+                    const targetRp = this.remotePlayers.get(this.spectateTargetId);
+                    const cps = Game.getSectorCheckpoints(Game.activeBiomeIndex, Game.isHardMode);
+                    const nextCp = cps.find(f => f > Game.dungeonFloor);
+
+                    banner.classList.add('on');
+                    banner.innerHTML = `
+                        <div class="text-xs font-extrabold text-red-400 tracking-widest uppercase">
+                            ⚠ CHASSIS OFFLINE — ${nextCp ? `REVIVING AT CHECKPOINT FLOOR ${nextCp}` : 'AWAITING SQUAD EXTRACTION'}
+                        </div>
+                        <div class="flex items-center gap-3 text-[11px] text-sky-200 font-bold">
+                            <button onclick="Coop.cycleSpectateTarget(-1)" class="arpg-btn px-2 py-0.5 text-[10px]">◀ [A]</button>
+                            <span>SPECTATING: <strong class="text-white">${targetRp?.profile?.name || 'SQUAD'}</strong></span>
+                            <button onclick="Coop.cycleSpectateTarget(1)" class="arpg-btn px-2 py-0.5 text-[10px]">[D] ▶</button>
+                        </div>
+                    `;
+                },
+
+                updateSquadHUD() {
+                    let el = document.getElementById('coop-squad-hud');
+                    if (!el) {
+                        el = document.createElement('div');
+                        el.id = 'coop-squad-hud';
+                        document.body.appendChild(el);
+                    }
+                    if (!this.isActive()) {
+                        el.classList.remove('on');
+                        return;
+                    }
+                    el.classList.add('on');
+                    const mults = this.getMultipliers();
+                    const cards = [];
+                    cards.push(`
+                        <div class="bg-slate-950/90 border border-cyan-500/70 px-2 py-1 text-[9px] font-bold flex justify-between items-center text-cyan-300">
+                            <span>SQUAD: ${this.roomCode} (${mults.count}/4)</span>
+                            <span class="text-amber-300">${mults.hp}x HP • ${mults.dmg}x DMG</span>
+                        </div>
+                    `);
+                    this.remotePlayers.forEach(rp => {
+                        const hpPct = Math.max(0, Math.min(100, (rp.hp / Math.max(1, rp.maxHp)) * 100));
+                        const shPct = Math.max(0, Math.min(100, (rp.armorShield / Math.max(1, rp.maxArmorShield)) * 100));
+                        cards.push(`
+                            <div class="coop-mate-card ${rp.isCoopDead ? 'dead' : ''}">
+                                <div class="flex justify-between items-center text-[10px] font-bold">
+                                    <span class="text-sky-200 truncate">${rp.profile?.name || 'OPERATIVE'}</span>
+                                    <span class="${rp.isCoopDead ? 'text-red-400 animate-pulse' : 'text-emerald-300'} text-[9px]">
+                                        ${rp.isCoopDead ? 'DEAD (CP REVIVE)' : `LVL ${rp.profile?.level || 1}`}
+                                    </span>
+                                </div>
+                                <div class="w-full h-1 bg-black border border-cyan-900 mt-1 overflow-hidden">
+                                    <div class="h-full bg-cyan-400" style="width:${shPct}%"></div>
+                                </div>
+                                <div class="w-full h-1.5 bg-black border border-red-900 mt-0.5 overflow-hidden">
+                                    <div class="h-full bg-red-500" style="width:${hpPct}%"></div>
+                                </div>
+                            </div>
+                        `);
+                    });
+                    el.innerHTML = cards.join('');
+                },
+
+                // ==================== PER-FRAME CO-OP TICK ====================
+                tick(dt) {
+                    this.activeAiEnemy = null;
+                    if (!this.isActive()) return;
+
+                    // 1. Broadcast Local Player State at 20Hz
+                    this.syncAccum += dt;
+                    if (this.syncAccum >= 0.05) {
+                        this.syncAccum = 0;
+                        const p = Game.player;
+                        this.broadcast({
+                            t: 'PL_STATE',
+                            id: this.myPeerId,
+                            x: +p.pos.x.toFixed(2),
+                            y: +(p.pos.y || 0).toFixed(2),
+                            z: +p.pos.z.toFixed(2),
+                            ry: +p.rotY.toFixed(2),
+                            hp: Math.round(p.hp),
+                            mhp: Math.round(p.maxHp),
+                            sh: Math.round(p.armorShield),
+                            msh: Math.round(p.maxArmorShield),
+                            mv: p.isMoving ? 1 : 0,
+                            sp: p.isSprinting ? 1 : 0,
+                            ads: p.isADS ? 1 : 0,
+                            dsh: +(p.dashActiveTimer || 0).toFixed(2),
+                            stl: +(p.stealthTimer || 0).toFixed(2),
+                            slot: p.activeWeaponSlot || 'weapon'
+                        });
+                        this.updateSquadHUD();
+                    }
+
+                    // 2. Host Authoritative Egg Sac Proximity Check for Remote Players + 20Hz Enemy Sync
+                    if (this.isHost() && Game.mode === 'dungeon') {
+                        this.updateHostTargetRanking(dt);
+
+                        // Check if any remote player walked near an egg_sac on the Host!
+                        Game.gimmickEntities.forEach(g => {
+                            if (g.type === 'egg_sac' && !g.triggered) {
+                                for (const [, rp] of this.remotePlayers) {
+                                    if (!rp.isCoopDead && Math.hypot(rp.pos.x - g.pos.x, rp.pos.z - g.pos.z) <= 4.2 && Math.abs((rp.pos.y || 0) - (g.pos.y || 0)) <= 2.4) {
+                                        this.hostPopEggSac(g);
+                                        break;
+                                    }
+                                }
+                            }
+                        });
+
+                        this.enemySyncAccum += dt;
+                        if (this.enemySyncAccum >= 0.05) {
+                            this.enemySyncAccum = 0;
+                            const list = Game.enemies.filter(e => !e.isDummy && e.hp > 0).map(e => [
+                                e.netId,
+                                +e.pos.x.toFixed(2),
+                                +(e.pos.y || 0).toFixed(2),
+                                +e.pos.z.toFixed(2),
+                                +e.mesh.rotation.y.toFixed(2),
+                                Math.round(e.hp),
+                                Math.round(e.maxHp),
+                                e.phase || 1,
+                                +(e.stunTimer || 0).toFixed(2),
+                                +(e.slowTimer || 0).toFixed(2),
+                                +(e.shieldTimer || 0).toFixed(2),
+                                e.targetPeerId || null
+                            ]);
+                            this.broadcast({ t: 'EN_SYNC', list });
+                        }
+                    }
+
+                    // 3. Animate Remote Players (Movement, Dash Wings, Stealth Mask, Death -> 3.5s Despawn, Aegis Dome)
+                    this.remotePlayers.forEach(rp => {
+                        if (!rp.rig || !rp.rig.group) return;
+                        rp.npGroup.lookAt(Game.camera.position);
+                        rp.hpFill.scale.x = Math.max(0.001, rp.hp / Math.max(1, rp.maxHp));
+                        rp.shldFill.scale.x = Math.max(0.001, rp.armorShield / Math.max(1, rp.maxArmorShield));
+
+                        if (rp.isCoopDead) {
+                            rp.deathAnimTimer += dt;
+                            if (rp.deathAnimTimer < 3.5) {
+                                rp.rig.group.visible = true;
+                                rp.rig.group.rotation.x = THREE.MathUtils.lerp(rp.rig.group.rotation.x, -Math.PI / 2 + 0.08, 12 * dt);
+                                rp.rig.group.position.y = (rp.pos.y || 0) + 0.12;
+                                rp.npGroup.visible = false;
+                            } else {
+                                rp.rig.group.visible = false;
+                            }
+                            if (rp.aegisMesh) {
+                                Game.scene.remove(rp.aegisMesh);
+                                rp.aegisMesh = null;
+                            }
+                            return;
+                        }
+
+                        rp.rig.group.visible = true;
+                        rp.npGroup.visible = true;
+                        rp.rig.group.rotation.x = 0;
+                        rp.rig.group.rotation.z = 0;
+
+                        rp.pos.lerp(rp.targetPos, Math.min(1, 16 * dt));
+                        rp.rotY = rp.targetRotY;
+                        rp.rig.group.position.copy(rp.pos);
+                        rp.rig.group.rotation.y = rp.rotY;
+
+                        Game.applyEntityStatusColorMask(rp.rig.upperBody, rp.stealthTimer > 0 ? 'stealth' : 'none');
+
+                        if (rp.dashActiveTimer > 0) {
+                            rp.dashActiveTimer = Math.max(0, rp.dashActiveTimer - dt);
+                            rp.ghostTick = (rp.ghostTick || 0) - dt;
+                            if (rp.ghostTick <= 0) {
+                                rp.ghostTick = 0.045;
+                                Game.spawnBurstParticles(rp.pos.clone().setY((rp.pos.y || 0) + 0.8), 0x22d3ee, 3);
+                            }
+                        }
+                        if (rp.rig.wingL && rp.rig.wingR) {
+                            const wSpan = rp.dashActiveTimer > 0 ? 1.95 : (rp.isSprinting ? 1.45 : 0.90);
+                            rp.rig.wingL.scale.x = THREE.MathUtils.lerp(rp.rig.wingL.scale.x, wSpan, 14 * dt);
+                            rp.rig.wingR.scale.x = THREE.MathUtils.lerp(rp.rig.wingR.scale.x, wSpan, 14 * dt);
+                        }
+
+                        if (rp.swingAnimTimer > 0) rp.swingAnimTimer = Math.max(0, rp.swingAnimTimer - dt);
+                        const recoilPct = rp.swingAnimTimer / 0.14;
+
+                        if (rp.isMoving) {
+                            rp.walkCycle += dt * (rp.isSprinting ? 16.0 : 10.5);
+                            const sL = Math.sin(rp.walkCycle);
+                            rp.rig.legL.rotation.x = sL * (rp.isSprinting ? 0.8 : 0.55);
+                            rp.rig.legR.rotation.x = -sL * (rp.isSprinting ? 0.8 : 0.55);
+                            rp.rig.shinL.rotation.x = Math.max(0, -Math.cos(rp.walkCycle - 0.35)) * 0.85;
+                            rp.rig.shinR.rotation.x = Math.max(0, -Math.cos(rp.walkCycle + Math.PI - 0.35)) * 0.85;
+                            rp.rig.upperBody.rotation.x = (rp.dashActiveTimer > 0 ? 0.42 : (rp.isSprinting ? 0.28 : 0.10)) - recoilPct * 0.06;
+                        } else {
+                            rp.rig.legL.rotation.x = THREE.MathUtils.lerp(rp.rig.legL.rotation.x, 0, 12 * dt);
+                            rp.rig.legR.rotation.x = THREE.MathUtils.lerp(rp.rig.legR.rotation.x, 0, 12 * dt);
+                            rp.rig.shinL.rotation.x = THREE.MathUtils.lerp(rp.rig.shinL.rotation.x, 0.05, 12 * dt);
+                            rp.rig.shinR.rotation.x = THREE.MathUtils.lerp(rp.rig.shinR.rotation.x, 0.05, 12 * dt);
+                            rp.rig.upperBody.rotation.x = THREE.MathUtils.lerp(rp.rig.upperBody.rotation.x, -recoilPct * 0.06, 12 * dt);
+                        }
+                        rp.rig.armR.rotation.x = -recoilPct * 0.24;
+
+                        if (rp.aegisTimer > 0 && rp.aegisHp > 0 && rp.aegisMesh) {
+                            rp.aegisTimer = Math.max(0, rp.aegisTimer - dt);
+                            rp.aegisMesh.position.copy(rp.pos);
+                            rp.aegisMesh.rotation.y += dt * 1.6;
+                        } else if (rp.aegisMesh) {
+                            Game.scene.remove(rp.aegisMesh);
+                            rp.aegisMesh = null;
+                        }
+                    });
+
+                    // 4. Local Dead Player Corpse Despawn after 3.5s & Spectator Camera
+                    if (Game.player.isCoopDead && Game.mode === 'dungeon') {
+                        if (Game.player.deathAnimTimer >= 3.5) {
+                            if (Game.player.mesh) Game.player.mesh.visible = false;
+                            if (Game.player.laserLine) Game.player.laserLine.visible = false;
+                            if (Game.player.laserTipDot) Game.player.laserTipDot.visible = false;
+                            if (!this.spectating) {
+                                this.spectating = true;
+                                this.cycleSpectateTarget(1);
+                            }
+                        }
+                        if (this.spectating) {
+                            const targetRp = this.remotePlayers.get(this.spectateTargetId);
+                            if (targetRp && !targetRp.isCoopDead) {
+                                const camTarget = new THREE.Vector3(targetRp.pos.x, (targetRp.pos.y || 0) + 14.0, targetRp.pos.z + 11.8);
+                                Game.camera.position.lerp(camTarget, 8 * dt);
+                                Game.camera.lookAt(targetRp.pos.x, (targetRp.pos.y || 0) + 0.8, targetRp.pos.z);
+                            }
+                        }
+                    }
+                },
+
+                openLobbyModal() {
+                    UI.openModal('coop_lobby');
+                },
+
+                refreshModalIfOpen() {
+                    if (UI.activeModal === 'coop_lobby' || UI.activeModal === 'sanctuary' || UI.activeModal === 'briefing_modal') {
+                        UI.openModal(UI.activeModal);
+                    }
+                },
+
+                saveCallsign(val) {
+                    const clean = String(val || '').trim().toUpperCase().slice(0, 16) || 'OPERATIVE';
+                    this.callsign = clean;
+                    localStorage.setItem('z4n_callsign', clean);
+                    if (this.isActive()) {
+                        this.broadcast({ t: 'PROFILE_UPD', profile: this.getLocalProfileSummary() });
+                    }
+                },
+
+                renderLobbyModalHTML() {
+                    const mults = this.getMultipliers();
+                    const members = [this.getLocalProfileSummary(), ...Array.from(this.remotePlayers.values()).map(rp => rp.profile).filter(Boolean)];
+
+                    return `
+                        <div class="p-6 h-full overflow-y-auto flex flex-col gap-5">
+                            <div class="arpg-panel p-5 border-2 border-cyan-400 flex flex-wrap justify-between items-center gap-4">
+                                <div>
+                                    <span class="text-xs font-cinzel font-bold uppercase tracking-widest text-cyan-300">CITADEL-9 P2P TACTICAL UPLINK</span>
+                                    <h2 class="font-cinzel font-black text-2xl text-white tracking-wider">4-PLAYER CO-OP COMMAND BEACON</h2>
+                                    <p class="text-xs text-slate-300 mt-0.5">Peer-to-Peer WebRTC Squad Link • Bring your full personal loadout, upgrades & cosmetics.</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="bg-slate-950 px-3.5 py-2 border border-sky-500/60">
+                                        <label class="block text-[9px] font-cinzel text-sky-400">YOUR CALLSIGN</label>
+                                        <input type="text" value="${this.callsign}" onchange="Coop.saveCallsign(this.value)" maxlength="14" class="bg-transparent text-white font-cinzel font-bold text-xs focus:outline-none w-32"/>
+                                    </div>
+                                    ${this.isActive() ? `
+                                        <button onclick="Coop.leaveLobby()" class="arpg-btn px-4 py-2.5 text-xs text-rose-300 border-rose-500 font-bold">
+                                            Disconnect Squad
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+
+                            ${!this.isActive() ? `
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                    <div class="arpg-panel p-6 flex flex-col justify-between gap-4 border-sky-500/70">
+                                        <div>
+                                            <div class="text-xs font-cinzel font-bold text-sky-300 uppercase">OPTION 1 // HOST SQUAD</div>
+                                            <h3 class="text-lg font-cinzel font-black text-white mt-1">Host a Co-Op Lobby (Up to 4 Players)</h3>
+                                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                                Generates a 6-character Invite Code. Up to 3 friends can join your Citadel-9 FOB instance and deploy into any Sector that all squad members have unlocked.
+                                            </p>
+                                        </div>
+                                        <button onclick="Coop.hostLobby()" class="arpg-btn-gold py-3 text-sm font-extrabold w-full">
+                                            <i class="fa-solid fa-satellite-dish mr-1.5"></i> GENERATE ROOM CODE & HOST
+                                        </button>
+                                    </div>
+
+                                    <div class="arpg-panel p-6 flex flex-col justify-between gap-4 border-emerald-500/70">
+                                        <div>
+                                            <div class="text-xs font-cinzel font-bold text-emerald-300 uppercase">OPTION 2 // JOIN SQUAD</div>
+                                            <h3 class="text-lg font-cinzel font-black text-white mt-1">Join Friend's Room Code</h3>
+                                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                                Enter the 6-character code from the Host to link directly via WebRTC with your current weapons, abilities, Cyber-Augments, and 3D cosmetics.
+                                            </p>
+                                            <input id="coop-join-code-input" type="text" placeholder="ENTER 6-CHAR CODE (e.g. 7X9K2M)" maxlength="10" class="w-full mt-3 px-4 py-2.5 bg-slate-950 border-2 border-emerald-500/80 text-white font-cinzel font-black text-sm tracking-widest uppercase focus:outline-none"/>
+                                        </div>
+                                        <button onclick="Coop.joinLobby(document.getElementById('coop-join-code-input').value)" class="arpg-btn-gold py-3 text-sm font-extrabold w-full border-emerald-400">
+                                            <i class="fa-solid fa-plug mr-1.5"></i> CONNECT TO SQUAD
+                                        </button>
+                                    </div>
+                                </div>
+                            ` : `
+                                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 flex-1">
+                                    <div class="lg:col-span-5 arpg-panel p-5 flex flex-col justify-between gap-4 border-amber-400/80">
+                                        <div class="flex flex-col gap-3">
+                                            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                                                <span class="text-xs font-cinzel font-bold text-amber-300">ACTIVE UPLINK // ${this.isHost() ? 'HOSTING SQUAD' : 'CONNECTED CLIENT'}</span>
+                                                <span class="px-2 py-0.5 bg-emerald-950 text-emerald-300 border border-emerald-500 text-[10px] font-cinzel font-bold">ONLINE (${members.length}/4)</span>
+                                            </div>
+                                            <div class="bg-slate-950 p-4 border border-sky-500/70 flex justify-between items-center">
+                                                <div>
+                                                    <div class="text-[10px] font-cinzel text-slate-400">SQUAD INVITE CODE</div>
+                                                    <div class="text-2xl font-cinzel font-black text-sky-300 tracking-widest">${this.roomCode || '...'}</div>
+                                                </div>
+                                                <button onclick="navigator.clipboard?.writeText('${this.roomCode}'); Game.spawnFloatingText(Game.player.pos, 'CODE COPIED!', '#38bdf8', 'text-xs', true);" class="arpg-btn px-3.5 py-2 text-xs text-sky-300">
+                                                    <i class="fa-solid fa-copy mr-1"></i> Copy Code
+                                                </button>
+                                            </div>
+                                            <div class="bg-slate-950/90 p-3.5 border border-slate-800 text-xs flex flex-col gap-1.5">
+                                                <div class="font-cinzel font-bold text-amber-300">ACTIVE CO-OP SCALING (${mults.count} PLAYERS):</div>
+                                                <div class="flex justify-between"><span>Hostile Health Multiplier:</span><span class="font-bold text-red-400">${mults.hp}x HP (+1.2x / player)</span></div>
+                                                <div class="flex justify-between"><span>Hostile Damage Multiplier:</span><span class="font-bold text-orange-400">${mults.dmg}x DMG</span></div>
+                                                <div class="flex justify-between"><span>Checkpoint Revival:</span><span class="font-bold text-emerald-300">Enabled on Checkpoint Floors</span></div>
+                                                <div class="flex justify-between"><span>Sector Completion Credit:</span><span class="font-bold text-sky-300">Shared Across All Squad Members</span></div>
+                                            </div>
+                                        </div>
+
+                                        ${this.isHost() ? `
+                                            <button onclick="UI.openModal('sanctuary')" class="arpg-btn-gold py-3 text-sm font-extrabold w-full">
+                                                <i class="fa-solid fa-satellite mr-1.5"></i> SELECT SECTOR & DEPLOY SQUAD (U)
+                                            </button>
+                                        ` : `
+                                            <div class="text-center py-3 bg-slate-950 border border-sky-800 text-xs font-cinzel font-bold text-sky-300 animate-pulse">
+                                                Standing by for Host to select Sector & Deploy...
+                                            </div>
+                                        `}
+                                    </div>
+
+                                    <div class="lg:col-span-7 arpg-panel p-5 flex flex-col gap-3">
+                                        <h4 class="font-cinzel font-bold text-sm text-sky-300 border-b border-sky-900 pb-2">
+                                            Squad Roster (${members.length} / 4 Operatives)
+                                        </h4>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                            ${members.map((m, idx) => `
+                                                <div class="bg-slate-950/90 p-4 border ${m.peerId === this.myPeerId ? 'border-sky-400' : 'border-slate-800'} flex flex-col justify-between gap-2">
+                                                    <div class="flex justify-between items-center">
+                                                        <span class="text-[10px] font-cinzel font-bold ${idx === 0 ? 'text-amber-300' : 'text-sky-400'}">
+                                                            SLOT ${idx + 1} ${idx === 0 ? '★ HOST' : '• CLIENT'}
+                                                        </span>
+                                                        <span class="text-[10px] font-cinzel font-bold px-2 py-0.5 bg-sky-950 text-sky-200 border border-sky-600">LVL ${m.level || 1}</span>
+                                                    </div>
+                                                    <div class="text-base font-cinzel font-black text-white truncate">${m.name || 'OPERATIVE'}</div>
+                                                    <div class="text-[10px] font-cinzel px-2 py-0.5 border ${m.fxClass || 'rank-fx-0'} truncate">
+                                                        RANK ${m.rankNumber || 1}: ${m.rankTitle || 'Unranked'}
+                                                    </div>
+                                                    <div class="text-[11px] text-slate-300 pt-1.5 border-t border-slate-800/80 flex flex-col gap-0.5">
+                                                        <div><span class="text-slate-500">1° Gun:</span> <span class="text-emerald-300 font-bold">${m.weapon?.name || 'Standard'}</span></div>
+                                                        <div><span class="text-slate-500">2° Gun:</span> <span class="text-amber-300 font-bold">${m.secondary?.name || 'Sidearm'}</span></div>
+                                                        <div><span class="text-slate-500">Unlocked Sectors:</span> <span class="text-sky-300 font-bold">Sec 1–${m.unlockedBiomes || 1}</span></div>
+                                                    </div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            `}
+                        </div>
+                    `;
+                }
+            };
+
+            window.Coop = Coop;
+
+            // ==================== WRAP GAME & UI METHODS ====================
+
+            // 1. Add Co-Op Beacon Monument in Citadel-9 FOB Hub
+            const origBuildSanctuary = Game.buildSanctuaryScene;
+            Game.buildSanctuaryScene = function () {
+                origBuildSanctuary.apply(this, arguments);
+                this.createMonument(
+                    9.5, -45, 0x22d3ee,
+                    'Co-Op Tactical Uplink Beacon — Host or Join 4-Player Squad',
+                    'tech_matrix',
+                    () => Coop.openLobbyModal()
+                );
+                if (Coop.isActive()) {
+                    Coop.remotePlayers.forEach(rp => {
+                        rp.isCoopDead = false;
+                        rp.deathAnimTimer = 0;
+                        if (rp.rig && rp.rig.group) {
+                            rp.rig.group.visible = true;
+                            rp.rig.group.rotation.set(0, 0, 0);
+                            if (!rp.rig.group.parent) this.scene.add(rp.rig.group);
+                        }
+                    });
+                }
+            };
+
+            // 2. Deterministic Floor Seeding + Authoritative Host Floor Snapshot Sync
+            const origBuildDungeonFloor = Game.buildDungeonFloor;
+            Game.buildDungeonFloor = function () {
+                if (Coop.isActive()) {
+                    Coop.enemySeq = 0;
+                    Coop.propSeq = 0;
+                    Coop.gimSeq = 0;
+
+                    if (Coop.isHost()) {
+                        // Generate a fresh seed ONLY when advancing to Floor 2+ (Floor 1 seed is set in deployToSector)
+                        if (this.dungeonFloor > 1 || !Coop._deploySeedLocked) {
+                            Coop.floorSeed = (Math.random() * 0xFFFFFFFF) >>> 0;
+                            const isBossFl = (this.dungeonFloor === this.maxDungeonFloors);
+                            if (!isBossFl) {
+                                this.forcedLayoutId = Math.floor(Math.random() * 40);
+                            }
+                        }
+                        Coop._deploySeedLocked = false;
+                    }
+
+                    const savedLayoutId = this.forcedLayoutId;
+                    Coop.withSeededRandom(Coop.floorSeed, () => {
+                        origBuildDungeonFloor.apply(this, arguments);
+                    });
+
+                    // Host captures exact floor snapshot; Client applies Host's exact floor snapshot!
+                    if (Coop.isHost()) {
+                        const snap = Coop.captureHostFloorSnapshot();
+                        Coop.lastHostSnapshot = snap;
+                        if (this.dungeonFloor > 1) {
+                            Coop.broadcast({
+                                t: 'CHANGE_FLOOR',
+                                floor: this.dungeonFloor,
+                                floorSeed: Coop.floorSeed,
+                                layoutId: savedLayoutId,
+                                snapshot: snap
+                            });
+                        }
+                    } else if (Coop.isClient() && Coop.pendingSnapshot) {
+                        Coop.applyFloorSnapshotOnClient(Coop.pendingSnapshot);
+                        Coop.pendingSnapshot = null;
+                    }
+
+                    if (this.archEntities) {
+                        this.archEntities.forEach(ae => {
+                            if (ae.type === 'arch_destructible' && !ae.netPropId) {
+                                ae.netPropId = 'prop_' + (++Coop.propSeq);
+                            }
+                        });
+                    }
+
+                    // Intercept client-side egg_sac triggering so Host always pops eggs & spawns synced crawlers
+                    this.gimmickEntities.forEach((g, idx) => {
+                        if (!g.netGimId) g.netGimId = 'egg_' + idx;
+                    });
+
+                    this.interactables.forEach(inter => {
+                        if (inter._coopWrapped) return;
+                        inter._coopWrapped = true;
+                        const origFn = inter.onInteract;
+                        const ix = inter.pos.x, iz = inter.pos.z, lbl = inter.label || '';
+                        inter.onInteract = () => {
+                            if (Game.player.isCoopDead) return;
+                            const isPortal = lbl.includes('Descend to Floor') || lbl.includes('Extract to Citadel-9') || lbl.includes('Command Deck Extraction');
+                            if (isPortal) {
+                                const isEx = lbl.includes('Extract') || (Game.dungeonFloor >= Game.maxDungeonFloors);
+                                if (!Coop._fromRemotePortal) {
+                                    Coop.broadcast({ t: 'PORTAL_USE', isExtraction: isEx, nextFloor: Game.dungeonFloor + 1 });
+                                }
+                                if (Coop.isClient() && !isEx) return;
+                            } else if (!Coop._fromRemoteInteract) {
+                                Coop.broadcast({ t: 'INTER_USE', x: ix, z: iz, label: lbl });
+                            }
+                            origFn();
+                        };
+                    });
+
+                    // Revive dead players on Floor 1 or Checkpoint Floors
+                    const cps = this.getSectorCheckpoints(this.activeBiomeIndex, this.isHardMode);
+                    const isReviveFloor = (this.dungeonFloor === 1) || cps.includes(this.dungeonFloor);
+                    if (isReviveFloor) {
+                        if (this.player.isCoopDead) {
+                            this.player.isCoopDead = false;
+                            this.player.deathAnimTimer = 0;
+                            Coop.spectating = false;
+                            Coop.updateSpectatorBanner();
+                            if (this.player.mesh) {
+                                this.player.mesh.visible = true;
+                                this.player.mesh.rotation.set(0, 0, 0);
+                            }
+                            this.resetPlayerCombatState();
+                            this.spawnFloatingText(this.player.pos, 'CHECKPOINT REACHED — CHASSIS REPRINTED!', '#34d399', 'text-sm', true);
+                        }
+                        Coop.remotePlayers.forEach(rp => {
+                            rp.isCoopDead = false;
+                            rp.deathAnimTimer = 0;
+                            rp.hp = rp.maxHp;
+                            rp.armorShield = rp.maxArmorShield;
+                        });
+                    }
+
+                    Coop.remotePlayers.forEach(rp => {
+                        if (rp.rig && rp.rig.group && !rp.rig.group.parent) {
+                            this.scene.add(rp.rig.group);
+                        }
+                    });
+
+                    // Spawn all players at the exact same base startSpot with a tight 1.6m squad offset
+                    const baseStart = this.floorStartPos || { x: this.player.pos.x, z: this.player.pos.z };
+                    const slotIdx = Coop.getMySlotIndex();
+                    const off = SPAWN_OFFSETS[slotIdx % SPAWN_OFFSETS.length];
+                    const safePt = this.findSafeOpenSpot(baseStart.x + off[0], baseStart.z + off[1], 1.2, 0);
+                    this.player.pos.set(safePt.x, 0, safePt.z);
+                    this.resolveWallCollisions(this.player.pos, 0.75);
+                    this.player.mesh.position.copy(this.player.pos);
+                    Coop.updateSquadHUD();
+                    Coop.updateSpectatorBanner();
+                } else {
+                    origBuildDungeonFloor.apply(this, arguments);
+                }
+            };
+
+            const origSpawnPortal = Game.spawnPortal;
+            Game.spawnPortal = function (x, z, isExtraction) {
+                origSpawnPortal.apply(this, arguments);
+                if (!Coop.isActive()) return;
+                const inter = this.interactables[this.interactables.length - 1];
+                if (inter && !inter._coopWrapped) {
+                    inter._coopWrapped = true;
+                    const origFn = inter.onInteract;
+                    inter.onInteract = () => {
+                        if (Game.player.isCoopDead) return;
+                        const isEx = Boolean(isExtraction || Game.dungeonFloor >= Game.maxDungeonFloors);
+                        if (!Coop._fromRemotePortal) {
+                            Coop.broadcast({ t: 'PORTAL_USE', isExtraction: isEx, nextFloor: Game.dungeonFloor + 1 });
+                        }
+                        if (Coop.isClient() && !isEx) return;
+                        origFn();
+                    };
+                }
+            };
+
+            // 3. Wrap spawnEnemy: Prevent Client from locally spawning unsynced mid-floor egg crawlers!
+            const origSpawnEnemy = Game.spawnEnemy;
+            Game.spawnEnemy = function (type, x, z, level, isBoss = false, isElite = false, isMiniBoss = false, forcedElevY = null) {
+                if (Coop.isClient() && !Coop._allowingRemoteSpawn && Game.floorStartPos && performance.now() - (Game.runStats?.startTime || 0) > 400) {
+                    // Client triggered an egg sac locally -> request Host to pop the egg and spawn the authoritative crawler!
+                    const nearEgg = Game.gimmickEntities.find(g => g.type === 'egg_sac' && Math.hypot(g.pos.x - x, g.pos.z - z) <= 2.5);
+                    if (nearEgg) {
+                        Coop.sendToHost({ t: 'EGG_POP_REQ', netGimId: nearEgg.netGimId, x: +x.toFixed(2), z: +z.toFixed(2) });
+                    }
+                    return;
+                }
+
+                const prevLen = this.enemies.length;
+                origSpawnEnemy.apply(this, arguments);
+                if (this.enemies.length <= prevLen) return;
+                const en = this.enemies[this.enemies.length - 1];
+                if (!en || en.isDummy) return;
+
+                en.netId = 'en_' + (++Coop.enemySeq);
+                if (Coop.isActive() && !Coop._allowingRemoteSpawn) {
+                    const mults = Coop.getMultipliers();
+                    en.maxHp = Math.round(en.maxHp * mults.hp);
+                    en.hp = en.maxHp;
+                    en.baseMaxHp = Math.round((en.baseMaxHp || en.maxHp) * mults.hp);
+                    if (en.tensorTotalHp) en.tensorTotalHp = Math.round(en.tensorTotalHp * mults.hp);
+                    if (en.tensorBaseDmg) en.tensorBaseDmg = Math.round(en.tensorBaseDmg * mults.dmg);
+                    en.dmg = Math.round(en.dmg * mults.dmg);
+                    if (en.isBoss) UI.updateBossHUD();
+
+                    if (Coop.isHost() && Game.floorStartPos && performance.now() - (Game.runStats?.startTime || 0) > 400) {
+                        Coop.broadcast({
+                            t: 'EN_SPAWN',
+                            netId: en.netId,
+                            type, x: +x.toFixed(2), z: +z.toFixed(2), level, isBoss, isElite, isMiniBoss,
+                            elevY: forcedElevY,
+                            maxHp: en.maxHp,
+                            dmg: en.dmg
+                        });
+                    }
+                }
+            };
+
+            // 4. Wrap damageEnemy & handleEnemyDeath
+            const origDamageEnemy = Game.damageEnemy;
+            Game.damageEnemy = function (en, rawDmg, canLeech = true, isAbility = false, isSharedTetherEcho = false, forceCrit = false, canProcAmmoRefund = true) {
+                if (!Coop.isActive() || !en || en.isDummy) {
+                    return origDamageEnemy.apply(this, arguments);
+                }
+                const hpBefore = en.hp;
+                const phaseBefore = en.phase || 1;
+
+                if (Coop.isClient()) {
+                    const savedHandleDeath = this.handleEnemyDeath;
+                    this.handleEnemyDeath = function () {};
+                    try {
+                        origDamageEnemy.apply(this, arguments);
+                    } finally {
+                        this.handleEnemyDeath = savedHandleDeath;
+                    }
+                    const dealt = Math.max(1, hpBefore - en.hp);
+                    if (en.hp <= 0) en.hp = 1;
+                    Coop.sendToHost({
+                        t: 'EN_HIT',
+                        netId: en.netId,
+                        dmg: dealt,
+                        isCrit: Boolean(forceCrit),
+                        stun: en.stunTimer || 0,
+                        slow: en.slowTimer || 0,
+                        poisonTimer: en.poisonTimer || 0,
+                        poisonDps: en.poisonDps || 0
+                    });
+                    return;
+                }
+
+                origDamageEnemy.apply(this, arguments);
+                const dealt = Math.max(1, hpBefore - en.hp);
+                if (en.isZed2Boss && (en.phase || 1) > phaseBefore) {
+                    en.maxHp = Math.round(1000000 * Coop.getMultipliers().hp);
+                    en.hp = en.maxHp;
+                    UI.updateBossHUD();
+                }
+                if (en.hp > 0) {
+                    Coop.broadcast({
+                        t: 'EN_DMG_FX',
+                        netId: en.netId,
+                        dmg: dealt,
+                        isCrit: Boolean(forceCrit),
+                        hp: en.hp,
+                        maxHp: en.maxHp,
+                        phase: en.phase,
+                        attackerId: Coop.myPeerId
+                    });
+                }
+            };
+
+            const origHandleEnemyDeath = Game.handleEnemyDeath;
+            Game.handleEnemyDeath = function (en) {
+                if (Coop.isActive() && !en?.isDummy) {
+                    if (Coop.isClient() && !Coop._authoritativeKill) return;
+                    if (Coop.isHost()) {
+                        Coop.broadcast({ t: 'EN_DIE', netId: en.netId, killerId: Coop.myPeerId });
+                    }
+                }
+                return origHandleEnemyDeath.apply(this, arguments);
+            };
+
+            // 5. Wrap Projectiles, Explosions, Thrown Canisters, Dash FX, and Skill Meshes
+            const origSpawnProjectile = Game.spawnProjectile;
+            Game.spawnProjectile = function (startPos, dir, speed, dmg, fromPlayer, colorHex, piercing = false, applyPoison = false, stunChance = 0, maxRange = 22.0, explosiveHit = false, mindControlPayload = null, specialWeaponData = null) {
+                origSpawnProjectile.apply(this, arguments);
+                if (!Coop.isActive() || (specialWeaponData && specialWeaponData._fromCoopRemote) || Coop.inSyncedBossUlt) return;
+                if (!fromPlayer && Coop.isClient()) return;
+                Coop.broadcast({
+                    t: 'PROJ',
+                    sender: Coop.myPeerId,
+                    x: +startPos.x.toFixed(2),
+                    y: +(startPos.y || 0).toFixed(2),
+                    z: +startPos.z.toFixed(2),
+                    dx: +dir.x.toFixed(3),
+                    dz: +dir.z.toFixed(3),
+                    spd: speed,
+                    dmg,
+                    fromPlayer: Boolean(fromPlayer),
+                    col: colorHex,
+                    pierce: Boolean(piercing),
+                    rng: maxRange,
+                    card: Boolean(specialWeaponData && specialWeaponData.isPlayingCard),
+                    cardData: specialWeaponData?.cardData || null,
+                    saw: Boolean(specialWeaponData && specialWeaponData.isRicochetSaw),
+                    kunai: Boolean(specialWeaponData && specialWeaponData.isKunai),
+                    harpoon: Boolean(specialWeaponData && specialWeaponData.isPlayerHarpoon),
+                    dart: Boolean(mindControlPayload)
+                });
+            };
+
+            const origSpawnSphereExplosion = Game.spawnSphereExplosionVisual;
+            Game.spawnSphereExplosionVisual = function (pos, radius, colorHex = 0xf97316) {
+                origSpawnSphereExplosion.apply(this, arguments);
+                if (Coop.isActive() && !Coop.suppressNetFx && !Coop.inSyncedBossUlt && pos) {
+                    Coop.broadcast({
+                        t: 'FX_EXPLODE',
+                        sender: Coop.myPeerId,
+                        x: +pos.x.toFixed(2),
+                        y: +(pos.y || 0).toFixed(2),
+                        z: +pos.z.toFixed(2),
+                        rad: +(radius || 3.0).toFixed(2),
+                        col: colorHex
+                    });
+                }
+            };
+
+            const origSpawnArcingCanister = Game.spawnArcingCanisterVisual;
+            Game.spawnArcingCanisterVisual = function (startPos, destPos, duration, colorHex, onLand) {
+                if (Coop.isActive() && !Coop.suppressNetFx && startPos && destPos) {
+                    Coop.broadcast({
+                        t: 'FX_CANISTER',
+                        sender: Coop.myPeerId,
+                        sx: +startPos.x.toFixed(2),
+                        sy: +(startPos.y || 0).toFixed(2),
+                        sz: +startPos.z.toFixed(2),
+                        dx: +destPos.x.toFixed(2),
+                        dy: +(destPos.y || 0).toFixed(2),
+                        dz: +destPos.z.toFixed(2),
+                        dur: duration || 0.26,
+                        col: colorHex,
+                        rad: 4.5
+                    });
+                }
+                origSpawnArcingCanister.apply(this, arguments);
+            };
+
+            const origSpawnTelegraph = Game.spawnTelegraph;
+            Game.spawnTelegraph = function (x, z, radius, duration, dmg, onDetonate = null) {
+                origSpawnTelegraph.apply(this, arguments);
+                if (Coop.isHost() && !Coop.inSyncedBossUlt) {
+                    Coop.broadcast({ t: 'EN_TEL', x: +x.toFixed(2), z: +z.toFixed(2), rad: radius, dur: duration, dmg });
+                }
+            };
+
+            const origSpawnLaser = Game.spawnWallPiercingLaser;
+            Game.spawnWallPiercingLaser = function (originPos, angle, colorHex, tickDmg, telegraphDur = 0.85, activeDur = 1.75, rotSpeed = 0) {
+                origSpawnLaser.apply(this, arguments);
+                if (Coop.isHost() && !Coop.inSyncedBossUlt) {
+                    Coop.broadcast({
+                        t: 'EN_LASER',
+                        x: +originPos.x.toFixed(2),
+                        y: +(originPos.y || 0).toFixed(2),
+                        z: +originPos.z.toFixed(2),
+                        ang: +angle.toFixed(3),
+                        col: colorHex,
+                        dmg: tickDmg,
+                        tDur: telegraphDur,
+                        aDur: activeDur,
+                        rotSpd: rotSpeed
+                    });
+                }
+            };
+
+            const origSpawnPool = Game.spawnLingeringHazardPool;
+            Game.spawnLingeringHazardPool = function (x, z, radius, duration, tickDmg, colorHex, appliesSlow = false, forcedY = null, fromPlayer = false) {
+                origSpawnPool.apply(this, arguments);
+                if (Coop.isActive() && !Coop.inSyncedBossUlt && (fromPlayer || Coop.isHost())) {
+                    Coop.broadcast({
+                        t: 'EN_POOL',
+                        x: +x.toFixed(2),
+                        z: +z.toFixed(2),
+                        rad: radius,
+                        dur: duration,
+                        dmg: tickDmg,
+                        col: colorHex,
+                        slow: appliesSlow,
+                        y: forcedY,
+                        fromPlayer
+                    });
+                }
+            };
+
+            const origExecuteArmedSkill = Game.executeArmedSkill;
+            Game.executeArmedSkill = function (slotIdx, isAltFire = false) {
+                const skillId = this.state.hotbar[slotIdx];
+                const rank = this.state.skills[skillId] || 1;
+                const skDef = SKILL_TREE.find(s => s.id === skillId);
+                const targetPt = skDef ? this.getAbilityTargetPoint(skDef, 0) : this.player.pos.clone();
+                const startPt = this.player.pos.clone();
+
+                origExecuteArmedSkill.apply(this, arguments);
+
+                if (Coop.isActive() && skillId) {
+                    if (skillId === 'aegisBarrier' && this.player.aegisTimer > 0) {
+                        Coop.broadcast({
+                            t: 'AEGIS_STATE',
+                            peerId: Coop.myPeerId,
+                            timer: this.player.aegisTimer,
+                            hp: this.player.aegisHp,
+                            maxHp: this.player.maxAegisHp,
+                            reflect: this.player.aegisReflect,
+                            reflectMult: this.player.aegisReflectMult,
+                            col: rank >= 7 ? 0xf43f5e : (rank >= 6 ? 0xfacc15 : 0x10b981)
+                        });
+                    } else {
+                        Coop.broadcast({
+                            t: 'SKILL_FX',
+                            sender: Coop.myPeerId,
+                            skillId,
+                            rank,
+                            isAlt: Boolean(isAltFire),
+                            x: +targetPt.x.toFixed(2),
+                            y: +(targetPt.y || 0).toFixed(2),
+                            z: +targetPt.z.toFixed(2),
+                            sx: +startPt.x.toFixed(2),
+                            sy: +(startPt.y || 0).toFixed(2),
+                            sz: +startPt.z.toFixed(2),
+                            rotY: +this.player.rotY.toFixed(2)
+                        });
+                    }
+                }
+            };
+
+            const origExpireAegis = Game.expireAegisDome;
+            Game.expireAegisDome = function (broken = false) {
+                origExpireAegis.apply(this, arguments);
+                if (Coop.isActive()) {
+                    Coop.broadcast({ t: 'AEGIS_STATE', peerId: Coop.myPeerId, timer: 0, hp: 0, maxHp: 0 });
+                }
+            };
+
+            // 6. Route Enemy Melee / Contact / Suicide / Lunge Damage to the Actual Targeted Player!
+            const origDamagePlayer = Game.damagePlayer;
+            Game.damagePlayer = function (rawDmg) {
+                if (this.player.isCoopDead) return;
+
+                // If an enemy in the Host's AI loop triggered damagePlayer(), check which player is actually in melee/contact range!
+                if (Coop.isHost() && Coop.activeAiEnemy && !Coop._fromAuthoritativeHit) {
+                    const en = Coop.activeAiEnemy;
+                    const reach = en.isSuicide ? 3.2 : Math.max(2.6, (en.range || 2.2) + 1.0);
+                    let hitRemote = false;
+
+                    Coop.remotePlayers.forEach(rp => {
+                        if (!rp.isCoopDead && Math.hypot(en.pos.x - rp.pos.x, en.pos.z - rp.pos.z) <= reach && Math.abs((en.pos.y || 0) - (rp.pos.y || 0)) <= 2.5) {
+                            if (en.isSuicide || en.targetPeerId === rp.peerId || Math.hypot(en.pos.x - rp.pos.x, en.pos.z - rp.pos.z) <= 1.5) {
+                                hitRemote = true;
+                                Coop.broadcast({ t: 'PL_HURT', targetPeerId: rp.peerId, dmg: rawDmg });
+                            }
+                        }
+                    });
+
+                    const distToHost = Math.hypot(en.pos.x - this.player.pos.x, en.pos.z - this.player.pos.z);
+                    if (distToHost > reach || (hitRemote && !en.isSuicide && en.targetPeerId && en.targetPeerId !== Coop.myPeerId)) {
+                        return; // Host was not the player hit by this melee/contact attack!
+                    }
+                }
+
+                // Check if standing inside a teammate's physical Aegis Dome
+                if (Coop.isActive() && (this.player.aegisTimer <= 0 || this.player.aegisHp <= 0)) {
+                    for (const [, rp] of Coop.remotePlayers) {
+                        if (!rp.isCoopDead && rp.aegisTimer > 0 && rp.aegisHp > 0 && this.player.pos.distanceTo(rp.pos) <= 1.75) {
+                            AudioEngine.sfx('shieldHit');
+                            this.spawnFloatingText(this.player.pos, `🛡️ ALLY AEGIS`, '#34d399', 'text-sm font-black', true);
+                            Coop.broadcast({ t: 'AEGIS_ABSORB', targetPeerId: rp.peerId, dmg: rawDmg });
+                            return;
+                        }
+                    }
+                }
+                return origDamagePlayer.apply(this, arguments);
+            };
+
+            const origGameOver = Game.gameOver;
+            Game.gameOver = function () {
+                if (!Coop.isActive()) {
+                    return origGameOver.apply(this, arguments);
+                }
+                if (this.player.isCoopDead) return;
+                this.player.isCoopDead = true;
+                this.player.hp = 0;
+                this.isMouseDown = false;
+                this.isRightMouseDown = false;
+                this.player.armedSkillSlot = null;
+                this.spawnPlayerDeathGore();
+                Coop.broadcast({ t: 'PL_DIED', peerId: Coop.myPeerId });
+                Coop.updateSquadHUD();
+
+                if (Coop.anyPlayerAlive()) {
+                    UI.announce('CHASSIS OFFLINE', 'Spectating Squad — You will reprint at the next Checkpoint Floor!');
+                } else if (Coop.isHost()) {
+                    Coop.broadcast({ t: 'PARTY_WIPE' });
+                    Coop.triggerTotalPartyWipe();
+                }
+            };
+
+            const origPerformPrimaryAttack = Game.performPrimaryAttack;
+            Game.performPrimaryAttack = function () {
+                if (this.player.isCoopDead) return;
+                return origPerformPrimaryAttack.apply(this, arguments);
+            };
+
+            const origTriggerDash = Game.triggerDash;
+            Game.triggerDash = function () {
+                if (this.player.isCoopDead) return;
+                const before = this.player.dashActiveTimer;
+                const r = origTriggerDash.apply(this, arguments);
+                if (Coop.isActive() && before <= 0 && this.player.dashActiveTimer > 0) {
+                    Coop.broadcast({ t: 'DASH_FX', sender: Coop.myPeerId });
+                }
+                return r;
+            };
+
+            // 7. Cutscene 2-Player Vote-to-Skip
+            const origStartSectorCutscene = Game.startSectorCutscene;
+            Game.startSectorCutscene = function () {
+                Coop.cutsceneVotes.clear();
+                origStartSectorCutscene.apply(this, arguments);
+                Coop.updateCutsceneSkipButtonLabel();
+            };
+
+            const origEndSectorCutscene = Game.endSectorCutscene;
+            Game.endSectorCutscene = function () {
+                if (Coop.isActive() && this.cutsceneState && this.cutsceneState.elapsed < this.cutsceneState.duration - 0.1) {
+                    Coop.voteSkipCutscene();
+                    return;
+                }
+                return origEndSectorCutscene.apply(this, arguments);
+            };
+
+            const origStartZed2Cutscene = Game.startZed2DefeatCutscene;
+            Game.startZed2DefeatCutscene = function () {
+                Coop.cutsceneVotes.clear();
+                origStartZed2Cutscene.apply(this, arguments);
+                Coop.updateCutsceneSkipButtonLabel();
+            };
+
+            const origFinishZed2Cutscene = Game.finishZed2DefeatCutscene;
+            Game.finishZed2DefeatCutscene = function () {
+                if (Coop.isActive() && this.zed2DefeatCutsceneActive && this.zed2CutsceneData && this.zed2CutsceneData.elapsed < 9.1) {
+                    Coop.voteSkipCutscene();
+                    return;
+                }
+                return origFinishZed2Cutscene.apply(this, arguments);
+            };
+
+            // 8. UI Modal & Deployment Snapshot Sync
+            const origRenderModalContent = UI.renderModalContent;
+            UI.renderModalContent = function (id) {
+                if (id === 'coop_lobby') {
+                    return Coop.renderLobbyModalHTML();
+                }
+                const html = origRenderModalContent.apply(this, arguments);
+                if (Coop.isActive() && id === 'briefing_modal') {
+                    const check = Coop.canPartyDeploy(this.briefingSectorIdx ?? 0, this.briefingIsHardMode);
+                    if (!check.ok) {
+                        return html.replace(
+                            /DEPLOY TO [^<]+<\/button>/,
+                            `LOCKED: ${check.reason.toUpperCase()}</button>`
+                        ).replace('class="arpg-btn-gold px-8 py-3', 'disabled class="arpg-btn px-8 py-3 opacity-50');
+                    }
+                }
+                return html;
+            };
+
+            const origDeployToSector = UI.deployToSector;
+            UI.deployToSector = function (sectorIdx, startFloor = 1, isHardMode = false) {
+                if (Coop.isActive() && Coop.isHost()) {
+                    const check = Coop.canPartyDeploy(sectorIdx, isHardMode);
+                    if (!check.ok) {
+                        AudioEngine.sfx('oom');
+                        Game.spawnFloatingText(Game.player.pos, check.reason.toUpperCase(), '#f87171', 'text-xs', true);
+                        return;
+                    }
+                    Coop.lockedPartySize = Coop.getPartySize();
+                    Coop.floorSeed = (Math.random() * 0xFFFFFFFF) >>> 0;
+                    Game.forcedLayoutId = Math.floor(Math.random() * 40);
+                    const savedLayout = Game.forcedLayoutId;
+                    Coop._deploySeedLocked = true;
+
+                    // Build Floor 1 on Host FIRST so we can send the exact floorSnapshot to Clients!
+                    origDeployToSector.apply(this, arguments);
+
+                    Coop.broadcast({
+                        t: 'START_RUN',
+                        sectorIdx,
+                        floor: startFloor,
+                        isHardMode,
+                        isTensorRun: false,
+                        floorSeed: Coop.floorSeed,
+                        layoutId: savedLayout,
+                        partySize: Coop.lockedPartySize,
+                        snapshot: Coop.lastHostSnapshot
+                    });
+                    return;
+                }
+                if (Coop.isActive() && Coop.isClient() && !Coop.pendingSnapshot) {
+                    Game.spawnFloatingText(Game.player.pos, 'ONLY THE SQUAD HOST CAN LAUNCH DEPLOYMENT!', '#f87171', 'text-xs', true);
+                    return;
+                }
+                return origDeployToSector.apply(this, arguments);
+            };
+
+            const origDeployToTensor = UI.deployToTensor;
+            UI.deployToTensor = function () {
+                if (Coop.isActive() && Coop.isHost()) {
+                    const check = Coop.canPartyDeploy(9, true);
+                    if (!check.ok) {
+                        AudioEngine.sfx('oom');
+                        Game.spawnFloatingText(Game.player.pos, check.reason.toUpperCase(), '#f87171', 'text-xs', true);
+                        return;
+                    }
+                    Coop.lockedPartySize = Coop.getPartySize();
+                    Coop.floorSeed = (Math.random() * 0xFFFFFFFF) >>> 0;
+                    Coop._deploySeedLocked = true;
+
+                    origDeployToTensor.apply(this, arguments);
+
+                    Coop.broadcast({
+                        t: 'START_RUN',
+                        sectorIdx: 9,
+                        floor: 1,
+                        isHardMode: true,
+                        isTensorRun: true,
+                        floorSeed: Coop.floorSeed,
+                        layoutId: 0,
+                        partySize: Coop.lockedPartySize,
+                        snapshot: Coop.lastHostSnapshot
+                    });
+                    return;
+                }
+                return origDeployToTensor.apply(this, arguments);
+            };
+
+            const origUpdateCosmetics = Game.updateCosmeticsVisuals;
+            Game.updateCosmeticsVisuals = function () {
+                origUpdateCosmetics.apply(this, arguments);
+                if (Coop.isActive()) Coop.broadcast({ t: 'PROFILE_UPD', profile: Coop.getLocalProfileSummary() });
+            };
+            const origUpdateWeaponMesh = Game.updateWeaponMeshModel;
+            Game.updateWeaponMeshModel = function () {
+                origUpdateWeaponMesh.apply(this, arguments);
+                if (Coop.isActive()) Coop.broadcast({ t: 'PROFILE_UPD', profile: Coop.getLocalProfileSummary() });
+            };
+
+            window.addEventListener('keydown', (e) => {
+                if (Coop.spectating && Game.player.isCoopDead && Game.mode === 'dungeon') {
+                    if (e.code === 'KeyA' || e.code === 'ArrowLeft') Coop.cycleSpectateTarget(-1);
+                    else if (e.code === 'KeyD' || e.code === 'ArrowRight') Coop.cycleSpectateTarget(1);
+                }
+            });
+
+            let lastCoopTime = performance.now();
+            function coopFrameLoop(now) {
+                requestAnimationFrame(coopFrameLoop);
+                const dt = Math.min(0.1, (now - lastCoopTime) / 1000);
+                lastCoopTime = now;
+                if (Coop.isActive()) {
+                    try { Coop.tick(dt); } catch (e) { console.warn('[Coop Tick]', e); }
+                }
+            }
+            requestAnimationFrame(coopFrameLoop);
         })();
     </script>
 </body>
