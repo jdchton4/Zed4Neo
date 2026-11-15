@@ -34002,10 +34002,11 @@ const LORE_ENTRIES = [
             window.ZedEnhanced = { cfg, stats, session, ACH, checkAch, resetStatsAndAch, openMenu, closeMenu, activateOD, announce, toast, version: '2.6' };
         })();
     </script>
-    <script id="zn-coop">
+        <script id="zn-coop">
         /**
          * ============================================================================
-         * ZED4NEO // 4-PLAYER P2P ONLINE CO-OP MODULE v2 (Full World & FX Sync)
+         * ZED4NEO // 4-PLAYER P2P ONLINE CO-OP MODULE v3
+         * (Spatial Teammate SFX, Floor-Persistent Corpses, Spectator Cam & Live Unpaused Menu)
          * ============================================================================
          */
         (function () {
@@ -34020,6 +34021,17 @@ const LORE_ENTRIES = [
                 [1.6, 0],
                 [0, -1.6]
             ];
+
+            // Sound effects that broadcast to teammates within earshot (Zed vocals are stripped automatically)
+            const SYNCED_SFX = new Set([
+                'cleave', 'rifle', 'heavy_rifle', 'minigun', 'suppressed', 'dagger', 'smg', 'pistol', 'magnum',
+                'hammer', 'shotgun', 'sniper', 'cannon', 'arcane', 'railgun', 'explosion', 'buzzsaw_throw',
+                'buzzsaw_hit', 'cryo_shatter', 'gravity_well', 'electric_zap', 'harpoon_launch', 'deploy_mech',
+                'stealth_cloak', 'flame_whoosh', 'nanite_swarm', 'kunai_throw', 'assassin_slash',
+                'lance_charge_1', 'lance_charge_2', 'lance_charge_3', 'reload', 'reload_done',
+                'dash', 'potion', 'shieldHit', 'shieldBreak', 'perfectDodge', 'sonar', 'cardThrow', 'crit', 'hit'
+            ]);
+            const LOUD_SFX = new Set(['shotgun', 'sniper', 'cannon', 'railgun', 'explosion', 'heavy_rifle', 'magnum']);
 
             const styleEl = document.createElement('style');
             styleEl.textContent = `
@@ -34087,11 +34099,13 @@ const LORE_ENTRIES = [
                 enemySyncAccum: 0,
                 inSyncedBossUlt: false,
                 suppressNetFx: false,
+                suppressNetSfx: false,
+                suppressVocal: false,
                 activeAiEnemy: null,
                 cutsceneVotes: new Set(),
                 spectating: false,
                 spectateTargetId: null,
-                remoteVisualEffects: [],
+                coopMenuOpen: false,
 
                 isActive() {
                     return this.role === 'host' || this.role === 'client';
@@ -34275,13 +34289,24 @@ const LORE_ENTRIES = [
                     this.lockedPartySize = 1;
                     this.spectating = false;
                     this.spectateTargetId = null;
-                    if (Game.player) {
-                        Game.player.isCoopDead = false;
-                        if (Game.player.mesh) Game.player.mesh.visible = true;
-                    }
+                    this.restoreLocalPlayerFromCoopDeath();
                     this.updateSquadHUD();
                     this.updateSpectatorBanner();
                     if (!silent) this.refreshModalIfOpen();
+                },
+
+                restoreLocalPlayerFromCoopDeath() {
+                    if (!Game.player) return;
+                    Game.player.isCoopDead = false;
+                    Game.player.coopDeathFloor = null;
+                    Game.player.coopDeathPos = null;
+                    Game.player.deathAnimTimer = 0;
+                    if (Game.player.mesh) {
+                        Game.player.mesh.visible = true;
+                        Game.player.mesh.rotation.set(0, 0, 0);
+                    }
+                    const floatHud = document.getElementById('player-floating-hud');
+                    if (floatHud) floatHud.style.display = '';
                 },
 
                 onPeerDisconnect(peerId) {
@@ -34335,6 +34360,41 @@ const LORE_ENTRIES = [
                     });
                 },
 
+                // ==================== SPATIAL TEAMMATE SFX (NO ZED VOCALS) ====================
+                playRemoteSpatialSfx(name, x, z) {
+                    if (typeof AudioEngine === 'undefined' || AudioEngine.muted) return;
+                    // Listener position is either the spectated teammate or our own character
+                    let listenerPos = Game.player.pos;
+                    if (this.spectating && Game.player.isCoopDead && this.spectateTargetId) {
+                        const specRp = this.remotePlayers.get(this.spectateTargetId);
+                        if (specRp) listenerPos = specRp.pos;
+                    }
+                    const dist = Math.hypot(listenerPos.x - x, listenerPos.z - z);
+                    const maxDist = LOUD_SFX.has(name) ? 48.0 : 36.0;
+                    if (dist > maxDist) return;
+
+                    const atten = Math.pow(Math.max(0.08, 1 - dist / maxDist), 1.3) * 0.85;
+                    this.suppressNetSfx = true;
+                    this.suppressVocal = true;
+                    const prevSfxVol = AudioEngine.sfxVol ?? 1.0;
+                    try {
+                        if (AudioEngine.sfxBus && AudioEngine.ctx) {
+                            AudioEngine.sfxBus.gain.setValueAtTime(prevSfxVol * atten, AudioEngine.ctx.currentTime);
+                        }
+                        origAudioSfx.call(AudioEngine, name);
+                    } finally {
+                        if (AudioEngine.sfxBus && AudioEngine.ctx) {
+                            setTimeout(() => {
+                                if (AudioEngine.sfxBus && AudioEngine.ctx) {
+                                    AudioEngine.sfxBus.gain.setValueAtTime(AudioEngine.sfxVol ?? 1.0, AudioEngine.ctx.currentTime);
+                                }
+                            }, 90);
+                        }
+                        this.suppressVocal = false;
+                        this.suppressNetSfx = false;
+                    }
+                },
+
                 // ==================== FLOOR SNAPSHOT BUILDER & APPLICATOR ====================
                 captureHostFloorSnapshot() {
                     return {
@@ -34363,15 +34423,7 @@ const LORE_ENTRIES = [
                         eggSacs: Game.gimmickEntities.filter(g => g.type === 'egg_sac').map((g, idx) => {
                             g.netGimId = 'egg_' + idx;
                             return { netGimId: g.netGimId, x: +g.pos.x.toFixed(2), y: +(g.pos.y || 0).toFixed(2), z: +g.pos.z.toFixed(2) };
-                        }),
-                        chests: Game.interactables.filter(i => (i.label || '').includes('Supply Cache')).map(i => ({
-                            x: +i.pos.x.toFixed(2),
-                            z: +i.pos.z.toFixed(2)
-                        })),
-                        shrines: Game.interactables.filter(i => (i.label || '').includes('Med-Beacon')).map(i => ({
-                            x: +i.pos.x.toFixed(2),
-                            z: +i.pos.z.toFixed(2)
-                        }))
+                        })
                     };
                 },
 
@@ -34383,7 +34435,6 @@ const LORE_ENTRIES = [
                     if (snap.startSpot) Game.floorStartPos = { x: snap.startSpot.x, z: snap.startSpot.z };
                     if (snap.exitPos) Game.floorExitPos = { x: snap.exitPos.x, z: snap.exitPos.z };
 
-                    // 1. Replace client's randomly spawned enemies with Host's exact enemy list
                     Game.enemies.slice().forEach(en => {
                         if (!en.isDummy) Game.scene.remove(en.mesh);
                     });
@@ -34407,7 +34458,6 @@ const LORE_ENTRIES = [
                     this._allowingRemoteSpawn = false;
                     Game.enemiesRemaining = Game.enemies.length;
 
-                    // 2. Replace client's egg_sacs with Host's exact egg_sacs
                     if (Array.isArray(snap.eggSacs)) {
                         for (let i = Game.gimmickEntities.length - 1; i >= 0; i--) {
                             if (Game.gimmickEntities[i].type === 'egg_sac') {
@@ -34490,6 +34540,7 @@ const LORE_ENTRIES = [
                             swingAnimTimer: 0,
                             walkCycle: 0,
                             isCoopDead: false,
+                            coopDeathFloor: null,
                             deathAnimTimer: 0,
                             aegisTimer: 0,
                             aegisHp: 0,
@@ -34750,7 +34801,6 @@ const LORE_ENTRIES = [
                             if (ae.pipFill) ae.pipFill.scale.x = Math.max(0.01, ae.hitsLeft / Math.max(1, ae.maxHits));
                             if (ae.hitsLeft <= 0) {
                                 if (typeof ae.onBreak === 'function') ae.onBreak();
-                                AudioEngine.sfx('shotgun');
                                 this.suppressNetFx = true;
                                 Game.spawnSphereExplosionVisual(ae.pos, ae.blastRadius || 3.5, ae.coreColor || 0xf97316);
                                 this.suppressNetFx = false;
@@ -34764,7 +34814,6 @@ const LORE_ENTRIES = [
                     }
                 },
 
-                // Spawn visual-only 3D meshes for remote teammate abilities!
                 spawnRemoteSkillVisual(data) {
                     const skId = data.skillId;
                     const rnk = data.rank || 1;
@@ -34774,7 +34823,6 @@ const LORE_ENTRIES = [
                     const startPt = new THREE.Vector3(data.sx || 0, data.sy || 0, data.sz || 0);
 
                     if (skId === 'claymoreMine') {
-                        AudioEngine.sfx('reload');
                         const blastR = isOvr ? 6.8 : (isAmp ? 5.8 : +(4.6 + rnk * 0.15).toFixed(1));
                         const lCol = data.isAlt ? 0x38bdf8 : (isOvr ? 0xf43f5e : (isAmp ? 0x22d3ee : 0xf59e0b));
                         const mGroup = Game.buildClaymoreMineMesh(blastR, 3.0, lCol);
@@ -34783,14 +34831,12 @@ const LORE_ENTRIES = [
                         Game.scene.add(mGroup);
                         setTimeout(() => Game.scene.remove(mGroup), 12000);
                     } else if (skId === 'repulsorPulse') {
-                        AudioEngine.sfx('shotgun');
                         const rad = isOvr ? 8.5 : (isAmp ? 6.2 : 4.8);
                         const rCol = isOvr ? 0xf43f5e : (isAmp ? 0x22d3ee : 0xf97316);
                         this.suppressNetFx = true;
                         Game.spawnSphereExplosionVisual(startPt, rad * 0.75, rCol);
                         this.suppressNetFx = false;
                     } else if (skId === 'orbitalNapalm') {
-                        AudioEngine.sfx('shotgun');
                         const aimDir = targetPt.clone().sub(startPt).setY(0);
                         if (aimDir.lengthSq() < 0.01) aimDir.set(Math.sin(data.rotY || 0), 0, Math.cos(data.rotY || 0));
                         aimDir.normalize();
@@ -34810,7 +34856,6 @@ const LORE_ENTRIES = [
                             cleanup: () => Game.scene.remove(jetGrp)
                         });
                     } else if (skId === 'vortexSingularity') {
-                        AudioEngine.sfx('arcane');
                         const pullRad = isOvr ? 10.5 : (isAmp ? 8.2 : 6.2);
                         const dur = isOvr ? 5.5 : (isAmp ? 4.0 : 3.6);
                         const bhGroup = new THREE.Group();
@@ -34825,7 +34870,6 @@ const LORE_ENTRIES = [
                         Game.scene.add(bhGroup);
                         setTimeout(() => Game.scene.remove(bhGroup), dur * 1000);
                     } else if (skId === 'teslaPylon') {
-                        AudioEngine.sfx('arcane');
                         const tCol = data.isAlt ? 0xfacc15 : (isOvr ? 0xf43f5e : 0x22d3ee);
                         const pGrp = new THREE.Group();
                         pGrp.position.copy(targetPt);
@@ -34839,20 +34883,17 @@ const LORE_ENTRIES = [
                         Game.scene.add(pGrp);
                         setTimeout(() => Game.scene.remove(pGrp), (isOvr ? 14 : 10) * 1000);
                     } else if (skId === 'hvtStrike') {
-                        AudioEngine.sfx('railgun');
                         const sCol = isOvr ? 0xf43f5e : (isAmp ? 0xe879f9 : 0x34d399);
                         const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 16, 16), new THREE.MeshBasicMaterial({ color: sCol, transparent: true, opacity: 0.65 }));
                         beam.position.copy(targetPt).add(new THREE.Vector3(0, 8, 0));
                         Game.scene.add(beam);
                         setTimeout(() => Game.scene.remove(beam), 520);
                     } else if (skId === 'sonarPulse') {
-                        AudioEngine.sfx('sonar');
                         const sSphere = new THREE.Mesh(new THREE.SphereGeometry(8.0, 16, 12), new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true, transparent: true, opacity: 0.55 }));
                         sSphere.position.copy(startPt).add(new THREE.Vector3(0, 1, 0));
                         Game.scene.add(sSphere);
                         setTimeout(() => Game.scene.remove(sSphere), 450);
                     } else if (skId === 'arcOverload' || skId === 'nanitePlague') {
-                        AudioEngine.sfx('arcane');
                         this.suppressNetFx = true;
                         Game.spawnSphereExplosionVisual(targetPt, 4.0, skId === 'nanitePlague' ? 0x84cc16 : 0x38bdf8);
                         this.suppressNetFx = false;
@@ -34906,7 +34947,7 @@ const LORE_ENTRIES = [
                     if (!data || !data.t) return;
 
                     if (this.isHost() && [
-                        'PL_STATE', 'PROJ', 'FX_EXPLODE', 'FX_CANISTER', 'DASH_FX', 'SKILL_FX',
+                        'PL_STATE', 'PROJ', 'SFX', 'FX_EXPLODE', 'FX_CANISTER', 'DASH_FX', 'SKILL_FX',
                         'AEGIS_STATE', 'AEGIS_ABSORB', 'PROP_HIT', 'INTER_USE', 'PORTAL_USE', 'PL_DIED', 'CS_VOTE'
                     ].includes(data.t)) {
                         this.broadcast(data, senderPeerId);
@@ -34962,9 +35003,11 @@ const LORE_ENTRIES = [
                             if (pid === this.myPeerId) return;
                             const rp = this.remotePlayers.get(pid);
                             if (!rp) return;
-                            rp.targetPos.set(data.x || 0, data.y || 0, data.z || 0);
-                            if (rp.pos.distanceTo(rp.targetPos) > 15) rp.pos.copy(rp.targetPos);
-                            rp.targetRotY = data.ry || 0;
+                            if (!rp.isCoopDead) {
+                                rp.targetPos.set(data.x || 0, data.y || 0, data.z || 0);
+                                if (rp.pos.distanceTo(rp.targetPos) > 15) rp.pos.copy(rp.targetPos);
+                                rp.targetRotY = data.ry || 0;
+                            }
                             rp.hp = data.hp ?? rp.hp;
                             rp.maxHp = data.mhp ?? rp.maxHp;
                             rp.armorShield = data.sh ?? rp.armorShield;
@@ -34980,6 +35023,11 @@ const LORE_ENTRIES = [
                             }
                             break;
                         }
+
+                        case 'SFX':
+                            if (data.sender === this.myPeerId) return;
+                            this.playRemoteSpatialSfx(data.name, data.x || 0, data.z || 0);
+                            break;
 
                         case 'START_RUN':
                             if (this.isClient()) {
@@ -35034,8 +35082,11 @@ const LORE_ENTRIES = [
                         case 'FX_EXPLODE':
                             if (data.sender === this.myPeerId) return;
                             this.suppressNetFx = true;
+                            this.suppressNetSfx = true;
                             origSpawnSphereExplosion.call(Game, new THREE.Vector3(data.x, data.y, data.z), data.rad, data.col);
+                            this.suppressNetSfx = false;
                             this.suppressNetFx = false;
+                            this.playRemoteSpatialSfx('explosion', data.x, data.z);
                             break;
 
                         case 'FX_CANISTER':
@@ -35049,7 +35100,9 @@ const LORE_ENTRIES = [
                                 data.col,
                                 () => {
                                     this.suppressNetFx = true;
+                                    this.suppressNetSfx = true;
                                     origSpawnSphereExplosion.call(Game, new THREE.Vector3(data.dx, data.dy, data.dz), data.rad || 4.0, data.col);
+                                    this.suppressNetSfx = false;
                                     this.suppressNetFx = false;
                                 }
                             );
@@ -35061,7 +35114,6 @@ const LORE_ENTRIES = [
                             const rp = this.remotePlayers.get(data.sender);
                             if (rp) {
                                 rp.dashActiveTimer = 0.16;
-                                AudioEngine.sfx('dash');
                                 Game.spawnBurstParticles(rp.pos.clone().setY((rp.pos.y || 0) + 0.9), 0x22d3ee, 14);
                             }
                             break;
@@ -35085,7 +35137,7 @@ const LORE_ENTRIES = [
                                 if (g) {
                                     g.triggered = true;
                                     Game.scene.remove(g.mesh);
-                                    AudioEngine.sfx('shotgun');
+                                    this.playRemoteSpatialSfx('shotgun', g.pos.x, g.pos.z);
                                     Game.spawnBurstParticles(g.pos.clone().add(new THREE.Vector3(0, 0.8, 0)), 0x10b981, 22);
                                 }
                             }
@@ -35155,7 +35207,6 @@ const LORE_ENTRIES = [
                                     }
                                     this.applyAuthoritativeDamage(en, data.dmg, data.isCrit, senderPeerId);
                                 } else {
-                                    // Enemy is already dead or doesn't exist on Host -> tell Client to remove phantom immediately!
                                     this.broadcast({ t: 'EN_DIE', netId: data.netId, killerId: senderPeerId });
                                 }
                             }
@@ -35277,7 +35328,7 @@ const LORE_ENTRIES = [
                             if (data.isExtraction) {
                                 this._fromRemotePortal = true;
                                 Game.isDefeatPending = false;
-                                Game.player.isCoopDead = false;
+                                this.restoreLocalPlayerFromCoopDeath();
                                 Game.returnToSanctuary(true);
                                 this._fromRemotePortal = false;
                             } else if (this.isHost()) {
@@ -35290,9 +35341,10 @@ const LORE_ENTRIES = [
                             const rp = this.remotePlayers.get(data.peerId || senderPeerId);
                             if (rp && !rp.isCoopDead) {
                                 rp.isCoopDead = true;
+                                rp.coopDeathFloor = Game.dungeonFloor;
                                 rp.hp = 0;
                                 rp.deathAnimTimer = 0.001;
-                                AudioEngine.sfx('playerDeathGore');
+                                this.playRemoteSpatialSfx('playerDeathGore', rp.pos.x, rp.pos.z);
                                 Game.spawnBurstParticles(rp.pos.clone().setY((rp.pos.y || 0) + 0.9), 0xdc2626, 28);
                                 const puddle = new THREE.Mesh(
                                     new THREE.CircleGeometry(1.4, 20),
@@ -35426,8 +35478,7 @@ const LORE_ENTRIES = [
                 triggerTotalPartyWipe() {
                     this.spectating = false;
                     this.updateSpectatorBanner();
-                    Game.player.isCoopDead = false;
-                    if (Game.player.mesh) Game.player.mesh.visible = true;
+                    this.restoreLocalPlayerFromCoopDeath();
                     if (!Game.isDefeatPending) {
                         origGameOver.call(Game);
                     }
@@ -35522,6 +35573,22 @@ const LORE_ENTRIES = [
                     this.activeAiEnemy = null;
                     if (!this.isActive()) return;
 
+                    // Keep Command Menu (#zn-menu) UNPAUSED in Co-Op so players can never pause-tank enemies!
+                    const znMenu = document.getElementById('zn-menu');
+                    if (znMenu && znMenu.classList.contains('open')) {
+                        if (window.ZedEnhanced && typeof window.ZedEnhanced.closeMenu === 'function' && !this._unpausingMenu) {
+                            this._unpausingMenu = true;
+                            window.ZedEnhanced.closeMenu(); // Clears T.paused = false & resumes audio
+                            znMenu.classList.add('open');   // Keeps the settings UI visible while game runs live!
+                            const pauseBadge = znMenu.querySelector('.hd div');
+                            if (pauseBadge) {
+                                pauseBadge.textContent = 'LIVE CO-OP — UNPAUSED';
+                                pauseBadge.style.color = '#f43f5e';
+                            }
+                            this._unpausingMenu = false;
+                        }
+                    }
+
                     // 1. Broadcast Local Player State at 20Hz
                     this.syncAccum += dt;
                     if (this.syncAccum >= 0.05) {
@@ -35538,9 +35605,9 @@ const LORE_ENTRIES = [
                             mhp: Math.round(p.maxHp),
                             sh: Math.round(p.armorShield),
                             msh: Math.round(p.maxArmorShield),
-                            mv: p.isMoving ? 1 : 0,
-                            sp: p.isSprinting ? 1 : 0,
-                            ads: p.isADS ? 1 : 0,
+                            mv: (!p.isCoopDead && p.isMoving) ? 1 : 0,
+                            sp: (!p.isCoopDead && p.isSprinting) ? 1 : 0,
+                            ads: (!p.isCoopDead && p.isADS) ? 1 : 0,
                             dsh: +(p.dashActiveTimer || 0).toFixed(2),
                             stl: +(p.stealthTimer || 0).toFixed(2),
                             slot: p.activeWeaponSlot || 'weapon'
@@ -35548,11 +35615,10 @@ const LORE_ENTRIES = [
                         this.updateSquadHUD();
                     }
 
-                    // 2. Host Authoritative Egg Sac Proximity Check for Remote Players + 20Hz Enemy Sync
+                    // 2. Host Authoritative Egg Sac Proximity Check + 20Hz Enemy Sync
                     if (this.isHost() && Game.mode === 'dungeon') {
                         this.updateHostTargetRanking(dt);
 
-                        // Check if any remote player walked near an egg_sac on the Host!
                         Game.gimmickEntities.forEach(g => {
                             if (g.type === 'egg_sac' && !g.triggered) {
                                 for (const [, rp] of this.remotePlayers) {
@@ -35585,7 +35651,7 @@ const LORE_ENTRIES = [
                         }
                     }
 
-                    // 3. Animate Remote Players (Movement, Dash Wings, Stealth Mask, Death -> 3.5s Despawn, Aegis Dome)
+                    // 3. Animate Remote Players (Corpse stays on current floor only, disappears on next floor)
                     this.remotePlayers.forEach(rp => {
                         if (!rp.rig || !rp.rig.group) return;
                         rp.npGroup.lookAt(Game.camera.position);
@@ -35594,17 +35660,23 @@ const LORE_ENTRIES = [
 
                         if (rp.isCoopDead) {
                             rp.deathAnimTimer += dt;
-                            if (rp.deathAnimTimer < 3.5) {
-                                rp.rig.group.visible = true;
-                                rp.rig.group.rotation.x = THREE.MathUtils.lerp(rp.rig.group.rotation.x, -Math.PI / 2 + 0.08, 12 * dt);
-                                rp.rig.group.position.y = (rp.pos.y || 0) + 0.12;
-                                rp.npGroup.visible = false;
-                            } else {
-                                rp.rig.group.visible = false;
-                            }
                             if (rp.aegisMesh) {
                                 Game.scene.remove(rp.aegisMesh);
                                 rp.aegisMesh = null;
+                            }
+                            // Show corpse ONLY on the floor where they died; hide on subsequent floors
+                            if (rp.coopDeathFloor === Game.dungeonFloor) {
+                                rp.rig.group.visible = true;
+                                rp.npGroup.visible = false;
+                                rp.rig.group.position.set(rp.pos.x, (rp.pos.y || 0) + 0.11, rp.pos.z);
+                                rp.rig.group.rotation.x = THREE.MathUtils.lerp(rp.rig.group.rotation.x, -Math.PI / 2 + 0.06, 12 * dt);
+                                rp.rig.group.rotation.z = THREE.MathUtils.lerp(rp.rig.group.rotation.z, 0.42, 10 * dt);
+                                rp.rig.legL.rotation.set(-0.85, 0, 1.0);
+                                rp.rig.legR.rotation.set(0.95, 0, -0.85);
+                                rp.rig.armL.rotation.set(-1.6, 0, 1.2);
+                                rp.rig.armR.rotation.set(1.3, 0, -1.3);
+                            } else {
+                                rp.rig.group.visible = false;
                             }
                             return;
                         }
@@ -35664,27 +35736,6 @@ const LORE_ENTRIES = [
                             rp.aegisMesh = null;
                         }
                     });
-
-                    // 4. Local Dead Player Corpse Despawn after 3.5s & Spectator Camera
-                    if (Game.player.isCoopDead && Game.mode === 'dungeon') {
-                        if (Game.player.deathAnimTimer >= 3.5) {
-                            if (Game.player.mesh) Game.player.mesh.visible = false;
-                            if (Game.player.laserLine) Game.player.laserLine.visible = false;
-                            if (Game.player.laserTipDot) Game.player.laserTipDot.visible = false;
-                            if (!this.spectating) {
-                                this.spectating = true;
-                                this.cycleSpectateTarget(1);
-                            }
-                        }
-                        if (this.spectating) {
-                            const targetRp = this.remotePlayers.get(this.spectateTargetId);
-                            if (targetRp && !targetRp.isCoopDead) {
-                                const camTarget = new THREE.Vector3(targetRp.pos.x, (targetRp.pos.y || 0) + 14.0, targetRp.pos.z + 11.8);
-                                Game.camera.position.lerp(camTarget, 8 * dt);
-                                Game.camera.lookAt(targetRp.pos.x, (targetRp.pos.y || 0) + 0.8, targetRp.pos.z);
-                            }
-                        }
-                    }
                 },
 
                 openLobbyModal() {
@@ -35832,11 +35883,112 @@ const LORE_ENTRIES = [
 
             window.Coop = Coop;
 
-            // ==================== WRAP GAME & UI METHODS ====================
+            // ==================== WRAP AUDIO, CLOCK, RENDERER, GAME & UI ====================
+
+            // A. Spatial Audio Hook & Zed Vocal Suppression for Teammate SFX
+            const origPlayZedVocal = AudioEngine.playZedVocal;
+            AudioEngine.playZedVocal = function (kind) {
+                if (Coop.suppressVocal) return;
+                return origPlayZedVocal.apply(this, arguments);
+            };
+
+            const origAudioSfx = AudioEngine.sfx;
+            AudioEngine.sfx = function (name) {
+                const r = origAudioSfx.apply(this, arguments);
+                if (Coop.isActive() && !Coop.suppressNetSfx && SYNCED_SFX.has(name) && Game.player) {
+                    Coop.broadcast({
+                        t: 'SFX',
+                        sender: Coop.myPeerId,
+                        name,
+                        x: +Game.player.pos.x.toFixed(1),
+                        z: +Game.player.pos.z.toFixed(1)
+                    });
+                }
+                return r;
+            };
+
+            // B. Force Real-Time Clock in Co-Op (Prevents Esc Menu / Hit-Stop from Freezing or Desyncing Simulation)
+            const origClockGetDelta = Game.gameClock.getDelta;
+            Game.gameClock.getDelta = function () {
+                if (Coop.isActive()) {
+                    return Math.min(0.1, THREE.Clock.prototype.getDelta.call(this));
+                }
+                return origClockGetDelta.apply(this, arguments);
+            };
+
+            // C. Hook Renderer.render to Lock Dead Local Corpse Pose & Override Spectator Camera After Game.animate()
+            let rendererHooked = false;
+            function ensureRendererHook() {
+                if (rendererHooked || !Game.renderer) return;
+                rendererHooked = true;
+                const origRender = Game.renderer.render;
+                Game.renderer.render = function (scene, camera) {
+                    if (scene === Game.scene && Coop.isActive() && Game.player.isCoopDead && Game.mode === 'dungeon') {
+                        const p = Game.player;
+                        const dt = 0.016;
+                        p.deathAnimTimer = (p.deathAnimTimer || 0.001) + dt;
+
+                        // Lock dead player position so WASD never walks around at 0 HP
+                        if (p.coopDeathPos) {
+                            p.pos.copy(p.coopDeathPos);
+                        }
+                        if (p.laserLine) p.laserLine.visible = false;
+                        if (p.laserTipDot) p.laserTipDot.visible = false;
+                        const floatHud = document.getElementById('player-floating-hud');
+                        if (floatHud) floatHud.style.display = 'none';
+
+                        // Keep corpse on the ground for the floor where you died; hide on subsequent floors
+                        if (p.coopDeathFloor === Game.dungeonFloor) {
+                            if (p.mesh) {
+                                p.mesh.visible = true;
+                                p.mesh.position.set(p.pos.x, (p.pos.y || 0) + 0.11, p.pos.z);
+                                p.mesh.rotation.x = -Math.PI / 2 + 0.06;
+                                p.mesh.rotation.z = 0.42;
+                            }
+                            if (p.legL && p.legR) {
+                                p.legL.rotation.set(-0.85, 0, 1.0);
+                                p.legR.rotation.set(0.95, 0, -0.85);
+                            }
+                            if (p.armL && p.armR) {
+                                p.armL.rotation.set(-1.6, 0, 1.2);
+                                p.armR.rotation.set(1.3, 0, -1.3);
+                            }
+                        } else if (p.mesh) {
+                            p.mesh.visible = false;
+                        }
+
+                        // After 1.6s of death fall, lock camera onto living teammate in Spectator Mode!
+                        if (p.deathAnimTimer >= 1.6) {
+                            if (!Coop.spectating) {
+                                Coop.spectating = true;
+                                Coop.cycleSpectateTarget(1);
+                            }
+                            const livingRemote = Array.from(Coop.remotePlayers.values()).filter(rp => !rp.isCoopDead && rp.hp > 0);
+                            if (!livingRemote.some(rp => rp.peerId === Coop.spectateTargetId) && livingRemote[0]) {
+                                Coop.spectateTargetId = livingRemote[0].peerId;
+                                Coop.updateSpectatorBanner();
+                            }
+                            const targetRp = Coop.remotePlayers.get(Coop.spectateTargetId);
+                            if (targetRp && !targetRp.isCoopDead) {
+                                const camTarget = new THREE.Vector3(targetRp.pos.x, (targetRp.pos.y || 0) + 14.0, targetRp.pos.z + 11.8);
+                                camera.position.copy(camTarget);
+                                camera.lookAt(targetRp.pos.x, (targetRp.pos.y || 0) + 0.8, targetRp.pos.z);
+                            }
+                        }
+                    } else if (scene === Game.scene && !Game.player.isCoopDead) {
+                        const floatHud = document.getElementById('player-floating-hud');
+                        if (floatHud && floatHud.style.display === 'none') floatHud.style.display = '';
+                        if (Game.player.laserLine) Game.player.laserLine.visible = true;
+                    }
+                    return origRender.apply(this, arguments);
+                };
+            }
 
             // 1. Add Co-Op Beacon Monument in Citadel-9 FOB Hub
             const origBuildSanctuary = Game.buildSanctuaryScene;
             Game.buildSanctuaryScene = function () {
+                ensureRendererHook();
+                Coop.restoreLocalPlayerFromCoopDeath();
                 origBuildSanctuary.apply(this, arguments);
                 this.createMonument(
                     9.5, -45, 0x22d3ee,
@@ -35847,6 +35999,7 @@ const LORE_ENTRIES = [
                 if (Coop.isActive()) {
                     Coop.remotePlayers.forEach(rp => {
                         rp.isCoopDead = false;
+                        rp.coopDeathFloor = null;
                         rp.deathAnimTimer = 0;
                         if (rp.rig && rp.rig.group) {
                             rp.rig.group.visible = true;
@@ -35860,13 +36013,13 @@ const LORE_ENTRIES = [
             // 2. Deterministic Floor Seeding + Authoritative Host Floor Snapshot Sync
             const origBuildDungeonFloor = Game.buildDungeonFloor;
             Game.buildDungeonFloor = function () {
+                ensureRendererHook();
                 if (Coop.isActive()) {
                     Coop.enemySeq = 0;
                     Coop.propSeq = 0;
                     Coop.gimSeq = 0;
 
                     if (Coop.isHost()) {
-                        // Generate a fresh seed ONLY when advancing to Floor 2+ (Floor 1 seed is set in deployToSector)
                         if (this.dungeonFloor > 1 || !Coop._deploySeedLocked) {
                             Coop.floorSeed = (Math.random() * 0xFFFFFFFF) >>> 0;
                             const isBossFl = (this.dungeonFloor === this.maxDungeonFloors);
@@ -35882,7 +36035,6 @@ const LORE_ENTRIES = [
                         origBuildDungeonFloor.apply(this, arguments);
                     });
 
-                    // Host captures exact floor snapshot; Client applies Host's exact floor snapshot!
                     if (Coop.isHost()) {
                         const snap = Coop.captureHostFloorSnapshot();
                         Coop.lastHostSnapshot = snap;
@@ -35908,7 +36060,6 @@ const LORE_ENTRIES = [
                         });
                     }
 
-                    // Intercept client-side egg_sac triggering so Host always pops eggs & spawns synced crawlers
                     this.gimmickEntities.forEach((g, idx) => {
                         if (!g.netGimId) g.netGimId = 'egg_' + idx;
                     });
@@ -35934,28 +36085,28 @@ const LORE_ENTRIES = [
                         };
                     });
 
-                    // Revive dead players on Floor 1 or Checkpoint Floors
+                    // Revive dead players on Floor 1 or Checkpoint Floors; otherwise hide corpses from previous floor!
                     const cps = this.getSectorCheckpoints(this.activeBiomeIndex, this.isHardMode);
                     const isReviveFloor = (this.dungeonFloor === 1) || cps.includes(this.dungeonFloor);
                     if (isReviveFloor) {
                         if (this.player.isCoopDead) {
-                            this.player.isCoopDead = false;
-                            this.player.deathAnimTimer = 0;
+                            Coop.restoreLocalPlayerFromCoopDeath();
                             Coop.spectating = false;
                             Coop.updateSpectatorBanner();
-                            if (this.player.mesh) {
-                                this.player.mesh.visible = true;
-                                this.player.mesh.rotation.set(0, 0, 0);
-                            }
                             this.resetPlayerCombatState();
                             this.spawnFloatingText(this.player.pos, 'CHECKPOINT REACHED — CHASSIS REPRINTED!', '#34d399', 'text-sm', true);
                         }
                         Coop.remotePlayers.forEach(rp => {
                             rp.isCoopDead = false;
+                            rp.coopDeathFloor = null;
                             rp.deathAnimTimer = 0;
                             rp.hp = rp.maxHp;
                             rp.armorShield = rp.maxArmorShield;
                         });
+                    } else if (this.player.isCoopDead) {
+                        // Still dead on a non-checkpoint floor -> hide local body & keep spectating
+                        if (this.player.mesh) this.player.mesh.visible = false;
+                        Coop.spectating = true;
                     }
 
                     Coop.remotePlayers.forEach(rp => {
@@ -35964,7 +36115,6 @@ const LORE_ENTRIES = [
                         }
                     });
 
-                    // Spawn all players at the exact same base startSpot with a tight 1.6m squad offset
                     const baseStart = this.floorStartPos || { x: this.player.pos.x, z: this.player.pos.z };
                     const slotIdx = Coop.getMySlotIndex();
                     const off = SPAWN_OFFSETS[slotIdx % SPAWN_OFFSETS.length];
@@ -35972,6 +36122,9 @@ const LORE_ENTRIES = [
                     this.player.pos.set(safePt.x, 0, safePt.z);
                     this.resolveWallCollisions(this.player.pos, 0.75);
                     this.player.mesh.position.copy(this.player.pos);
+                    if (this.player.isCoopDead) {
+                        this.player.coopDeathPos = this.player.pos.clone();
+                    }
                     Coop.updateSquadHUD();
                     Coop.updateSpectatorBanner();
                 } else {
@@ -35999,11 +36152,9 @@ const LORE_ENTRIES = [
                 }
             };
 
-            // 3. Wrap spawnEnemy: Prevent Client from locally spawning unsynced mid-floor egg crawlers!
             const origSpawnEnemy = Game.spawnEnemy;
             Game.spawnEnemy = function (type, x, z, level, isBoss = false, isElite = false, isMiniBoss = false, forcedElevY = null) {
                 if (Coop.isClient() && !Coop._allowingRemoteSpawn && Game.floorStartPos && performance.now() - (Game.runStats?.startTime || 0) > 400) {
-                    // Client triggered an egg sac locally -> request Host to pop the egg and spawn the authoritative crawler!
                     const nearEgg = Game.gimmickEntities.find(g => g.type === 'egg_sac' && Math.hypot(g.pos.x - x, g.pos.z - z) <= 2.5);
                     if (nearEgg) {
                         Coop.sendToHost({ t: 'EGG_POP_REQ', netGimId: nearEgg.netGimId, x: +x.toFixed(2), z: +z.toFixed(2) });
@@ -36041,7 +36192,6 @@ const LORE_ENTRIES = [
                 }
             };
 
-            // 4. Wrap damageEnemy & handleEnemyDeath
             const origDamageEnemy = Game.damageEnemy;
             Game.damageEnemy = function (en, rawDmg, canLeech = true, isAbility = false, isSharedTetherEcho = false, forceCrit = false, canProcAmmoRefund = true) {
                 if (!Coop.isActive() || !en || en.isDummy) {
@@ -36105,7 +36255,6 @@ const LORE_ENTRIES = [
                 return origHandleEnemyDeath.apply(this, arguments);
             };
 
-            // 5. Wrap Projectiles, Explosions, Thrown Canisters, Dash FX, and Skill Meshes
             const origSpawnProjectile = Game.spawnProjectile;
             Game.spawnProjectile = function (startPos, dir, speed, dmg, fromPlayer, colorHex, piercing = false, applyPoison = false, stunChance = 0, maxRange = 22.0, explosiveHit = false, mindControlPayload = null, specialWeaponData = null) {
                 origSpawnProjectile.apply(this, arguments);
@@ -36218,6 +36367,7 @@ const LORE_ENTRIES = [
 
             const origExecuteArmedSkill = Game.executeArmedSkill;
             Game.executeArmedSkill = function (slotIdx, isAltFire = false) {
+                if (this.player.isCoopDead) return;
                 const skillId = this.state.hotbar[slotIdx];
                 const rank = this.state.skills[skillId] || 1;
                 const skDef = SKILL_TREE.find(s => s.id === skillId);
@@ -36265,12 +36415,10 @@ const LORE_ENTRIES = [
                 }
             };
 
-            // 6. Route Enemy Melee / Contact / Suicide / Lunge Damage to the Actual Targeted Player!
             const origDamagePlayer = Game.damagePlayer;
             Game.damagePlayer = function (rawDmg) {
                 if (this.player.isCoopDead) return;
 
-                // If an enemy in the Host's AI loop triggered damagePlayer(), check which player is actually in melee/contact range!
                 if (Coop.isHost() && Coop.activeAiEnemy && !Coop._fromAuthoritativeHit) {
                     const en = Coop.activeAiEnemy;
                     const reach = en.isSuicide ? 3.2 : Math.max(2.6, (en.range || 2.2) + 1.0);
@@ -36287,11 +36435,10 @@ const LORE_ENTRIES = [
 
                     const distToHost = Math.hypot(en.pos.x - this.player.pos.x, en.pos.z - this.player.pos.z);
                     if (distToHost > reach || (hitRemote && !en.isSuicide && en.targetPeerId && en.targetPeerId !== Coop.myPeerId)) {
-                        return; // Host was not the player hit by this melee/contact attack!
+                        return;
                     }
                 }
 
-                // Check if standing inside a teammate's physical Aegis Dome
                 if (Coop.isActive() && (this.player.aegisTimer <= 0 || this.player.aegisHp <= 0)) {
                     for (const [, rp] of Coop.remotePlayers) {
                         if (!rp.isCoopDead && rp.aegisTimer > 0 && rp.aegisHp > 0 && this.player.pos.distanceTo(rp.pos) <= 1.75) {
@@ -36312,6 +36459,8 @@ const LORE_ENTRIES = [
                 }
                 if (this.player.isCoopDead) return;
                 this.player.isCoopDead = true;
+                this.player.coopDeathFloor = this.dungeonFloor;
+                this.player.coopDeathPos = this.player.pos.clone();
                 this.player.hp = 0;
                 this.isMouseDown = false;
                 this.isRightMouseDown = false;
@@ -36345,7 +36494,12 @@ const LORE_ENTRIES = [
                 return r;
             };
 
-            // 7. Cutscene 2-Player Vote-to-Skip
+            const origUsePotion = Game.usePotion;
+            Game.usePotion = function () {
+                if (this.player.isCoopDead) return;
+                return origUsePotion.apply(this, arguments);
+            };
+
             const origStartSectorCutscene = Game.startSectorCutscene;
             Game.startSectorCutscene = function () {
                 Coop.cutsceneVotes.clear();
@@ -36378,7 +36532,6 @@ const LORE_ENTRIES = [
                 return origFinishZed2Cutscene.apply(this, arguments);
             };
 
-            // 8. UI Modal & Deployment Snapshot Sync
             const origRenderModalContent = UI.renderModalContent;
             UI.renderModalContent = function (id) {
                 if (id === 'coop_lobby') {
@@ -36412,7 +36565,6 @@ const LORE_ENTRIES = [
                     const savedLayout = Game.forcedLayoutId;
                     Coop._deploySeedLocked = true;
 
-                    // Build Floor 1 on Host FIRST so we can send the exact floorSnapshot to Clients!
                     origDeployToSector.apply(this, arguments);
 
                     Coop.broadcast({
@@ -36477,12 +36629,20 @@ const LORE_ENTRIES = [
                 if (Coop.isActive()) Coop.broadcast({ t: 'PROFILE_UPD', profile: Coop.getLocalProfileSummary() });
             };
 
+            // Prevent WASD from moving dead local player; route A/D to Spectator Target cycling
             window.addEventListener('keydown', (e) => {
-                if (Coop.spectating && Game.player.isCoopDead && Game.mode === 'dungeon') {
-                    if (e.code === 'KeyA' || e.code === 'ArrowLeft') Coop.cycleSpectateTarget(-1);
-                    else if (e.code === 'KeyD' || e.code === 'ArrowRight') Coop.cycleSpectateTarget(1);
+                if (Game.player && Game.player.isCoopDead && Game.mode === 'dungeon') {
+                    if (e.code === 'KeyA' || e.code === 'ArrowLeft') {
+                        Game.keys[e.code] = false;
+                        Coop.cycleSpectateTarget(-1);
+                    } else if (e.code === 'KeyD' || e.code === 'ArrowRight') {
+                        Game.keys[e.code] = false;
+                        Coop.cycleSpectateTarget(1);
+                    } else if (['KeyW', 'KeyS', 'ArrowUp', 'ArrowDown', 'Space'].includes(e.code)) {
+                        Game.keys[e.code] = false;
+                    }
                 }
-            });
+            }, true);
 
             let lastCoopTime = performance.now();
             function coopFrameLoop(now) {
@@ -36490,6 +36650,12 @@ const LORE_ENTRIES = [
                 const dt = Math.min(0.1, (now - lastCoopTime) / 1000);
                 lastCoopTime = now;
                 if (Coop.isActive()) {
+                    if (Game.player && Game.player.isCoopDead) {
+                        Game.keys['KeyW'] = false; Game.keys['KeyS'] = false;
+                        Game.keys['KeyA'] = false; Game.keys['KeyD'] = false;
+                        Game.keys['ArrowUp'] = false; Game.keys['ArrowDown'] = false;
+                        Game.keys['ArrowLeft'] = false; Game.keys['ArrowRight'] = false;
+                    }
                     try { Coop.tick(dt); } catch (e) { console.warn('[Coop Tick]', e); }
                 }
             }
