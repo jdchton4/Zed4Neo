@@ -1684,53 +1684,53 @@
                     class="arpg-btn px-2 py-1 flex flex-col items-center text-xs relative"
                     title="Neural Tech Matrix (Hotkey: K)">
                     <i class="fa-solid fa-microchip text-cyan-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Tech (K)</span>
+                    <span class="text-[8px] font-bold">Tech</span>
                     <span id="badge-skill-pts"
                         class="hidden absolute top-0.5 right-0.5 w-2 h-2 bg-cyan-400 animate-ping"></span>
                 </button>
                 <button onclick="UI.openModal('forge')" class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="Weapon Fabrication & Modding (Hotkey: B)">
                     <i class="fa-solid fa-gun text-orange-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Weapons (B)</span>
+                    <span class="text-[8px] font-bold">Weapons</span>
                 </button>
                 <button onclick="UI.openModal('armor_tab')"
                     class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="Armor, Visors, Relics & Greaves Foundry (Hotkey: I)">
                     <i class="fa-solid fa-shield-halved text-emerald-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Armor (I)</span>
+                    <span class="text-[8px] font-bold">Armor</span>
                 </button>
                 <button onclick="UI.openModal('shop_tab')" class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="Quartermaster Supply Market (Hotkey: M)">
                     <i class="fa-solid fa-store text-amber-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Shop (M)</span>
+                    <span class="text-[8px] font-bold">Shop</span>
                 </button>
                 <button onclick="UI.openModal('evo_neo')" class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="AMP, OVERLOAD, NEO & FUSION Lab (Hotkey: N)">
                     <i class="fa-solid fa-dna text-fuchsia-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Lab (N)</span>
+                    <span class="text-[8px] font-bold">Lab</span>
                 </button>
                 <button onclick="UI.openModal('cores_tab')"
                     class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="Cyber-Augment Chassis Grid & 3D Bench (Hotkey: J)">
                     <i class="fa-solid fa-heart-pulse text-rose-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Augments (J)</span>
+                    <span class="text-[8px] font-bold">Augments</span>
                 </button>
                 <button onclick="UI.openModal('sanctuary')"
                     class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="Sector Drop-Gate & Mission Briefings (Hotkey: U)">
                     <i class="fa-solid fa-satellite text-purple-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Deploy (U)</span>
+                    <span class="text-[8px] font-bold">Deploy</span>
                 </button>
                 <button onclick="UI.openModal('codex')" class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="Intel Dossiers, Cutscenes & Save Data (Hotkey: L)">
                     <i class="fa-solid fa-tablet-screen-button text-amber-300 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Intel (L)</span>
+                    <span class="text-[8px] font-bold">Intel</span>
                 </button>
                 <button onclick="UI.openModal('achievements_tab')"
                     class="arpg-btn px-2 py-1 flex flex-col items-center text-xs"
                     title="Achievements & Career Milestones (Hotkey: Y)">
                     <i class="fa-solid fa-trophy text-yellow-400 text-xs mb-0.5"></i>
-                    <span class="text-[8px] font-bold">Trophies (Y)</span>
+                    <span class="text-[8px] font-bold">Trophies</span>
                 </button>
             </div>
         </div>
@@ -33931,8 +33931,8 @@ const LORE_ENTRIES = [
                     if (tag !== 'SELECT' && tag !== 'INPUT') e.preventDefault();
                     e.stopPropagation(); return;
                 }
-                if (e.code === 'KeyH') openMenu('tutorial');
-                else if (e.code === 'KeyO') openMenu('settings');
+                
+                if (e.code === 'KeyO') openMenu('settings');
             }, true);
 
             document.addEventListener('visibilitychange', () => {
