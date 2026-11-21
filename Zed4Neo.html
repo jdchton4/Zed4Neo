@@ -5018,136 +5018,136 @@
         const WEAPON_ARCHETYPES = {
             cleaver: {
                 id: 'cleaver', weaponClass: 'Rifle', name: 'R3 Puncher Carbine', styleName: 'Puncher', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
-                auto: true, range: 16, arc: 0, cooldown: 0.28, dmgMult: 1.00, critBonus: 5, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0xfbbf24,
-                pellets: 1, spread: 0.022, magSize: 24, reloadTime: 2.45, recoilPerShot: 0.090, maxBloom: 0.44, bloomDecay: 0.45,
+                auto: true, range: 16, arc: 0, cooldown: 0.27, dmgMult: 1.00, critBonus: 5, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0xfbbf24,
+                pellets: 1, spread: 0.022, magSize: 25, reloadTime: 2.25, recoilPerShot: 0.090, maxBloom: 0.4, bloomDecay: 0.5,
                 partWeights: { rec: 8, brl: 7, bolt: 6, trig: 5, furn: 6, aux: 5 },
-                desc: 'Full-Auto 3.57 RPS service carbine (16m Range). Accurate on burst-fire; moving blooms spread.'
+                desc: 'Full-Auto standard issue service carbine // Accurate on burst-fire; moving blooms spread'
             },
             m4_phantom: {
                 id: 'm4_phantom', weaponClass: 'Rifle', name: 'R4-S Hitman Carbine', styleName: 'Hitman', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
-                auto: true, isSuppressed: true, range: 14.5, arc: 0, cooldown: 0.19, dmgMult: 0.78, critBonus: 3, speedMod: 0.03, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0x22d3ee,
+                auto: true, isSuppressed: true, range: 14.5, arc: 0, cooldown: 0.23, dmgMult: 0.84, critBonus: 3, speedMod: 0.02, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0x22d3ee,
                 pellets: 1, spread: 0.015, magSize: 30, reloadTime: 2.20, recoilPerShot: 0.065, maxBloom: 0.34, bloomDecay: 0.54,
                 partWeights: { rec: 8, brl: 8, bolt: 6, trig: 6, furn: 5, aux: 5 },
-                desc: 'Full-Auto 5.26 RPS suppressed carbine (14.5m Range, +3% Move Spd). Fast cycle rate & low recoil.'
+                desc: 'Full-Auto suppressed carbine // Fast cycle rate & low recoil.'
             },
             vk47_heavy: {
                 id: 'vk47_heavy', weaponClass: 'Rifle', name: 'R5-H Cleaver Rifle', styleName: 'Cleaver', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
                 auto: true, range: 17, arc: 0, cooldown: 0.40, dmgMult: 1.52, critBonus: 6, speedMod: -0.03, isRanged: true, mpCost: 0, projSpeed: 49, projColor: 0xf97316,
                 pellets: 1, spread: 0.028, magSize: 18, reloadTime: 2.85, recoilPerShot: 0.125, maxBloom: 0.50, bloomDecay: 0.38,
                 partWeights: { rec: 10, brl: 9, bolt: 8, trig: 6, furn: 7, aux: 6 },
-                desc: 'Heavy 2.50 RPS automatic rifle (17m Range, -3% Move Spd). Hard-hitting; rewards stationary bursts.'
+                desc: 'Heavy automatic rifle // Hard-hitting, rewarding stationary bursts.'
             },
             br55_burst: {
                 id: 'br55_burst', weaponClass: 'Rifle', name: 'R8-H Terminal Rifle', styleName: 'Terminal', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
-                auto: false, range: 18, arc: 0, cooldown: 0.35, dmgMult: 1.70, critBonus: 9, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 54, projColor: 0x38bdf8,
+                auto: false, range: 18, arc: 0, cooldown: 0.34, dmgMult: 1.55, critBonus: 9, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 54, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.008, magSize: 14, reloadTime: 2.60, recoilPerShot: 0.10, maxBloom: 0.34, bloomDecay: 0.58,
                 partWeights: { rec: 9, brl: 10, bolt: 7, trig: 8, furn: 6, aux: 6 },
-                desc: 'Semi-Auto 2.86 RPS precision rifle (18m Range, +9% Crit). Pinpoint accuracy on paced shots.'
+                desc: 'Semi-Auto precision rifle // Pinpoint accuracy on paced shots'
             },
             daggers: {
                 id: 'daggers', weaponClass: 'SMG', name: 'S4 Vector SMG', styleName: 'Vector', icon: 'fa-bolt', displayIcon: 'fa-bolt',
                 auto: true, isRunAndGun: true, range: 10, arc: 0, cooldown: 0.125, dmgMult: 0.43, critBonus: 5, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x10b981,
-                pellets: 1, spread: 0.048, magSize: 20, reloadTime: 2.10, recoilPerShot: 0.046, maxBloom: 0.36, bloomDecay: 0.62,
+                pellets: 1, spread: 0.048, magSize: 20, reloadTime: 2, recoilPerShot: 0.046, maxBloom: 0.36, bloomDecay: 0.62,
                 partWeights: { rec: 7, brl: 5, bolt: 6, trig: 5, furn: 5, aux: 0 },
-                desc: 'Run-and-Gun 8 RPS CQB shredder (10m Range, +7% Spd). Stays accurate while moving and dodging.'
+                desc: 'Movement friendly CQB shredder // Sprays bullets as fast as possible with a quick reload to boot'
             },
             mp7_pdw: {
                 id: 'mp7_pdw', weaponClass: 'SMG', name: 'S5-R Ripper PDW', styleName: 'Ripper', icon: 'fa-bolt', displayIcon: 'fa-bolt',
                 auto: true, isRunAndGun: true, range: 12, arc: 0, cooldown: 0.15, dmgMult: 0.47, critBonus: 6, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 44, projColor: 0x2dd4bf,
-                pellets: 1, spread: 0.042, magSize: 24, reloadTime: 2.10, recoilPerShot: 0.044, maxBloom: 0.34, bloomDecay: 0.64,
+                pellets: 1, spread: 0.042, magSize: 24, reloadTime: 2.2, recoilPerShot: 0.044, maxBloom: 0.34, bloomDecay: 0.64,
                 partWeights: { rec: 7, brl: 6, bolt: 6, trig: 6, furn: 0, aux: 5 },
-                desc: 'Run-and-Gun 6.67 RPS armor-piercing PDW (12m Range, +7% Spd). Tight mobile tracking.'
+                desc: 'Movement friendly high impact PDW // Tight mobile tracking with hefty magazine.'
             },
             v22_viper: {
                 id: 'v22_viper', weaponClass: 'SMG', name: 'S30-C Viper SMG', styleName: 'Viper', icon: 'fa-bolt', displayIcon: 'fa-bolt',
                 auto: true, isRunAndGun: true, isNeedler: true, range: 10.5, arc: 0, cooldown: 0.14, dmgMult: 0.41, critBonus: 5, speedMod: 0.06, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xe879f9,
-                pellets: 1, spread: 0.045, magSize: 22, reloadTime: 2.05, recoilPerShot: 0.044, maxBloom: 0.35, bloomDecay: 0.62,
+                pellets: 1, spread: 0.045, magSize: 22, reloadTime: 2.15, recoilPerShot: 0.044, maxBloom: 0.35, bloomDecay: 0.62,
                 partWeights: { rec: 7, brl: 6, bolt: 6, trig: 6, furn: 4, aux: 5 },
-                desc: 'Run-and-Gun 7.14 RPS crystal needler (10.5m Range). Every 8th needle (6th on NEO) detonates a Super-Combine burst!'
+                desc: 'Movement friendly crystal needler // 8th needle (6th on NEO) detonates for bonus damage'
             },
             m134_minigun: {
                 id: 'm134_minigun', weaponClass: 'SMG', name: 'L2 Breaker LMG', styleName: 'Breaker', icon: 'fa-hurricane', displayIcon: 'fa-hurricane',
                 auto: true, isMinigun: true, range: 15.5, arc: 0, cooldown: 0.28, minCooldown: 0.08, dmgMult: 0.43, critBonus: 4, speedMod: -0.22, isRanged: true, mpCost: 0, projSpeed: 45, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.032, magSize: 175, reloadTime: 3.80, recoilPerShot: 0.012, maxBloom: 0.28, bloomDecay: 0.55,
                 partWeights: { rec: 10, brl: 11, bolt: 8, trig: 6, furn: 7, aux: 8 },
-                desc: '150-Round Rotary LMG (15.5m Range, -22% Move Spd). Ramps from 3.57 RPS up to 12.5 RPS with tight sustained spread.'
+                desc: 'Heavy rotary LMG // Ramps up by 3.5x fire rate over time with tight sustained spread.'
             },
             maul: {
                 id: 'maul', weaponClass: 'Shotgun', name: 'B19 Cruncher Shotgun', styleName: 'Cruncher', icon: 'fa-burst', displayIcon: 'fa-burst',
                 auto: false, range: 8, arc: 0, cooldown: 0.72, dmgMult: 0.48, stunChance: 0.35, speedMod: 0.0, isRanged: true, mpCost: 0, projSpeed: 38, projColor: 0xf97316,
                 pellets: 7, spread: 0.135, magSize: 6, reloadTime: 3.00, recoilPerShot: 0.26, maxBloom: 0.38, bloomDecay: 0.50,
                 partWeights: { rec: 8, brl: 9, bolt: 6, trig: 5, furn: 7, aux: 0 },
-                desc: 'Semi-Auto 1.39 RPS pump scattergun (7 pellets, 8m Range). High point-blank stopping power & stagger.'
+                desc: 'Semi-Auto pump scattergun // High point-blank stopping power & stagger.'
             },
             aa18_auto: {
                 id: 'aa18_auto', weaponClass: 'Shotgun', name: 'B17-A Repeater Shotgun', styleName: 'Repeater', icon: 'fa-burst', displayIcon: 'fa-burst',
                 auto: true, range: 7, arc: 0, cooldown: 0.36, dmgMult: 0.30, stunChance: 0.18, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 37, projColor: 0xfb7185,
                 pellets: 6, spread: 0.16, magSize: 9, reloadTime: 3.20, recoilPerShot: 0.20, maxBloom: 0.46, bloomDecay: 0.46,
                 partWeights: { rec: 9, brl: 8, bolt: 8, trig: 0, furn: 6, aux: 6 },
-                desc: 'Full-Auto 2.78 RPS drum shotgun (6 pellets, 7m Range, -2% Move Spd). Rapid CQB room-clearer.'
+                desc: 'Full-Auto drum shotgun // Rapid fire close quarters dueling weapon'
             },
             k88_helios: {
                 id: 'k88_helios', weaponClass: 'Shotgun', name: 'B12-E Warhead Shotgun', styleName: 'Warhead', icon: 'fa-burst', displayIcon: 'fa-burst',
                 auto: false, stickyChargeShotgun: true, range: 8, arc: 0, cooldown: 0.68, dmgMult: 0.32, stunChance: 0.22, speedMod: -0.02, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0xf59e0b,
                 pellets: 5, spread: 0.13, magSize: 5, reloadTime: 3.00, recoilPerShot: 0.24, maxBloom: 0.40, bloomDecay: 0.50,
                 partWeights: { rec: 8, brl: 9, bolt: 6, trig: 6, furn: 6, aux: 6 },
-                desc: 'Semi-Auto 1.47 RPS 5-slug shotgun (8m Range). Each slug plants a sticky charge that detonates 1.35s later!'
+                desc: 'Semi-Auto 1.47 RPS 5-slug shotgun // Each slug plants a sticky charge that detonates 1.35s later'
             },
             m79_thumper: {
                 id: 'm79_thumper', weaponClass: 'Shotgun', name: 'G13-E Breacher Grenade Launcher', styleName: 'Breacher', icon: 'fa-bomb', displayIcon: 'fa-bomb',
                 auto: false, isGrenadeLauncher: true, aoeBlastRadius: 4, range: 16, arc: 0, cooldown: 0.77, dmgMult: 1.93, stunChance: 0.35, speedMod: -0.07, isRanged: true, mpCost: 0, projSpeed: 30, projColor: 0xf97316,
                 pellets: 1, spread: 0.018, magSize: 7, reloadTime: 3.4, recoilPerShot: 0.33, maxBloom: 0.42, bloomDecay: 0.50,
                 partWeights: { rec: 9, brl: 10, bolt: 7, trig: 6, furn: 7, aux: 6 },
-                desc: '7-Round 40mm Grenade Launcher (1.29 RPS, 16m Range). Shells detonate in a 4m spherical blast.'
+                desc: '7-Round 40mm Grenade Launcher // Shells detonate on impact to destroy nearby (4m) enemies'
             },
             staff: {
                 id: 'staff', weaponClass: 'Sniper', name: 'SR2 Atomizer Railgun', styleName: 'Atomizer', icon: 'fa-atom', displayIcon: 'fa-atom',
                 auto: false, range: 21, arc: 0, cooldown: 0.68, dmgMult: 2.45, critBonus: 14, speedMod: -0.06, isRanged: true, piercing: true, isTechWeapon: true, mpCost: 0, projSpeed: 64, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.004, magSize: 5, reloadTime: 2.95, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
                 partWeights: { rec: 9, brl: 11, bolt: 8, trig: 7, furn: 6, aux: 9 },
-                desc: 'Semi-Auto 1.47 RPS magnetic railgun (21m Range, -6% Move Spd). Pierces all targets in a line.'
+                desc: 'Semi-Auto magnetic railgun // Solid piercing rifle'
             },
             sr99_sniper: {
                 id: 'sr99_sniper', weaponClass: 'Sniper', name: 'SR99 Through-hole Sniper', styleName: 'Through-hole', icon: 'fa-crosshairs', displayIcon: 'fa-crosshairs',
                 auto: false, range: 25, arc: 0, cooldown: 0.85, dmgMult: 3.20, critBonus: 18, speedMod: -0.08, isRanged: true, piercing: true, mpCost: 0, projSpeed: 68, projColor: 0xfacc15,
                 pellets: 1, spread: 0.002, magSize: 6, reloadTime: 3.25, recoilPerShot: 0.26, maxBloom: 0.38, bloomDecay: 0.52,
                 partWeights: { rec: 10, brl: 12, bolt: 9, trig: 8, furn: 8, aux: 7 },
-                desc: 'Bolt-Action 1.18 RPS sniper (25m Range, +18% Crit, -8% Move Spd). Heavy piercing stopping power.'
+                desc: 'Bolt-Action sniper // Long range piercing weaponry'
             },
             xr0_eclipse: {
                 id: 'xr0_eclipse', weaponClass: 'Sniper', name: 'SR0-C Ronin Sniper', styleName: 'Ronin', icon: 'fa-bolt-lightning', displayIcon: 'fa-bolt-lightning',
                 auto: false, isChargeLance: true, isTechWeapon: true, range: 26, arc: 0, cooldown: 0.6, dmgMult: 1.6, critBonus: 15, speedMod: -0.06, isRanged: true, piercing: false, mpCost: 0, projSpeed: 70, projColor: 0x22d3ee,
                 pellets: 1, spread: 0.003, magSize: 4, reloadTime: 3, recoilPerShot: 0.22, maxBloom: 0.34, bloomDecay: 0.55,
                 partWeights: { rec: 10, brl: 12, bolt: 8, trig: 7, furn: 8, aux: 9 },
-                desc: '3-Stage ADS Charge Lance (26m Range). Hold RMB to charge up to 3.0x Dmg + Wall Penetration!'
+                desc: '3-Stage ADS Charge Lance // Hold ADS to build damage & wall penetration'
             },
             ntw20_titan: {
                 id: 'ntw20_titan', weaponClass: 'Sniper', name: 'SR1-E Titus Sniper', styleName: 'Titus', icon: 'fa-meteor', displayIcon: 'fa-meteor',
                 auto: false, singleShotBreech: true, aoeBlastRadius: 3.4, range: 28.0, arc: 0, cooldown: 1.00, dmgMult: 9.50, critBonus: 26, stunChance: 0.4, speedMod: -0.15, isRanged: true, piercing: true, mpCost: 0, projSpeed: 78, projColor: 0xf43f5e,
                 pellets: 1, spread: 0.001, magSize: 1, reloadTime: 3.20, recoilPerShot: 0.60, maxBloom: 0.42, bloomDecay: 0.58,
                 partWeights: { rec: 12, brl: 14, bolt: 10, trig: 8, furn: 8, aux: 9 },
-                desc: '1-Round Breech Cannon (28m Range, +26% Crit, -15% Spd). Pierces all targets & detonates a 3.5m shockwave.'
+                desc: '1-Round Breech Cannon // Decimates lined up enemies'
             },
             mk23_soc: {
                 id: 'mk23_soc', weaponClass: 'Pistol', name: 'P23 Roller Pistol', styleName: 'Roller', icon: 'fa-gun', displayIcon: 'fa-gun',
                 auto: false, isSidearmSpecialist: true, isRunAndGun: true, range: 11, arc: 0, cooldown: 0.18, dmgMult: 0.77, critBonus: 8, speedMod: 0.07, isRanged: true, mpCost: 0, projSpeed: 42, projColor: 0x38bdf8,
                 pellets: 1, spread: 0.03, magSize: 12, reloadTime: 1.7, recoilPerShot: 0.09, maxBloom: 0.32, bloomDecay: 0.70,
                 partWeights: { rec: 6, brl: 5, bolt: 0, trig: 5, furn: 0, aux: 5 },
-                desc: 'Sidearm Specialist (5.71 RPS, +9% Spd). 0% Secondary Slot penalty & grants +25% Crit/Reload for 2s on swap!'
+                desc: 'Sidearm Specialist: -75% Secondary penalty & kills while equipped as sidearm refund 10% stamina (7s) // Trusty backup weapon'
             },
             de50_magnum: {
                 id: 'de50_magnum', weaponClass: 'Pistol', name: 'P1-H Eagle Pistol', styleName: 'Eagle', icon: 'fa-gun', displayIcon: 'fa-gun',
                 auto: false, isSidearmSpecialist: true, range: 14, arc: 0, cooldown: 0.45, dmgMult: 1.60, critBonus: 16, stunChance: 0.07, speedMod: 0.05, isRanged: true, mpCost: 0, projSpeed: 46, projColor: 0xf59e0b,
                 pellets: 1, spread: 0.022, magSize: 7, reloadTime: 2.05, recoilPerShot: 0.20, maxBloom: 0.38, bloomDecay: 0.60,
                 partWeights: { rec: 7, brl: 7, bolt: 6, trig: 5, furn: 0, aux: 0 },
-                desc: 'Sidearm Specialist (2.22 RPS, .50-Cal). 0% Secondary Slot penalty & +25% Crit/Reload for 2s on swap!'
+                desc: 'Sidearm Specialist: -75% Secondary Slot penalty & kills while equipped to secondary refund 10% max stamina (7s CD) // Accurate finishing weapon'
             },
             g18_autopistol: {
                 id: 'g18_autopistol', weaponClass: 'Pistol', name: 'P5-A Stoptime Pistol', styleName: 'Stoptime', icon: 'fa-gun', displayIcon: 'fa-gun',
-                auto: true, isSidearmSpecialist: true, isRunAndGun: true, range: 9.5, arc: 0, cooldown: 0.11, dmgMult: 0.37, critBonus: 6, speedMod: 0.8, isRanged: true, mpCost: 0, projSpeed: 40, projColor: 0x34d399,
+                auto: true, isSidearmSpecialist: true, isRunAndGun: true, range: 9.5, arc: 0, cooldown: 0.11, dmgMult: 0.37, critBonus: 6, speedMod: 0.08, isRanged: true, mpCost: 0, projSpeed: 40, projColor: 0x34d399,
                 pellets: 1, spread: 0.055, magSize: 16, reloadTime: 1.85, recoilPerShot: 0.065, maxBloom: 0.40, bloomDecay: 0.65,
                 partWeights: { rec: 6, brl: 5, bolt: 5, trig: 0, furn: 0, aux: 6 },
-                desc: 'Sidearm Specialist (9.09 RPS Full-Auto). 0% Secondary Slot penalty & +25% Crit/Reload for 2s on swap!'
+                desc: 'Sidearm Specialist: -75% Secondary Slot penalty & kills while equipped to secondary refund 10% max stamina (7s CD) // Lightweight bullet sprayer'
             }
         };
 
@@ -10375,12 +10375,7 @@ const LORE_ENTRIES = [
                 const nextArch = WEAPON_ARCHETYPES[wItem?.archetype] || WEAPON_ARCHETYPES.cleaver;
                 const isSidearm = Boolean(nextArch.isSidearmSpecialist);
 
-                // Sidearm Specialist Quick-Draw Mechanic!
-                this.player.attackTimer = isSidearm ? 0.05 : 0.18;
-                if (isSidearm && (this.player.quickDrawCooldown || 0) <= 0) {
-                    this.player.quickDrawTimer = 2.0;
-                    this.player.quickDrawCooldown = 4.0;
-                }
+                this.player.attackTimer = isSidearm ? 0.08 : 0.18;
 
                 const d = this.getDerivedStats();
                 this.player.maxAmmo = d.maxAmmo;
@@ -10393,10 +10388,8 @@ const LORE_ENTRIES = [
                 AudioEngine.sfx('reload');
                 this.spawnFloatingText(
                     this.player.pos,
-                    isSidearm
-                        ? `QUICK-DRAW: ${wItem.name} (+25% CRIT/RLD)`
-                        : (nextSlot === 'secondary' ? `2° BACKUP: ${wItem.name}` : `1° PRIMARY: ${wItem.name}`),
-                    isSidearm ? '#34d399' : (nextSlot === 'secondary' ? '#fbbf24' : '#38bdf8'),
+                    nextSlot === 'secondary' ? `2° BACKUP: ${wItem.name}` : `1° PRIMARY: ${wItem.name}`,
+                    nextSlot === 'secondary' ? '#fbbf24' : '#38bdf8',
                     'text-xs'
                 );
                 UI.updateHUD();
@@ -10430,7 +10423,7 @@ const LORE_ENTRIES = [
                     const sAtt = this.getWeaponAttachmentBonuses(this.state.equipped.secondary);
                     const supRnk = this.getEquippedPassiveRank('suppressingFire');
                     const supMag = supRnk >= 7 ? 0.45 : (supRnk >= 6 ? 0.28 : supRnk * 0.05);
-                    const secMagMult = (hasAkimbo || sArch.isSidearmSpecialist) ? 1.0 : 0.80;
+                    const secMagMult = hasAkimbo ? 1.0 : (sArch.isSidearmSpecialist ? 0.95 : 0.80);
                     this.player.slotAmmo.secondary = sArch.singleShotBreech ? 1 : Math.max(1, Math.round((sArch.magSize || 12) * (1 + sAtt.magPct + supMag) * secMagMult));
                 }
                 this.player.ammo = this.player.slotAmmo[this.player.activeWeaponSlot || 'weapon'] || d.maxAmmo;
@@ -10455,6 +10448,7 @@ const LORE_ENTRIES = [
                 this.player.selfTerminateTimer = 0;
                 this.player.quickDrawTimer = 0;
                 this.player.quickDrawCooldown = 0;
+                this.player.sidearmStamCd = 0;
                 this.player.aegisCapCdTimer = 0;
 
                 this.player.protoHeat = 0;
@@ -12132,126 +12126,168 @@ const LORE_ENTRIES = [
             );
 
             for (const box of this.wallColliders) {
-                if (box.maxY !== undefined && curY >= box.maxY - 0.85) continue;
-                if (box.minY !== undefined && curY + 1.8 <= box.minY) continue;
-                if (onRampNow && !box.isVoidCutout && curY >= 3.5) continue;
-                if (onUpperDeckNow && box.isVoidCutout) continue;
-                if (!isEnemy && box.isOneWayShield) continue;
+                    if (box.maxY !== undefined && curY >= box.maxY - 0.85) continue;
+                    if (box.minY !== undefined && curY + 1.8 <= box.minY) continue;
+                    if (onRampNow && !box.isVoidCutout && curY >= 3.5) continue;
+                    if (onUpperDeckNow && box.isVoidCutout) continue;
+                    if (!isEnemy && box.isOneWayShield) continue;
 
-                const closestX = Math.max(box.minX, Math.min(pos.x, box.maxX));
-                const closestZ = Math.max(box.minZ, Math.min(pos.z, box.maxZ));
-                const dx = pos.x - closestX;
-                const dz = pos.z - closestZ;
-                const distSq = dx * dx + dz * dz;
-                if (distSq < radius * radius) {
-                    const dist = Math.sqrt(distSq);
-                    if (dist > 0.0001) {
-                        const overlap = radius - dist;
-                        pos.x += (dx / dist) * overlap;
-                        pos.z += (dz / dist) * overlap;
-                    } else {
-                        const leftPen = Math.abs(pos.x - box.minX);
-                        const rightPen = Math.abs(box.maxX - pos.x);
-                        const topPen = Math.abs(pos.z - box.minZ);
-                        const botPen = Math.abs(pos.z - box.maxZ);
-                        const minPen = Math.min(leftPen, rightPen, topPen, botPen);
-                        if (minPen === leftPen) pos.x = box.minX - radius;
-                        else if (minPen === rightPen) pos.x = box.maxX + radius;
-                        else if (minPen === topPen) pos.z = box.minZ - radius;
-                        else pos.z = box.maxZ + radius;
+                    if (box.isOrientedBox) {
+                        const cosA = Math.cos(box.angle || 0);
+                        const sinA = Math.sin(box.angle || 0);
+                        const dx = pos.x - box.cx;
+                        const dz = pos.z - box.cz;
+                        const lx = dx * cosA - dz * sinA;
+                        const lz = dx * sinA + dz * cosA;
+                        const clx = Math.max(-box.halfW, Math.min(lx, box.halfW));
+                        const clz = Math.max(-box.halfD, Math.min(lz, box.halfD));
+                        const pdx = lx - clx;
+                        const pdz = lz - clz;
+                        const dSq = pdx * pdx + pdz * pdz;
+                        if (dSq < radius * radius) {
+                            const dist = Math.sqrt(dSq);
+                            let nlx = lx, nlz = lz;
+                            if (dist > 0.0001) {
+                                const ov = radius - dist;
+                                nlx += (pdx / dist) * ov;
+                                nlz += (pdz / dist) * ov;
+                            } else {
+                                const penX = box.halfW - Math.abs(lx);
+                                const penZ = box.halfD - Math.abs(lz);
+                                if (penX < penZ) nlx = (lx >= 0 ? 1 : -1) * (box.halfW + radius);
+                                else nlz = (lz >= 0 ? 1 : -1) * (box.halfD + radius);
+                            }
+                            pos.x = box.cx + (nlx * cosA + nlz * sinA);
+                            pos.z = box.cz + (-nlx * sinA + nlz * cosA);
+                        }
+                        continue;
+                    }
+
+                    const closestX = Math.max(box.minX, Math.min(pos.x, box.maxX));
+                    const closestZ = Math.max(box.minZ, Math.min(pos.z, box.maxZ));
+                    const dx = pos.x - closestX;
+                    const dz = pos.z - closestZ;
+                    const distSq = dx * dx + dz * dz;
+                    if (distSq < radius * radius) {
+                        const dist = Math.sqrt(distSq);
+                        if (dist > 0.0001) {
+                            const overlap = radius - dist;
+                            pos.x += (dx / dist) * overlap;
+                            pos.z += (dz / dist) * overlap;
+                        } else {
+                            const leftPen = Math.abs(pos.x - box.minX);
+                            const rightPen = Math.abs(box.maxX - pos.x);
+                            const topPen = Math.abs(pos.z - box.minZ);
+                            const botPen = Math.abs(pos.z - box.maxZ);
+                            const minPen = Math.min(leftPen, rightPen, topPen, botPen);
+                            if (minPen === leftPen) pos.x = box.minX - radius;
+                            else if (minPen === rightPen) pos.x = box.maxX + radius;
+                            else if (minPen === topPen) pos.z = box.minZ - radius;
+                            else pos.z = box.maxZ + radius;
+                        }
                     }
                 }
-            }
 
-            // Hard-clamp inside the Tensor Floor 20 Northern Sanctum when locked so no knockback or vault can ever push anyone out!
-            if (this.tensorSanctumLocked) {
-                pos.x = Math.max(-34.2, Math.min(34.2, pos.x));
-                pos.z = Math.max(-72.2, Math.min(-3.5, pos.z));
-            }
-
-            if (this.mode !== 'dungeon' || !this.archEntities) return;
-
-            for (const ae of this.archEntities) {
-                if (ae.type !== 'arch_ramp') continue;
-                const closestX = Math.max(ae.minX, Math.min(pos.x, ae.maxX));
-                const closestZ = Math.max(ae.minZ, Math.min(pos.z, ae.maxZ));
-                const dx = pos.x - closestX;
-                const dz = pos.z - closestZ;
-                if (dx * dx + dz * dz < radius * radius) {
-                    const t = this.getRampProgress(ae, closestX, closestZ);
-                    const rampY = t * (ae.height || 7.0);
-                    if (rampY > 1.5 && Math.abs(curY - rampY) > 2.8) {
-                        const leftPen = Math.abs(pos.x - ae.minX);
-                        const rightPen = Math.abs(ae.maxX - pos.x);
-                        const topPen = Math.abs(pos.z - ae.minZ);
-                        const botPen = Math.abs(pos.z - ae.maxZ);
-                        const minPen = Math.min(leftPen, rightPen, topPen, botPen);
-                        if (minPen === leftPen) pos.x = ae.minX - radius;
-                        else if (minPen === rightPen) pos.x = ae.maxX + radius;
-                        else if (minPen === topPen) pos.z = ae.minZ - radius;
-                        else pos.z = ae.maxZ + radius;
-                    }
+                // Hard-clamp inside the Tensor Floor 20 Northern Sanctum when locked so no knockback or vault can ever push anyone out!
+                if (this.tensorSanctumLocked) {
+                    pos.x = Math.max(-34.2, Math.min(34.2, pos.x));
+                    pos.z = Math.max(-72.2, Math.min(-3.5, pos.z));
                 }
-            }
 
-            if (curY < 2.2 && !onRampNow) {
+                if (this.mode !== 'dungeon' || !this.archEntities) return;
+
                 for (const ae of this.archEntities) {
-                    if (ae.type !== 'arch_platform') continue;
+                    if (ae.type !== 'arch_ramp') continue;
                     const closestX = Math.max(ae.minX, Math.min(pos.x, ae.maxX));
                     const closestZ = Math.max(ae.minZ, Math.min(pos.z, ae.maxZ));
                     const dx = pos.x - closestX;
                     const dz = pos.z - closestZ;
                     if (dx * dx + dz * dz < radius * radius) {
-                        const leftPen = Math.abs(pos.x - ae.minX);
-                        const rightPen = Math.abs(ae.maxX - pos.x);
-                        const topPen = Math.abs(pos.z - ae.minZ);
-                        const botPen = Math.abs(pos.z - ae.maxZ);
-                        const minPen = Math.min(leftPen, rightPen, topPen, botPen);
-                        if (minPen === leftPen) pos.x = ae.minX - radius;
-                        else if (minPen === rightPen) pos.x = ae.maxX + radius;
-                        else if (minPen === topPen) pos.z = ae.minZ - radius;
-                        else pos.z = ae.maxZ + radius;
+                        const t = this.getRampProgress(ae, closestX, closestZ);
+                        const rampY = t * (ae.height || 7.0);
+                        if (rampY > 1.5 && Math.abs(curY - rampY) > 2.8) {
+                            const leftPen = Math.abs(pos.x - ae.minX);
+                            const rightPen = Math.abs(ae.maxX - pos.x);
+                            const topPen = Math.abs(pos.z - ae.minZ);
+                            const botPen = Math.abs(pos.z - ae.maxZ);
+                            const minPen = Math.min(leftPen, rightPen, topPen, botPen);
+                            if (minPen === leftPen) pos.x = ae.minX - radius;
+                            else if (minPen === rightPen) pos.x = ae.maxX + radius;
+                            else if (minPen === topPen) pos.z = ae.minZ - radius;
+                            else pos.z = ae.maxZ + radius;
+                        }
                     }
                 }
-            }
-        },
 
-        autoLoadBeltFromReserve() {
-            const maxHpCap = this.player.maxHpPots || 1;
-            const maxMpCap = this.player.maxMpPots || 1;
-            const maxStamCap = this.player.maxStamPots || 1;
-            while (this.player.hpPots < maxHpCap && (this.state.reserveHpPots || 0) > 0) {
-                this.state.reserveHpPots--;
-                this.player.hpPots++;
-            }
-            while (this.player.mpPots < maxMpCap && (this.state.reserveMpPots || 0) > 0) {
-                this.state.reserveMpPots--;
-                this.player.mpPots++;
-            }
-            while ((this.player.stamPots || 0) < maxStamCap && (this.state.reserveStamPots || 0) > 0) {
-                this.state.reserveStamPots--;
-                this.player.stamPots = (this.player.stamPots || 0) + 1;
-            }
-        },
-
-        isPointInsideWall(pos, pad = 0, checkY = null) {
-            if (this.tensorSanctumLocked) {
-                if (pos.x < -34.5 + pad || pos.x > 34.5 - pad || pos.z < -72.5 + pad || pos.z > -3.2 - pad) {
-                    return true;
+                if (curY < 2.2 && !onRampNow) {
+                    for (const ae of this.archEntities) {
+                        if (ae.type !== 'arch_platform') continue;
+                        const closestX = Math.max(ae.minX, Math.min(pos.x, ae.maxX));
+                        const closestZ = Math.max(ae.minZ, Math.min(pos.z, ae.maxZ));
+                        const dx = pos.x - closestX;
+                        const dz = pos.z - closestZ;
+                        if (dx * dx + dz * dz < radius * radius) {
+                            const leftPen = Math.abs(pos.x - ae.minX);
+                            const rightPen = Math.abs(ae.maxX - pos.x);
+                            const topPen = Math.abs(pos.z - ae.minZ);
+                            const botPen = Math.abs(pos.z - ae.maxZ);
+                            const minPen = Math.min(leftPen, rightPen, topPen, botPen);
+                            if (minPen === leftPen) pos.x = ae.minX - radius;
+                            else if (minPen === rightPen) pos.x = ae.maxX + radius;
+                            else if (minPen === topPen) pos.z = ae.minZ - radius;
+                            else pos.z = ae.maxZ + radius;
+                        }
+                    }
                 }
-            }
-            const y = checkY !== null ? checkY : (pos.y || 0);
-            for (const box of this.wallColliders) {
-                if (box.maxY !== undefined && y >= box.maxY - 0.65) continue;
-                if (box.minY !== undefined && y + 1.8 <= box.minY) continue;
-                if (pos.x >= box.minX - pad && pos.x <= box.maxX + pad && pos.z >= box.minZ - pad && pos.z <= box.maxZ + pad) {
-                    return true;
-                }
-            }
-            return false;
-        },
+            },
 
-        isSpotClearOfArchitecture(x, z, pad = 2.0, checkY = null) {
+            autoLoadBeltFromReserve() {
+                const maxHpCap = this.player.maxHpPots || 1;
+                const maxMpCap = this.player.maxMpPots || 1;
+                const maxStamCap = this.player.maxStamPots || 1;
+                while (this.player.hpPots < maxHpCap && (this.state.reserveHpPots || 0) > 0) {
+                    this.state.reserveHpPots--;
+                    this.player.hpPots++;
+                }
+                while (this.player.mpPots < maxMpCap && (this.state.reserveMpPots || 0) > 0) {
+                    this.state.reserveMpPots--;
+                    this.player.mpPots++;
+                }
+                while ((this.player.stamPots || 0) < maxStamCap && (this.state.reserveStamPots || 0) > 0) {
+                    this.state.reserveStamPots--;
+                    this.player.stamPots = (this.player.stamPots || 0) + 1;
+                }
+            },
+
+            isPointInsideWall(pos, pad = 0, checkY = null, ignoreBastionCover = false) {
+                if (this.tensorSanctumLocked) {
+                    if (pos.x < -34.5 + pad || pos.x > 34.5 - pad || pos.z < -72.5 + pad || pos.z > -3.2 - pad) {
+                        return true;
+                    }
+                }
+                const y = checkY !== null ? checkY : (pos.y || 0);
+                for (const box of this.wallColliders) {
+                    if (ignoreBastionCover && box.isPlayerBastionCover) continue;
+                    if (box.maxY !== undefined && y >= box.maxY - 0.65) continue;
+                    if (box.minY !== undefined && y + 1.8 <= box.minY) continue;
+                    if (box.isOrientedBox) {
+                        const cosA = Math.cos(box.angle || 0);
+                        const sinA = Math.sin(box.angle || 0);
+                        const dx = pos.x - box.cx;
+                        const dz = pos.z - box.cz;
+                        const lx = dx * cosA - dz * sinA;
+                        const lz = dx * sinA + dz * cosA;
+                        if (Math.abs(lx) <= box.halfW + pad && Math.abs(lz) <= box.halfD + pad) return true;
+                        continue;
+                    }
+                    if (pos.x >= box.minX - pad && pos.x <= box.maxX + pad && pos.z >= box.minZ - pad && pos.z <= box.maxZ + pad) {
+                        return true;
+                    }
+                }
+                return false;
+            },
+
+            isSpotClearOfArchitecture(x, z, pad = 2.0, checkY = null) {
             const elevY = checkY !== null ? checkY : this.getFloorElevationAt(x, z, 0, false);
             if (this.isPointInsideWall({ x, z, y: elevY }, pad, elevY)) return false;
             if (this.isPointOnRamp(x, z, pad + 2.5)) return false;
@@ -17618,6 +17654,7 @@ const LORE_ENTRIES = [
                 const shieldMult = (en.shieldTimer > 0 ? 0.5 : 1.0) * (en.hasFrontShield ? 0.85 : 1.0);
                 const finalDmg = Math.max(1, Math.round(rawDmg * execMult * huntMult * pointBlankMult * sonarVulnMult * bountyVulnMult * naniteVulnMult * shieldMult * alertTwoHPBuff * (isCrit ? d.critMult : 1) * (0.94 + Math.random() * 0.12)));
 
+                en._lastHitWasAbility = Boolean(isAbility);
                 en.hp -= finalDmg;
                 if (this.runStats && !en.isDummy) {
                     this.runStats.damageDealt += finalDmg;
@@ -18081,7 +18118,7 @@ const LORE_ENTRIES = [
 
                 const isGoliathStance = hasGoliathAnchor && (!this.player.isMoving || this.player.isADS);
                 const isHemlockActive = hasHemlockStim && (this.player.protoHemlockTimer > 0);
-                const isQuickDrawActive = (this.player.quickDrawTimer || 0) > 0;
+                const isQuickDrawActive = false;
 
                 const gear = this.state.equipped;
                 const activeSlot = this.player.activeWeaponSlot === 'secondary' ? 'secondary' : 'weapon';
@@ -18089,9 +18126,8 @@ const LORE_ENTRIES = [
                 const activeWeapon = this.getActiveWeaponItem();
                 const arch = this.getEquippedArchetype();
 
-                const bypassSecPenalty = hasAkimboLink || Boolean(arch.isSidearmSpecialist);
-                const secondaryDmgMult = (isSecondarySlot && !bypassSecPenalty) ? 0.65 : 1.0;
-                const secondaryMagMult = (isSecondarySlot && !bypassSecPenalty) ? 0.80 : 1.0;
+                const secondaryDmgMult = !isSecondarySlot ? 1.0 : (hasAkimboLink ? 1.0 : (arch.isSidearmSpecialist ? 0.9125 : 0.65));
+                const secondaryMagMult = !isSecondarySlot ? 1.0 : (hasAkimboLink ? 1.0 : (arch.isSidearmSpecialist ? 0.95 : 0.80));
 
                 let gearHp = 0, gearDmg = 0, gearArmor = 0, gearMp = 0, gearCrit = 0;
                 let gearSpeedPct = 0, gearCdr = 0, gearLeech = 0, gearRofPct = 0, gearShieldFlat = 0;
@@ -18303,9 +18339,8 @@ const LORE_ENTRIES = [
                 const arch = WEAPON_ARCHETYPES[item.archetype] || WEAPON_ARCHETYPES.cleaver;
                 const att = this.getWeaponAttachmentBonuses(item);
                 const d = this.getDerivedStats();
-                const bypassSec = d.hasAkimboLink || Boolean(arch.isSidearmSpecialist);
-                const secDmgMult = (isSecondarySlot && !bypassSec) ? 0.65 : 1.0;
-                const secMagMult = (isSecondarySlot && !bypassSec) ? 0.80 : 1.0;
+                const secDmgMult = !isSecondarySlot ? 1.0 : (d.hasAkimboLink ? 1.0 : (arch.isSidearmSpecialist ? 0.9125 : 0.65));
+                const secMagMult = !isSecondarySlot ? 1.0 : (d.hasAkimboLink ? 1.0 : (arch.isSidearmSpecialist ? 0.95 : 0.80));
 
                 const gear = this.state.equipped || {};
                 let armorGearDmg = 0, gearRofPct = 0, gearReloadAdd = 0;
@@ -18604,7 +18639,7 @@ const LORE_ENTRIES = [
                     this.player.ammo = this.player.maxAmmo;
                     this.player.slotAmmo.weapon = this.state.equipped.weapon ? (WEAPON_ARCHETYPES[this.state.equipped.weapon.archetype]?.magSize || 22) : 22;
                     const secArch = this.state.equipped.secondary ? WEAPON_ARCHETYPES[this.state.equipped.secondary.archetype] : null;
-                    const secMult = (d.hasAkimboLink || (secArch && secArch.isSidearmSpecialist)) ? 1.0 : 0.80;
+                    const secMult = d.hasAkimboLink ? 1.0 : ((secArch && secArch.isSidearmSpecialist) ? 0.95 : 0.80);
                     this.player.slotAmmo.secondary = secArch ? Math.max(2, Math.round((secArch.magSize || 12) * secMult)) : 12;
                     this.player.reloadTimer = 0;
                     this.player.recoilBloom = 0;
@@ -19650,142 +19685,155 @@ const LORE_ENTRIES = [
 
                 this.spawnFloatingText(this.player.pos, `${isOvr ? 'DYSON AEGIS FORTRESS' : (isAmp ? 'REFLECTIVE AEGIS BASTION' : 'AEGIS DOME')} (${domeHp.toLocaleString()} HP / ${dur.toFixed(1)}s)!`, isOvr ? '#fb7185' : '#34d399', 'text-sm');
             } else if (skillId === 'deployableCover') {
-                // Tactical Bastion Cover: Built perpendicular to Zed3's facing direction (rotY)
-                AudioEngine.sfx('deploy_mech');
-                const aimDir = toAim.lengthSq() > 0.01 ? toAim.clone().normalize() : new THREE.Vector3(Math.sin(this.player.rotY), 0, Math.cos(this.player.rotY));
-                this.player.rotY = Math.atan2(aimDir.x, aimDir.z);
-                this.player.mesh.rotation.y = this.player.rotY;
-                const wallAngle = this.player.rotY;
-                const fwdVec = new THREE.Vector3(Math.sin(wallAngle), 0, Math.cos(wallAngle)).normalize();
+                    // Tactical Bastion Cover: Built perpendicular to Zed3's facing direction (rotY) with exact OBB hitbox!
+                    AudioEngine.sfx('deploy_mech');
+                    const aimDir = toAim.lengthSq() > 0.01 ? toAim.clone().normalize() : new THREE.Vector3(Math.sin(this.player.rotY), 0, Math.cos(this.player.rotY));
+                    this.player.rotY = Math.atan2(aimDir.x, aimDir.z);
+                    this.player.mesh.rotation.y = this.player.rotY;
+                    const wallAngle = this.player.rotY;
+                    const fwdVec = new THREE.Vector3(Math.sin(wallAngle), 0, Math.cos(wallAngle)).normalize();
 
-                const baseHits = isOvr ? 12 : (isAmp ? 11 : (4 + rank));
-                const totalHits = useAlt ? (baseHits + 4) : baseHits;
-                const blastRad = isOvr ? 5.8 : (isAmp ? 4.8 : (3.6 + rank * 0.2));
-                const blastDmg = Math.round(d.abilityPhysDmg * (isOvr ? 3.20 : (isAmp ? 2.45 : (1.35 + rank * 0.18))) * (nonLinScale * 0.68));
-                const cryoStripDmg = Math.round(d.abilityTechDmg * (isOvr ? 2.60 : 1.85) * (nonLinScale * 0.65));
+                    const baseHits = isOvr ? 12 : (isAmp ? 11 : (4 + rank));
+                    const totalHits = useAlt ? (baseHits + 4) : baseHits;
+                    const blastRad = isOvr ? 5.8 : (isAmp ? 4.8 : (3.6 + rank * 0.2));
+                    const blastDmg = Math.round(d.abilityPhysDmg * (isOvr ? 3.20 : (isAmp ? 2.45 : (1.35 + rank * 0.18))) * (nonLinScale * 0.68));
+                    const cryoStripDmg = Math.round(d.abilityTechDmg * (isOvr ? 2.60 : 1.85) * (nonLinScale * 0.65));
 
-                const barW = isOvr ? 4.4 : 3.8;
-                const barH = 2.05;
-                const barD = 1.25;
-                const elevY = targetPt.y || 0;
-                const cCol = useAlt ? 0x38bdf8 : (isOvr ? 0xf43f5e : (isAmp ? 0x22d3ee : 0xf59e0b));
+                    const barW = isOvr ? 4.4 : 3.8;
+                    const barH = 2.05;
+                    const barD = 0.92;
+                    const elevY = targetPt.y || 0;
+                    const cCol = useAlt ? 0x38bdf8 : (isOvr ? 0xf43f5e : (isAmp ? 0x22d3ee : 0xf59e0b));
 
-                const grp = new THREE.Group();
-                grp.position.set(targetPt.x, elevY, targetPt.z);
-                grp.rotation.y = wallAngle;
+                    const grp = new THREE.Group();
+                    grp.position.set(targetPt.x, elevY, targetPt.z);
+                    grp.rotation.y = wallAngle;
 
-                const hexTex = TextureGen.getHexArmorTexture();
-                const slabMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, map: hexTex, metalness: 0.85, roughness: 0.25 });
-                const shieldTrimMat = new THREE.MeshStandardMaterial({ color: cCol, emissive: cCol, emissiveIntensity: 0.55, metalness: 0.8 });
-                const mainSlab = new THREE.Mesh(new THREE.BoxGeometry(barW, barH, barD * 0.75), slabMat);
-                mainSlab.position.y = barH * 0.5;
-                const frontPlate = new THREE.Mesh(new THREE.BoxGeometry(barW * 0.88, barH * 0.72, 0.16), shieldTrimMat);
-                frontPlate.position.set(0, barH * 0.48, barD * 0.40);
-                [-1, 1].forEach(s => {
-                    constpost = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, barH + 0.22, 8), slabMat);
-                    constpost.position.set(s * (barW * 0.48), (barH + 0.22) * 0.5, 0);
-                    grp.add(constpost);
-                });
+                    const hexTex = TextureGen.getHexArmorTexture();
+                    const slabMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, map: hexTex, metalness: 0.85, roughness: 0.25 });
+                    const shieldTrimMat = new THREE.MeshStandardMaterial({ color: cCol, emissive: cCol, emissiveIntensity: 0.55, metalness: 0.8 });
+                    const mainSlab = new THREE.Mesh(new THREE.BoxGeometry(barW - 0.36, barH, barD), slabMat);
+                    mainSlab.position.y = barH * 0.5;
+                    const frontPlate = new THREE.Mesh(new THREE.BoxGeometry(barW - 0.44, barH * 0.72, 0.10), shieldTrimMat);
+                    frontPlate.position.set(0, barH * 0.48, barD * 0.5 + 0.02);
+                    const backPlate = frontPlate.clone();
+                    backPlate.position.z = -(barD * 0.5 + 0.02);
+                    [-1, 1].forEach(s => {
+                        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, barH + 0.22, 8), slabMat);
+                        post.position.set(s * (barW * 0.5 - 0.18), (barH + 0.22) * 0.5, 0);
+                        grp.add(post);
+                    });
 
-                const pipGrp = new THREE.Group();
-                pipGrp.position.y = barH + 0.48;
-                const pipBg = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.18), new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide }));
-                const pipFill = new THREE.Mesh(new THREE.PlaneGeometry(1.64, 0.12), new THREE.MeshBasicMaterial({ color: cCol, side: THREE.DoubleSide }));
-                pipFill.position.z = 0.01;
-                pipGrp.add(pipBg, pipFill);
+                    const pipGrp = new THREE.Group();
+                    pipGrp.position.y = barH + 0.48;
+                    const pipBg = new THREE.Mesh(new THREE.PlaneGeometry(1.7, 0.18), new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.DoubleSide }));
+                    const pipFill = new THREE.Mesh(new THREE.PlaneGeometry(1.64, 0.12), new THREE.MeshBasicMaterial({ color: cCol, side: THREE.DoubleSide }));
+                    pipFill.position.z = 0.01;
+                    pipGrp.add(pipBg, pipFill);
 
-                grp.add(mainSlab, frontPlate, pipGrp);
-                this.scene.add(grp);
-                this.worldMeshes.push(grp);
+                    grp.add(mainSlab, frontPlate, backPlate, pipGrp);
+                    this.scene.add(grp);
+                    this.worldMeshes.push(grp);
 
-                const hw = Math.abs(Math.cos(wallAngle)) * (barW * 0.5) + Math.abs(Math.sin(wallAngle)) * (barD * 0.5);
-                const hd = Math.abs(Math.sin(wallAngle)) * (barW * 0.5) + Math.abs(Math.cos(wallAngle)) * (barD * 0.5);
-                const colBox = { minX: targetPt.x - hw, maxX: targetPt.x + hw, minZ: targetPt.z - hd, maxZ: targetPt.z + hd, minY: elevY, maxY: elevY + barH + 0.2, isCover: true, blocksSight: false };
-                this.wallColliders.push(colBox);
+                    const colBox = {
+                        isOrientedBox: true,
+                        isPlayerBastionCover: true,
+                        cx: targetPt.x,
+                        cz: targetPt.z,
+                        halfW: barW * 0.5,
+                        halfD: barD * 0.5,
+                        angle: wallAngle,
+                        minY: elevY,
+                        maxY: elevY + barH + 0.2,
+                        isCover: true,
+                        blocksSight: false
+                    };
+                    this.wallColliders.push(colBox);
 
-                this.archEntities.push({
-                    type: 'arch_destructible',
-                    isPlayerBastionCover: true,
-                    noSelfDamage: true,
-                    suppressDefaultExplosion: Boolean(useAlt),
-                    mesh: grp,
-                    boxMesh: mainSlab,
-                    pipGrp,
-                    pipFill,
-                    pos: new THREE.Vector3(targetPt.x, elevY, targetPt.z),
-                    halfW: Math.max(hw, hd),
-                    tier: isOvr ? 3 : (isAmp ? 2 : 1),
-                    hitsLeft: totalHits,
-                    maxHits: totalHits,
-                    blastRadius: blastRad,
-                    stunDur: isOvr ? 1.8 : 1.2,
-                    customBlastDmg: useAlt ? 0 : blastDmg,
-                    coreColor: cCol,
-                    colBox,
-                    onBreak: () => {
-                        if (this.isDefeatPending) return;
-                        if (useAlt) {
-                            // Alt-Fire: Collapses into Cryo Rubble for 4.0s Slow Field (no explosion)
-                            AudioEngine.sfx('cryo_shatter');
-                            const rubbleGrp = new THREE.Group();
-                            rubbleGrp.position.set(targetPt.x, elevY, targetPt.z);
-                            for (let rb = 0; rb < 7; rb++) {
-                                const chunk = new THREE.Mesh(
-                                    new THREE.DodecahedronGeometry(0.32 + (rb % 3) * 0.12, 0),
-                                    new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.45, roughness: 0.4 })
-                                );
-                                chunk.position.set((Math.random() - 0.5) * 3.2, 0.22, (Math.random() - 0.5) * 2.2);
-                                rubbleGrp.add(chunk);
-                            }
-                            this.scene.add(rubbleGrp);
-                            setTimeout(() => this.scene.remove(rubbleGrp), 4000);
-                            this.spawnLingeringHazardPool(targetPt.x, targetPt.z, 3.8, 4.0, Math.max(5, Math.round(d.abilityTechDmg * 0.18)), 0x38bdf8, true, elevY, true);
-                            this.spawnFloatingText(targetPt, 'BASTION RUBBLE — 4s SLOW FIELD!', '#38bdf8', 'text-xs');
-                        } else if (isAmp) {
-                            // Rank 6 AMP & Rank 7 OVERLOAD: Blasts a forward Cryo Strip on destruction!
-                            AudioEngine.sfx('cryo_shatter');
-                            const stripW = isOvr ? 4.8 : 3.6;
-                            const stripLen = isOvr ? 13.5 : 10.5;
-                            const stripCenter = targetPt.clone().addScaledVector(fwdVec, stripLen * 0.5);
-                            const stripGrp = new THREE.Group();
-                            stripGrp.position.set(stripCenter.x, elevY + 0.08, stripCenter.z);
-                            stripGrp.rotation.y = wallAngle;
-                            const sheet = new THREE.Mesh(
-                                new THREE.PlaneGeometry(stripW, stripLen),
-                                new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.55 })
-                            );
-                            sheet.rotation.x = -Math.PI / 2;
-                            stripGrp.add(sheet);
-                            for (let sp = -3; sp <= 3; sp++) {
-                                const spire = new THREE.Mesh(
-                                    new THREE.ConeGeometry(0.34, 1.85, 5),
-                                    new THREE.MeshBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.82 })
-                                );
-                                spire.position.set((sp % 2) * (stripW * 0.25), 0.9, sp * (stripLen / 7.5));
-                                stripGrp.add(spire);
-                            }
-                            this.scene.add(stripGrp);
-                            setTimeout(() => this.scene.remove(stripGrp), 950);
-
-                            const rightVec = new THREE.Vector3(fwdVec.z, 0, -fwdVec.x);
-                            this.enemies.slice().forEach(en => {
-                                if (en.hp <= 0 || (en.mindControlTimer || 0) > 0 || Math.abs((en.pos.y || 0) - elevY) > 2.6) return;
-                                const rel = en.pos.clone().sub(targetPt);
-                                const projFwd = rel.x * fwdVec.x + rel.z * fwdVec.z;
-                                const projSide = Math.abs(rel.x * rightVec.x + rel.z * rightVec.z);
-                                if (projFwd >= -0.8 && projFwd <= stripLen && projSide <= stripW * 0.55) {
-                                    this.damageEnemy(en, cryoStripDmg, true, true);
-                                    en.slowTimer = Math.max(en.slowTimer || 0, isOvr ? 5.0 : 4.0);
-                                    if (!en.isBoss || (en.stunImmuneTimer || 0) <= 0) {
-                                        en.stunTimer = Math.max(en.stunTimer || 0, isOvr ? 1.8 : 1.2);
-                                    }
+                    this.archEntities.push({
+                        type: 'arch_destructible',
+                        isPlayerBastionCover: true,
+                        isOrientedCover: true,
+                        angle: wallAngle,
+                        halfW: barW * 0.5,
+                        halfD: barD * 0.5,
+                        noSelfDamage: true,
+                        suppressDefaultExplosion: Boolean(useAlt),
+                        mesh: grp,
+                        boxMesh: mainSlab,
+                        pipGrp,
+                        pipFill,
+                        pos: new THREE.Vector3(targetPt.x, elevY, targetPt.z),
+                        tier: isOvr ? 3 : (isAmp ? 2 : 1),
+                        hitsLeft: totalHits,
+                        maxHits: totalHits,
+                        blastRadius: blastRad,
+                        stunDur: isOvr ? 1.8 : 1.2,
+                        customBlastDmg: useAlt ? 0 : blastDmg,
+                        coreColor: cCol,
+                        colBox,
+                        onBreak: () => {
+                            if (this.isDefeatPending) return;
+                            if (useAlt) {
+                                AudioEngine.sfx('cryo_shatter');
+                                const rubbleGrp = new THREE.Group();
+                                rubbleGrp.position.set(targetPt.x, elevY, targetPt.z);
+                                for (let rb = 0; rb < 7; rb++) {
+                                    const chunk = new THREE.Mesh(
+                                        new THREE.DodecahedronGeometry(0.32 + (rb % 3) * 0.12, 0),
+                                        new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.45, roughness: 0.4 })
+                                    );
+                                    chunk.position.set((Math.random() - 0.5) * 3.2, 0.22, (Math.random() - 0.5) * 2.2);
+                                    rubbleGrp.add(chunk);
                                 }
-                            });
+                                this.scene.add(rubbleGrp);
+                                setTimeout(() => this.scene.remove(rubbleGrp), 4000);
+                                this.spawnLingeringHazardPool(targetPt.x, targetPt.z, 3.8, 4.0, Math.max(5, Math.round(d.abilityTechDmg * 0.18)), 0x38bdf8, true, elevY, true);
+                                this.spawnFloatingText(targetPt, 'BASTION RUBBLE — 4s SLOW FIELD!', '#38bdf8', 'text-xs');
+                            } else if (isAmp) {
+                                AudioEngine.sfx('cryo_shatter');
+                                const stripW = isOvr ? 4.8 : 3.6;
+                                const stripLen = isOvr ? 13.5 : 10.5;
+                                const stripCenter = targetPt.clone().addScaledVector(fwdVec, stripLen * 0.5);
+                                const stripGrp = new THREE.Group();
+                                stripGrp.position.set(stripCenter.x, elevY + 0.08, stripCenter.z);
+                                stripGrp.rotation.y = wallAngle;
+                                const sheet = new THREE.Mesh(
+                                    new THREE.PlaneGeometry(stripW, stripLen),
+                                    new THREE.MeshBasicMaterial({ color: 0x38bdf8, side: THREE.DoubleSide, transparent: true, opacity: 0.55 })
+                                );
+                                sheet.rotation.x = -Math.PI / 2;
+                                stripGrp.add(sheet);
+                                for (let sp = -3; sp <= 3; sp++) {
+                                    const spire = new THREE.Mesh(
+                                        new THREE.ConeGeometry(0.34, 1.85, 5),
+                                        new THREE.MeshBasicMaterial({ color: 0x7dd3fc, transparent: true, opacity: 0.82 })
+                                    );
+                                    spire.position.set((sp % 2) * (stripW * 0.25), 0.9, sp * (stripLen / 7.5));
+                                    stripGrp.add(spire);
+                                }
+                                this.scene.add(stripGrp);
+                                setTimeout(() => this.scene.remove(stripGrp), 950);
+
+                                const rightVec = new THREE.Vector3(fwdVec.z, 0, -fwdVec.x);
+                                this.enemies.slice().forEach(en => {
+                                    if (en.hp <= 0 || (en.mindControlTimer || 0) > 0 || Math.abs((en.pos.y || 0) - elevY) > 2.6) return;
+                                    const rel = en.pos.clone().sub(targetPt);
+                                    const projFwd = rel.x * fwdVec.x + rel.z * fwdVec.z;
+                                    const projSide = Math.abs(rel.x * rightVec.x + rel.z * rightVec.z);
+                                    if (projFwd >= -0.8 && projFwd <= stripLen && projSide <= stripW * 0.55) {
+                                        this.damageEnemy(en, cryoStripDmg, true, true);
+                                        en.slowTimer = Math.max(en.slowTimer || 0, isOvr ? 5.0 : 4.0);
+                                        if (!en.isBoss || (en.stunImmuneTimer || 0) <= 0) {
+                                            en.stunTimer = Math.max(en.stunTimer || 0, isOvr ? 1.8 : 1.2);
+                                        }
+                                    }
+                                });
+                            }
                         }
-                    }
-                });
-                this.spawnFloatingText(targetPt, useAlt ? `REINFORCED BASTION (${totalHits} HITS)!` : `TACTICAL BASTION DEPLOYED (${totalHits} HITS)!`, useAlt ? '#38bdf8' : '#fbbf24', 'text-xs');
-            } else if (skillId === 'orbitalNapalm') {
+                    });
+                    this.spawnFloatingText(targetPt, useAlt ? `REINFORCED BASTION (${totalHits} HITS)!` : `TACTICAL BASTION DEPLOYED (${totalHits} HITS)!`, useAlt ? '#38bdf8' : '#fbbf24', 'text-xs');
+                } else if (skillId === 'orbitalNapalm') {
                 // Line Carpet-Bomb from Zed3 to targetPt! Safe player pools!
                 AudioEngine.sfx('shotgun');
                 this.screenShake = 0.28;
@@ -20791,16 +20839,28 @@ const LORE_ENTRIES = [
             }
 
             // Clean up any Vaelen clones if Vaelen dies mid-ability!
-            if (en.isBoss && this.vaelenClones && this.vaelenClones.length > 0) {
-                this.vaelenClones.forEach(vc => {
-                    if (vc.mesh) this.scene.remove(vc.mesh);
-                    const aIdx = this.archEntities.indexOf(vc);
-                    if (aIdx !== -1) this.archEntities.splice(aIdx, 1);
-                });
-                this.vaelenClones = [];
-            }
+                if (en.isBoss && this.vaelenClones && this.vaelenClones.length > 0) {
+                    this.vaelenClones.forEach(vc => {
+                        if (vc.mesh) this.scene.remove(vc.mesh);
+                        const aIdx = this.archEntities.indexOf(vc);
+                        if (aIdx !== -1) this.archEntities.splice(aIdx, 1);
+                    });
+                    this.vaelenClones = [];
+                }
 
-            if (!en.isDummy) {
+                // Sidearm Specialist: Killing an enemy with a Pistol in 2° Secondary refunds 10% Stamina (7s CD)
+                if (!en.isDummy && !en._lastHitWasAbility && this.player.activeWeaponSlot === 'secondary') {
+                    const secArch = this.getEquippedArchetype();
+                    if (secArch && secArch.isSidearmSpecialist && (this.player.sidearmStamCd || 0) <= 0) {
+                        const stamRefund = Math.max(5, Math.round(this.player.maxStamina * 0.10));
+                        this.player.stamina = Math.min(this.player.maxStamina, this.player.stamina + stamRefund);
+                        this.player.staminaDelay = 0;
+                        this.player.sidearmStamCd = 7.0;
+                        this.spawnFloatingText(this.player.pos, `+${stamRefund} STAM (SIDEARM KILL)`, '#34d399', 'text-xs');
+                    }
+                }
+
+                if (!en.isDummy) {
                 if (!this.state.enemyKillCounts) this.state.enemyKillCounts = {};
                 if (en.type) {
                     this.state.enemyKillCounts[en.type] = (this.state.enemyKillCounts[en.type] || 0) + 1;
@@ -21299,6 +21359,9 @@ const LORE_ENTRIES = [
                 const startPos = this.player.pos.clone();
                 this.player.stationaryTimer = 0;
                 const hasValCore = (augs.valkyrie_zero_core || 0) > 0;
+                const spdRatio = (d.moveSpeed || 6.0) / 6.0;
+                const dashDistScale = Math.max(0.80, 0.80 + 0.20 * spdRatio); // 0% SPD = 80% DD, 100% SPD = 100% DD, 200% SPD = 120% DD
+                this.player.dashSpeed = 35.0 * dashDistScale;
                 this.player.stamina = Math.max(0, this.player.stamina - dashCost);
                 this.player.staminaDelay = hasValCore ? (0.45 * 0.95) : 0.45;
                 this.player.dashActiveTimer = hasBlink ? 0.06 : (0.13 * (hasValCore ? 1.05 : 1.0));
@@ -21360,7 +21423,7 @@ const LORE_ENTRIES = [
                 }
 
                 if (hasBlink) {
-                    const blinkDist = 4.55 * 1.30;
+                    const blinkDist = 4.55 * 1.30 * dashDistScale;
                     this.spawnBurstParticles(startPos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0x818cf8, 16);
                     this.checkPerfectDodgeWindow();
                     const rawDest = startPos.clone().addScaledVector(this.player.dashDir, blinkDist);
@@ -25171,6 +25234,8 @@ const LORE_ENTRIES = [
                 const curAugs = this.getInstalledAugmentCounts();
                 if (this.player.quickDrawTimer > 0) this.player.quickDrawTimer = Math.max(0, this.player.quickDrawTimer - dt);
                 if (this.player.quickDrawCooldown > 0) this.player.quickDrawCooldown = Math.max(0, this.player.quickDrawCooldown - dt);
+                if (this.player.sidearmStamCd > 0) this.player.sidearmStamCd = Math.max(0, this.player.sidearmStamCd - dt);
+                if (this.player.quickDrawCooldown > 0) this.player.quickDrawCooldown = Math.max(0, this.player.quickDrawCooldown - dt);
                 if (this.player.aegisCapCdTimer > 0) this.player.aegisCapCdTimer = Math.max(0, this.player.aegisCapCdTimer - dt);
                 if (this.player.protoMartyrInvulnTimer > 0) this.player.protoMartyrInvulnTimer = Math.max(0, this.player.protoMartyrInvulnTimer - dt);
                 if (this.player.protoBlinkCooldown > 0) this.player.protoBlinkCooldown = Math.max(0, this.player.protoBlinkCooldown - dt);
@@ -27039,7 +27104,7 @@ const LORE_ENTRIES = [
                     this.player.dashActiveTimer -= dt;
                     this.player.isMoving = true;
                     this.player.stationaryTimer = 0;
-                    this.player.pos.addScaledVector(this.player.dashDir, 35.0 * dt);
+                    this.player.pos.addScaledVector(this.player.dashDir, (this.player.dashSpeed || 35.0) * dt);
                     this.checkPerfectDodgeWindow();
                     if (this.player.dashActiveTimer <= 0 && this.player.mirageWasReadyOnDash) {
                         if (!this.player.perfectDodgeGranted) {
@@ -28757,226 +28822,269 @@ const LORE_ENTRIES = [
                     }
                 }
                 p.life -= dt * pSpeedMult;
-                p.pos.addScaledVector(p.dir, p.speed * pSpeedMult * dt);
-                if (p.isCardProj && p.mesh) {
-                    p.mesh.rotation.y += dt * 16.0;
-                }
-                if (p.isBuzzsawProj && p.mesh) {
-                    p.mesh.rotation.y += dt * 28.0;
-                }
-                if (p.tetherLine) {
-                    const lAttr = p.tetherLine.geometry.attributes.position;
-                    if (lAttr) {
-                        lAttr.setXYZ(0, this.player.pos.x, (this.player.pos.y || 0) + 1.15, this.player.pos.z);
-                        lAttr.setXYZ(1, p.pos.x, (p.pos.y || 0) + 1.15, p.pos.z);
-                        lAttr.needsUpdate = true;
+                    const prevProjPos = p.pos.clone();
+                    p.pos.addScaledVector(p.dir, p.speed * pSpeedMult * dt);
+                    if (p.isCardProj && p.mesh) {
+                        p.mesh.rotation.y += dt * 16.0;
                     }
-                }
-
-                const swData = p.specialWeaponData;
-
-                // Allow Player Projectiles to Shoot & Break Unopened Chests!
-                if (p.fromPlayer && p.life > 0 && this.interactables && this.interactables.length > 0) {
-                    for (let iIdx = this.interactables.length - 1; iIdx >= 0; iIdx--) {
-                        const inter = this.interactables[iIdx];
-                        if (inter && inter.isChest && !inter.opened && Math.abs((p.pos.y || 0) - (inter.pos.y || 0)) <= 1.6 && Math.hypot(p.pos.x - inter.pos.x, p.pos.z - inter.pos.z) <= 1.15) {
-                            p.life = 0;
-                            inter.hitsLeft = (inter.hitsLeft || 2) - 1;
-                            AudioEngine.sfx('anvil');
-                            this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 0.8, 0)), 0xfacc15, 8);
-                            if (inter.hitsLeft <= 0 && typeof inter.onInteract === 'function') {
-                                inter.onInteract();
-                            }
-                            break;
+                    if (p.isBuzzsawProj && p.mesh) {
+                        p.mesh.rotation.y += dt * 28.0;
+                    }
+                    if (p.tetherLine) {
+                        const lAttr = p.tetherLine.geometry.attributes.position;
+                        if (lAttr) {
+                            lAttr.setXYZ(0, this.player.pos.x, (this.player.pos.y || 0) + 1.15, this.player.pos.z);
+                            lAttr.setXYZ(1, p.pos.x, (p.pos.y || 0) + 1.15, p.pos.z);
+                            lAttr.needsUpdate = true;
                         }
                     }
-                }
 
-                if (p.isBuzzsawProj && swData && swData.bouncingToPlayer) {
-                    const toPlayer = this.player.pos.clone().sub(p.pos).setY(0);
-                    if (toPlayer.length() <= 1.25) {
-                        swData.bouncingToPlayer = false;
-                        const targetEn = swData.lastBounceEnemy;
-                        if (targetEn && targetEn.hp > 0 && (targetEn.mindControlTimer || 0) <= 0 && targetEn.pos.distanceTo(this.player.pos) <= 16.5) {
-                            p.hitSet.delete(targetEn);
-                            p.dir.copy(targetEn.pos.clone().sub(p.pos).setY(0).normalize());
-                            p.life = 0.65;
-                            AudioEngine.sfx('dash');
-                            this.spawnBurstParticles(this.player.pos.clone().setY(1.1), 0x38bdf8, 6);
-                        } else {
-                            p.life = 0;
-                        }
-                    } else {
-                        p.dir.copy(toPlayer.normalize());
-                    }
-                }
+                    const swData = p.specialWeaponData;
 
-                if (!(swData && swData.ignoresWalls) && this.isPointInsideWall(p.pos)) {
-                    if (p.isHarpoonProj && swData) {
-                        AudioEngine.sfx('anvil');
-                        AudioEngine.sfx('dash');
-                        this.player.movementSkillGraceTimer = Math.max(this.player.movementSkillGraceTimer || 0, 0.45);
-                        const curY = this.player.pos.y || 0;
-                        const pullBack = p.pos.clone().addScaledVector(p.dir, -1.05);
-                        const safeWallPt = this.findSafeOpenSpot(pullBack.x, pullBack.z, 0.85, curY);
-                        const destY = this.mode === 'dungeon' ? this.getFloorElevationAt(safeWallPt.x, safeWallPt.z, curY, curY >= 4.5) : 0;
-                        const destVec = new THREE.Vector3(safeWallPt.x, destY, safeWallPt.z);
-                        const startPos = this.player.pos.clone();
-                        const dist = startPos.distanceTo(destVec);
-                        const grappleDur = Math.max(0.12, Math.min(0.28, dist / 55.0));
-
-                        const cableGeo = new THREE.BufferGeometry().setFromPoints([
-                            startPos.clone().add(new THREE.Vector3(0, 1.15, 0)),
-                            p.pos.clone().add(new THREE.Vector3(0, 1.15, 0))
-                        ]);
-                        const cableLine = new THREE.Line(cableGeo, new THREE.LineBasicMaterial({ color: 0xf43f5e }));
-                        cableLine.frustumCulled = false;
-                        this.scene.add(cableLine);
-
-                        this.player.dashActiveTimer = grappleDur + 0.06;
-                        this.player.assassinWarpArc = {
-                            start: startPos,
-                            dest: destVec,
-                            elapsed: 0,
-                            duration: grappleDur,
-                            onArrive: () => {
-                                this.scene.remove(cableLine);
-                                this.spawnBurstParticles(destVec.clone().setY(destY + 1.0), 0xf43f5e, 14);
-                            }
-                        };
-                        const hSlot = this.state.hotbar.indexOf('berserkTether');
-                        if (hSlot !== -1 && this.player.skillCooldowns[hSlot] > 0) {
-                            this.player.skillCooldowns[hSlot] *= 0.60;
-                        }
-                        this.spawnFloatingText(p.pos, 'HARPOON WALL-GRAPPLE (-40% CD)!', '#fb7185', 'text-xs');
-                        p.life = 0;
-                    } else if (this.mode === 'dungeon' && p.isBuzzsawProj) {
-                        AudioEngine.sfx('hit');
-                        this.spawnBurstParticles(p.pos.clone().setY(1.1), swData.sawCol || 0xf43f5e, 14);
-                        p.life = 0;
-                    } else if (swData && swData.aoeBlastRadius > 0) {
-                        AudioEngine.sfx('shotgun');
-                        this.spawnSphereExplosionVisual(p.pos, swData.aoeBlastRadius, 0xf97316);
-                        this.enemies.slice().forEach(other => {
-                            if (other.hp > 0 && (other.mindControlTimer || 0) <= 0 && Math.hypot(other.pos.x - p.pos.x, other.pos.z - p.pos.z) <= swData.aoeBlastRadius && Math.abs((other.pos.y || 0) - (p.pos.y || 0)) <= 2.5) {
-                                this.damageEnemy(other, Math.round(p.dmg * 0.75), true, true, false, false, false);
-                            }
-                        });
-                        p.life = 0;
-                    } else if (p.fromPlayer && !p.explosiveHit && !p.hasRicocheted && d.hasRicochetGyro) {
-                        const nearest = this.enemies
-                            .filter(en => en.hp > 0 && !p.hitSet.has(en) && (en.mindControlTimer || 0) <= 0 && en.pos.distanceTo(p.pos) <= 8.0)
-                            .sort((a, b) => a.pos.distanceTo(p.pos) - b.pos.distanceTo(p.pos))[0];
-                        if (nearest) {
-                            p.hasRicocheted = true;
-                            p.pos.addScaledVector(p.dir, -p.speed * dt * 1.5);
-                            p.dir.copy(nearest.pos.clone().sub(p.pos).setY(0).normalize());
-                            p.mesh.rotation.y = Math.atan2(p.dir.x, p.dir.z);
-                            p.dmg = Math.max(1, Math.round(p.dmg * 0.50));
-                            p.life = Math.max(p.life, 0.35);
-                            this.spawnBurstParticles(p.pos.clone().setY(1.0), 0xa3e635, 6);
-                        } else {
-                            p.life = 0;
-                        }
-                    } else {
-                        p.life = 0;
-                    }
-                }
-
-                if (p.life > 0 && this.mode === 'dungeon' && this.archEntities && (p.pos.y || 0) < 1.35 && !(swData && swData.ignoresWalls) && !this.isPointOnRamp(p.pos.x, p.pos.z, 0.5)) {
-                    for (const ae of this.archEntities) {
-                        if (ae.type === 'arch_platform' && p.pos.x >= ae.minX && p.pos.x <= ae.maxX && p.pos.z >= ae.minZ && p.pos.z <= ae.maxZ) {
-                            p.life = 0;
-                            this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0x38bdf8, 4);
-                            break;
-                        }
-                    }
-                }
-
-                if (p.life > 0 && this.archEntities && this.archEntities.length > 0 && !(swData && swData.ignoresWalls)) {
-                    for (let aIdx = this.archEntities.length - 1; aIdx >= 0; aIdx--) {
-                        const ae = this.archEntities[aIdx];
-                        if (Math.abs((p.pos.y || 0) - (ae.pos ? ae.pos.y : 0)) > 1.6) continue;
-
-                        if (ae.type === 'arch_oneway_shield' && !p.fromPlayer) {
-                            const dx = p.pos.x - ae.pos.x;
-                            const dz = p.pos.z - ae.pos.z;
-                            if (Math.hypot(dx, dz) <= ae.halfW) {
-                                const localZ = Math.abs(dx * Math.sin(-ae.angle) + dz * Math.cos(-ae.angle));
-                                if (localZ <= 0.48) {
-                                    p.life = 0;
-                                    this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0x22d3ee, 6);
-                                    break;
+                    // Allow Player Projectiles to Shoot & Break Unopened Chests!
+                    if (p.fromPlayer && p.life > 0 && this.interactables && this.interactables.length > 0) {
+                        for (let iIdx = this.interactables.length - 1; iIdx >= 0; iIdx--) {
+                            const inter = this.interactables[iIdx];
+                            if (inter && inter.isChest && !inter.opened && Math.abs((p.pos.y || 0) - (inter.pos.y || 0)) <= 1.6 && Math.hypot(p.pos.x - inter.pos.x, p.pos.z - inter.pos.z) <= 1.15) {
+                                p.life = 0;
+                                inter.hitsLeft = (inter.hitsLeft || 2) - 1;
+                                AudioEngine.sfx('anvil');
+                                this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 0.8, 0)), 0xfacc15, 8);
+                                if (inter.hitsLeft <= 0 && typeof inter.onInteract === 'function') {
+                                    inter.onInteract();
                                 }
+                                break;
                             }
-                        } else if (ae.type === 'arch_rotating_baffle') {
-                            const dx = p.pos.x - ae.pos.x;
-                            const dz = p.pos.z - ae.pos.z;
-                            if (Math.hypot(dx, dz) <= ae.halfSpan) {
-                                const cosA = Math.cos(ae.angle);
-                                const sinA = Math.sin(ae.angle);
-                                const lx = Math.abs(dx * cosA - dz * sinA);
-                                const lz = Math.abs(dx * sinA + dz * cosA);
-                                const halfT = (ae.bladeThick || 0.55) * 0.5;
-                                if ((lx <= ae.halfSpan && lz <= halfT) || (lz <= ae.halfSpan && lx <= halfT)) {
-                                    p.life = 0;
-                                    this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0xfacc15, 5);
-                                    break;
-                                }
-                            }
-                        } else if (ae.type === 'arch_destructible' && !(ae.isVaelenClone && !p.fromPlayer) && Math.hypot(p.pos.x - ae.pos.x, p.pos.z - ae.pos.z) <= 1.75) {
-                            ae.hitsLeft = Math.max(0, (ae.hitsLeft || 1) - 1);
-                            p.life = 0;
-                            if (window.Coop && Coop.isActive() && !p._fromCoopRemote) Coop.sendPropHit(ae);
-                            if (ae.pipFill) {
-                                ae.pipFill.scale.x = Math.max(0.01, ae.hitsLeft / Math.max(1, ae.maxHits));
-                            }
-                            this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), ae.coreColor || 0xf97316, 6);
-                            if (ae.hitsLeft <= 0) {
-                                if (typeof ae.onBreak === 'function') ae.onBreak();
-                                const cIdx = this.wallColliders.indexOf(ae.colBox);
-                                if (cIdx !== -1) this.wallColliders.splice(cIdx, 1);
-                                this.scene.remove(ae.mesh);
-                                this.archEntities.splice(aIdx, 1);
+                        }
+                    }
 
-                                if (!ae.suppressDefaultExplosion) {
-                                    AudioEngine.sfx('shotgun');
-                                    this.screenShake = Math.max(this.screenShake, 0.24 + (ae.tier || 1) * 0.05);
-                                    this.spawnSphereExplosionVisual(ae.pos, ae.blastRadius || 3.5, ae.coreColor || 0xf97316);
-                                    const blastDmg = typeof ae.customBlastDmg === 'number'
-                                        ? ae.customBlastDmg
-                                        : Math.round(d.abilityPhysDmg * (ae.dmgMult || 1.65));
+                    if (p.isBuzzsawProj && swData && swData.bouncingToPlayer) {
+                        const toPlayer = this.player.pos.clone().sub(p.pos).setY(0);
+                        if (toPlayer.length() <= 1.25) {
+                            swData.bouncingToPlayer = false;
+                            const targetEn = swData.lastBounceEnemy;
+                            if (targetEn && targetEn.hp > 0 && (targetEn.mindControlTimer || 0) <= 0 && targetEn.pos.distanceTo(this.player.pos) <= 16.5) {
+                                p.hitSet.delete(targetEn);
+                                p.dir.copy(targetEn.pos.clone().sub(p.pos).setY(0).normalize());
+                                p.life = 0.65;
+                                AudioEngine.sfx('dash');
+                                this.spawnBurstParticles(this.player.pos.clone().setY(1.1), 0x38bdf8, 6);
+                            } else {
+                                p.life = 0;
+                            }
+                        } else {
+                            p.dir.copy(toPlayer.normalize());
+                        }
+                    }
 
-                                    if ((!ae.isBossProp || ae.hurtsPlayerOnBreak) && !ae.noSelfDamage &&
-                                        Math.abs((this.player.pos.y || 0) - ae.pos.y) <= 2.2 &&
-                                        Math.hypot(this.player.pos.x - ae.pos.x, this.player.pos.z - ae.pos.z) <= ae.blastRadius) {
-                                        const selfBlast = ae.hurtsPlayerOnBreak
-                                            ? blastDmg
-                                            : Math.max(15, Math.round(this.player.maxHp * (0.12 + (ae.tier || 1) * 0.04)));
-                                        this.damagePlayer(selfBlast);
+                    // Run architectural & Bastion Cover OBB swept-segment hit checks BEFORE isPointInsideWall so bullets always damage cover!
+                    if (p.life > 0 && this.archEntities && this.archEntities.length > 0 && !(swData && swData.ignoresWalls)) {
+                        for (let aIdx = this.archEntities.length - 1; aIdx >= 0; aIdx--) {
+                            const ae = this.archEntities[aIdx];
+                            if (ae.pos && Math.abs((p.pos.y || 0) - ae.pos.y) > 2.2) continue;
+
+                            if (ae.type === 'arch_oneway_shield' && !p.fromPlayer) {
+                                const dx = p.pos.x - ae.pos.x;
+                                const dz = p.pos.z - ae.pos.z;
+                                if (Math.hypot(dx, dz) <= ae.halfW) {
+                                    const localZ = Math.abs(dx * Math.sin(-ae.angle) + dz * Math.cos(-ae.angle));
+                                    if (localZ <= 0.48) {
+                                        p.life = 0;
+                                        this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0x22d3ee, 6);
+                                        break;
                                     }
+                                }
+                            } else if (ae.type === 'arch_rotating_baffle') {
+                                const dx = p.pos.x - ae.pos.x;
+                                const dz = p.pos.z - ae.pos.z;
+                                if (Math.hypot(dx, dz) <= ae.halfSpan) {
+                                    const cosA = Math.cos(ae.angle);
+                                    const sinA = Math.sin(ae.angle);
+                                    const lx = Math.abs(dx * cosA - dz * sinA);
+                                    const lz = Math.abs(dx * sinA + dz * cosA);
+                                    const halfT = (ae.bladeThick || 0.55) * 0.5;
+                                    if ((lx <= ae.halfSpan && lz <= halfT) || (lz <= ae.halfSpan && lx <= halfT)) {
+                                        p.life = 0;
+                                        this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0xfacc15, 5);
+                                        break;
+                                    }
+                                }
+                            } else if (ae.type === 'arch_destructible' && !(ae.isVaelenClone && !p.fromPlayer)) {
+                                let hitProp = false;
+                                if (ae.isOrientedCover) {
+                                    // Swept 2D Segment vs Rotated OBB check so 100% of bullets hit reliably regardless of speed or angle
+                                    const cosA = Math.cos(ae.angle || 0);
+                                    const sinA = Math.sin(ae.angle || 0);
+                                    const dx0 = prevProjPos.x - ae.pos.x, dz0 = prevProjPos.z - ae.pos.z;
+                                    const dx1 = p.pos.x - ae.pos.x, dz1 = p.pos.z - ae.pos.z;
+                                    const x0 = dx0 * cosA - dz0 * sinA, z0 = dx0 * sinA + dz0 * cosA;
+                                    const x1 = dx1 * cosA - dz1 * sinA, z1 = dx1 * sinA + dz1 * cosA;
+                                    const hw = (ae.halfW || 1.9) + 0.16;
+                                    const hd = (ae.halfD || 0.46) + 0.16;
+                                    const sdx = x1 - x0, sdz = z1 - z0;
+                                    let tmin = 0, tmax = 1, valid = true;
+                                    if (Math.abs(sdx) < 1e-6) {
+                                        if (x0 < -hw || x0 > hw) valid = false;
+                                    } else {
+                                        let t1 = (-hw - x0) / sdx, t2 = (hw - x0) / sdx;
+                                        if (t1 > t2) { const tmp = t1; t1 = t2; t2 = tmp; }
+                                        tmin = Math.max(tmin, t1); tmax = Math.min(tmax, t2);
+                                        if (tmin > tmax) valid = false;
+                                    }
+                                    if (valid) {
+                                        if (Math.abs(sdz) < 1e-6) {
+                                            if (z0 < -hd || z0 > hd) valid = false;
+                                        } else {
+                                            let t1 = (-hd - z0) / sdz, t2 = (hd - z0) / sdz;
+                                            if (t1 > t2) { const tmp = t1; t1 = t2; t2 = tmp; }
+                                            tmin = Math.max(tmin, t1); tmax = Math.min(tmax, t2);
+                                            if (tmin > tmax) valid = false;
+                                        }
+                                    }
+                                    if (valid && tmin <= tmax) {
+                                        hitProp = true;
+                                        p.pos.lerpVectors(prevProjPos, p.pos, Math.max(0, tmin));
+                                    }
+                                } else if (Math.hypot(p.pos.x - ae.pos.x, p.pos.z - ae.pos.z) <= 1.75) {
+                                    hitProp = true;
+                                }
 
-                                    if (!ae.isVaelenClone && blastDmg > 0) {
-                                        this.enemies.slice().forEach(en => {
-                                            if (en.hp > 0 && Math.abs((en.pos.y || 0) - ae.pos.y) <= 1.6 && Math.hypot(en.pos.x - ae.pos.x, en.pos.z - ae.pos.z) <= ae.blastRadius) {
-                                                this.damageEnemy(en, blastDmg, false, true);
-                                                if (ae.tier === 3 && !ae.isPlayerBastionCover) {
-                                                    en.poisonTimer = Math.max(en.poisonTimer || 0, 6.0);
-                                                    en.poisonDps = Math.max(en.poisonDps || 0, Math.round(blastDmg * 0.35));
-                                                } else if (!en.isBoss || (en.stunImmuneTimer || 0) <= 0) {
-                                                    en.stunTimer = Math.max(en.stunTimer || 0, ae.stunDur || 1.8);
-                                                }
+                                if (hitProp) {
+                                    ae.hitsLeft = Math.max(0, (ae.hitsLeft || 1) - 1);
+                                    p.life = 0;
+                                    if (window.Coop && Coop.isActive() && !p._fromCoopRemote) Coop.sendPropHit(ae);
+                                    if (ae.pipFill) {
+                                        ae.pipFill.scale.x = Math.max(0.01, ae.hitsLeft / Math.max(1, ae.maxHits));
+                                    }
+                                    this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), ae.coreColor || 0xf97316, 6);
+                                    if (ae.hitsLeft <= 0) {
+                                        if (typeof ae.onBreak === 'function') ae.onBreak();
+                                        const cIdx = this.wallColliders.indexOf(ae.colBox);
+                                        if (cIdx !== -1) this.wallColliders.splice(cIdx, 1);
+                                        this.scene.remove(ae.mesh);
+                                        this.archEntities.splice(aIdx, 1);
+
+                                        if (!ae.suppressDefaultExplosion) {
+                                            AudioEngine.sfx('shotgun');
+                                            this.screenShake = Math.max(this.screenShake, 0.24 + (ae.tier || 1) * 0.05);
+                                            this.spawnSphereExplosionVisual(ae.pos, ae.blastRadius || 3.5, ae.coreColor || 0xf97316);
+                                            const blastDmg = typeof ae.customBlastDmg === 'number'
+                                                ? ae.customBlastDmg
+                                                : Math.round(d.abilityPhysDmg * (ae.dmgMult || 1.65));
+
+                                            if ((!ae.isBossProp || ae.hurtsPlayerOnBreak) && !ae.noSelfDamage &&
+                                                Math.abs((this.player.pos.y || 0) - ae.pos.y) <= 2.2 &&
+                                                Math.hypot(this.player.pos.x - ae.pos.x, this.player.pos.z - ae.pos.z) <= ae.blastRadius) {
+                                                const selfBlast = ae.hurtsPlayerOnBreak
+                                                    ? blastDmg
+                                                    : Math.max(15, Math.round(this.player.maxHp * (0.12 + (ae.tier || 1) * 0.04)));
+                                                this.damagePlayer(selfBlast);
                                             }
-                                        });
+
+                                            if (!ae.isVaelenClone && blastDmg > 0) {
+                                                this.enemies.slice().forEach(en => {
+                                                    if (en.hp > 0 && Math.abs((en.pos.y || 0) - ae.pos.y) <= 1.6 && Math.hypot(en.pos.x - ae.pos.x, en.pos.z - ae.pos.z) <= ae.blastRadius) {
+                                                        this.damageEnemy(en, blastDmg, false, true);
+                                                        if (ae.tier === 3 && !ae.isPlayerBastionCover) {
+                                                            en.poisonTimer = Math.max(en.poisonTimer || 0, 6.0);
+                                                            en.poisonDps = Math.max(en.poisonDps || 0, Math.round(blastDmg * 0.35));
+                                                        } else if (!en.isBoss || (en.stunImmuneTimer || 0) <= 0) {
+                                                            en.stunTimer = Math.max(en.stunTimer || 0, ae.stunDur || 1.8);
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
                                     }
+                                    break;
                                 }
                             }
-                            break;
                         }
                     }
-                }
 
-                if (p.fromPlayer && p.life > 0 && !(swData && swData.bouncingToPlayer)) {
+                    if (p.life > 0 && !(swData && swData.ignoresWalls) && this.isPointInsideWall(p.pos, 0, null, true)) {
+                        if (p.isHarpoonProj && swData) {
+                            AudioEngine.sfx('anvil');
+                            AudioEngine.sfx('dash');
+                            this.player.movementSkillGraceTimer = Math.max(this.player.movementSkillGraceTimer || 0, 0.45);
+                            const curY = this.player.pos.y || 0;
+                            const pullBack = p.pos.clone().addScaledVector(p.dir, -1.05);
+                            const safeWallPt = this.findSafeOpenSpot(pullBack.x, pullBack.z, 0.85, curY);
+                            const destY = this.mode === 'dungeon' ? this.getFloorElevationAt(safeWallPt.x, safeWallPt.z, curY, curY >= 4.5) : 0;
+                            const destVec = new THREE.Vector3(safeWallPt.x, destY, safeWallPt.z);
+                            const startPos = this.player.pos.clone();
+                            const dist = startPos.distanceTo(destVec);
+                            const grappleDur = Math.max(0.12, Math.min(0.28, dist / 55.0));
+
+                            const cableGeo = new THREE.BufferGeometry().setFromPoints([
+                                startPos.clone().add(new THREE.Vector3(0, 1.15, 0)),
+                                p.pos.clone().add(new THREE.Vector3(0, 1.15, 0))
+                            ]);
+                            const cableLine = new THREE.Line(cableGeo, new THREE.LineBasicMaterial({ color: 0xf43f5e }));
+                            cableLine.frustumCulled = false;
+                            this.scene.add(cableLine);
+
+                            this.player.dashActiveTimer = grappleDur + 0.06;
+                            this.player.assassinWarpArc = {
+                                start: startPos,
+                                dest: destVec,
+                                elapsed: 0,
+                                duration: grappleDur,
+                                onArrive: () => {
+                                    this.scene.remove(cableLine);
+                                    this.spawnBurstParticles(destVec.clone().setY(destY + 1.0), 0xf43f5e, 14);
+                                }
+                            };
+                            const hSlot = this.state.hotbar.indexOf('berserkTether');
+                            if (hSlot !== -1 && this.player.skillCooldowns[hSlot] > 0) {
+                                this.player.skillCooldowns[hSlot] *= 0.60;
+                            }
+                            this.spawnFloatingText(p.pos, 'HARPOON WALL-GRAPPLE (-40% CD)!', '#fb7185', 'text-xs');
+                            p.life = 0;
+                        } else if (this.mode === 'dungeon' && p.isBuzzsawProj) {
+                            AudioEngine.sfx('hit');
+                            this.spawnBurstParticles(p.pos.clone().setY(1.1), swData.sawCol || 0xf43f5e, 14);
+                            p.life = 0;
+                        } else if (swData && swData.aoeBlastRadius > 0) {
+                            AudioEngine.sfx('shotgun');
+                            this.spawnSphereExplosionVisual(p.pos, swData.aoeBlastRadius, 0xf97316);
+                            this.enemies.slice().forEach(other => {
+                                if (other.hp > 0 && (other.mindControlTimer || 0) <= 0 && Math.hypot(other.pos.x - p.pos.x, other.pos.z - p.pos.z) <= swData.aoeBlastRadius && Math.abs((other.pos.y || 0) - (p.pos.y || 0)) <= 2.5) {
+                                    this.damageEnemy(other, Math.round(p.dmg * 0.75), true, true, false, false, false);
+                                }
+                            });
+                            p.life = 0;
+                        } else if (p.fromPlayer && !p.explosiveHit && !p.hasRicocheted && d.hasRicochetGyro) {
+                            const nearest = this.enemies
+                                .filter(en => en.hp > 0 && !p.hitSet.has(en) && (en.mindControlTimer || 0) <= 0 && en.pos.distanceTo(p.pos) <= 8.0)
+                                .sort((a, b) => a.pos.distanceTo(p.pos) - b.pos.distanceTo(p.pos))[0];
+                            if (nearest) {
+                                p.hasRicocheted = true;
+                                p.pos.addScaledVector(p.dir, -p.speed * dt * 1.5);
+                                p.dir.copy(nearest.pos.clone().sub(p.pos).setY(0).normalize());
+                                p.mesh.rotation.y = Math.atan2(p.dir.x, p.dir.z);
+                                p.dmg = Math.max(1, Math.round(p.dmg * 0.50));
+                                p.life = Math.max(p.life, 0.35);
+                                this.spawnBurstParticles(p.pos.clone().setY(1.0), 0xa3e635, 6);
+                            } else {
+                                p.life = 0;
+                            }
+                        } else {
+                            p.life = 0;
+                        }
+                    }
+
+                    if (p.life > 0 && this.mode === 'dungeon' && this.archEntities && (p.pos.y || 0) < 1.35 && !(swData && swData.ignoresWalls) && !this.isPointOnRamp(p.pos.x, p.pos.z, 0.5)) {
+                        for (const ae of this.archEntities) {
+                            if (ae.type === 'arch_platform' && p.pos.x >= ae.minX && p.pos.x <= ae.maxX && p.pos.z >= ae.minZ && p.pos.z <= ae.maxZ) {
+                                p.life = 0;
+                                this.spawnBurstParticles(p.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0x38bdf8, 4);
+                                break;
+                            }
+                        }
+                    }
+
+                    if (p.fromPlayer && p.life > 0 && !(swData && swData.bouncingToPlayer)) {
                     for (const en of this.enemies) {
                         const hitPad = p.isBuzzsawProj ? 0.50 : 0.15;
                         if (!p.hitSet.has(en) && Math.abs((p.pos.y || 0) - (en.pos.y || 0)) <= 1.45 && (en.mindControlTimer || 0) <= 0 && this.isPointHittingEnemy(p.pos, en, hitPad)) {
@@ -29662,7 +29770,7 @@ const LORE_ENTRIES = [
 
                     getSkillUpgradeCost(currentRank) {
             // Stepped TP curve: R1 (1 TP) & R2 (2 TP) for Sec 1-3; R3 (7 TP) for Sec 4-6; R4 (16 TP) for Sec 7-9; R5 (32 TP) for Hard Mode 1-3!
-            return [1, 2, 7, 16, 32][Math.max(0, Math.min(4, currentRank))] || 32;
+            return [1, 2, 7, 20, 38][Math.max(0, Math.min(4, currentRank))] || 32;
         },
 
         assignPassiveSlot(skillId, slotIdx) {
@@ -29851,7 +29959,7 @@ const LORE_ENTRIES = [
                 return;
             }
             st.cores.ampCore -= 20;
-            st.skillPts -= 85;
+            st.skillPts -= 90;
             st.gold -= 45000;
             st.skills[skillId] = 7;
             AudioEngine.sfx('levelup');
@@ -30155,7 +30263,7 @@ const LORE_ENTRIES = [
                     const rs = Game.getWeaponRealStats(item, isSecondarySlot);
                     const attCount = item.attachments ? ['optic', 'barrel', 'mag', 'underbarrel'].filter(k => item.attachments[k]).length : 0;
                     const hasBlessing = Boolean(item.attachments && item.attachments.blessing);
-                    const secNote = (isSecondarySlot && !arch.isSidearmSpecialist && !(Game.getInstalledAugmentCounts().proto_akimbo_link > 0)) ? ' (-35% 2°)' : (isSecondarySlot && arch.isSidearmSpecialist ? ' (100% Sidearm)' : '');
+                    const secNote = (isSecondarySlot && !(Game.getInstalledAugmentCounts().proto_akimbo_link > 0)) ? (arch.isSidearmSpecialist ? ' (-9% Dmg 2°)' : ' (-35% Dmg 2°)') : '';
 
                     return `
             <div class="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-left mt-2 bg-slate-950/90 p-3 border ${item.isTranscended ? 'border-yellow-400/80' : (item.isNeo ? 'border-fuchsia-500/80' : 'border-slate-800')} w-full">
@@ -30505,6 +30613,63 @@ const LORE_ENTRIES = [
                 this.renderDevTestDrawer();
             },
 
+            devGrantSelectedResource() {
+                const typeEl = document.getElementById('dev-res-type');
+                const qtyEl = document.getElementById('dev-res-qty');
+                const rType = (typeEl && typeEl.value) || this.devGrantType || 'gold';
+                const qty = Math.max(1, parseInt(qtyEl && qtyEl.value, 10) || this.devGrantQty || 100);
+                this.devGrantType = rType;
+                this.devGrantQty = qty;
+                const st = Game.state;
+
+                if (rType === 'gold') st.gold += qty;
+                else if (rType === 'scrap') st.soulScrap = (st.soulScrap || 0) + qty;
+                else if (rType === 'tp') st.skillPts += qty;
+                else if (rType === 'sp') st.statPts += qty;
+                else if (rType === 'parts') Object.keys(GUN_PARTS_META).forEach(k => { st.gunParts[k] = (st.gunParts[k] || 0) + qty; });
+                else if (rType === 'mats') Object.keys(ATTACHMENT_MATS_META).forEach(k => { st.attMats[k] = (st.attMats[k] || 0) + qty; });
+                else if (rType === 'cores') Object.keys(CYBER_CORES_META).forEach(k => { st.cores[k] = (st.cores[k] || 0) + qty; });
+                else if (rType === 'ascCores') {
+                    st.cores.neoCore = (st.cores.neoCore || 0) + qty;
+                    st.cores.ampCore = (st.cores.ampCore || 0) + qty;
+                    st.cores.fusionCore = (st.cores.fusionCore || 0) + qty;
+                } else if (rType === 'allMats') {
+                    Object.keys(GUN_PARTS_META).forEach(k => { st.gunParts[k] = (st.gunParts[k] || 0) + qty; });
+                    Object.keys(ATTACHMENT_MATS_META).forEach(k => { st.attMats[k] = (st.attMats[k] || 0) + qty; });
+                    Object.keys(CYBER_CORES_META).forEach(k => { st.cores[k] = (st.cores[k] || 0) + qty; });
+                    st.cores.neoCore = (st.cores.neoCore || 0) + qty;
+                    st.cores.ampCore = (st.cores.ampCore || 0) + qty;
+                    st.cores.fusionCore = (st.cores.fusionCore || 0) + qty;
+                } else if (rType === 'levels') {
+                    st.level += qty;
+                    st.statPts += qty * 5;
+                    st.skillPts += qty;
+                } else if (rType === 'pots') {
+                    st.reserveHpPots = (st.reserveHpPots || 0) + qty;
+                    st.reserveMpPots = (st.reserveMpPots || 0) + qty;
+                    st.reserveStamPots = (st.reserveStamPots || 0) + qty;
+                    Game.autoLoadBeltFromReserve();
+                }
+
+                this.RefreshDevState();
+                Game.spawnFloatingText(Game.player.pos, `DEV GRANTED: +${qty.toLocaleString()} [${rType.toUpperCase()}]`, '#34d399', 'text-xs', true);
+            },
+
+            devClearFloorEnemies() {
+                if (Game.mode !== 'dungeon') return;
+                Game.enemies.slice().forEach(en => {
+                    if (!en.isDummy) Game.handleEnemyDeath(en);
+                });
+                this.renderDevTestDrawer();
+            },
+
+            devSpawnTestChest(rarity) {
+                const fwd = new THREE.Vector3(Math.sin(Game.player.rotY), 0, Math.cos(Game.player.rotY));
+                const pt = Game.player.pos.clone().addScaledVector(fwd, 3.2);
+                Game.spawnChest(pt.x, pt.z, rarity);
+                AudioEngine.sfx('loot');
+            },
+
             renderDevTestDrawer() {
                 this.ensureHudTestButton();
                 const drawer = document.getElementById('dev-test-drawer');
@@ -30523,63 +30688,120 @@ const LORE_ENTRIES = [
                 const selLayoutName = layoutList[selId] || `Layout #${selId}`;
                 const tierTag = selId <= 13 ? 'SIMPLE' : 'COMPLEX';
 
+                const tab = this.devTab || 'grants';
+                const grantType = this.devGrantType || 'gold';
+                const grantQty = this.devGrantQty || 1000;
+                const protoCount = SOUL_WELL_UPGRADES.filter(u => u.isProto).length;
+
                 drawer.innerHTML = `
                     <div class="flex justify-between items-center border-b border-emerald-800 pb-1.5">
                         <span class="font-cinzel font-black text-emerald-300 tracking-wider">DEV SANDBOX [TEST]</span>
                         <button onclick="UI.toggleDevTestDrawer()" class="arpg-btn px-2 py-0.5 text-[10px] text-rose-300">✕</button>
                     </div>
-                    <button onclick="Game.instantReturnToHub(); UI.renderDevTestDrawer();" class="arpg-btn-gold py-1.5 text-[10px] w-full font-extrabold border-sky-300" ${!inDungeon ? 'disabled' : ''}>
-                        INSTANT LOBBY RECALL (NO DEATH / NO REWARDS)
-                    </button>
-                    <div class="border-y border-slate-800 py-1.5 flex flex-col gap-1 bg-slate-950/90 px-2">
-                        <div class="flex justify-between items-center text-[9px] font-cinzel font-bold">
-                            <span class="text-cyan-300">LAYOUT TESTER (0–39):</span>
-                            <span class="px-1.5 py-0.2 bg-sky-950 text-sky-200 border border-sky-500/60">ID: ${selId} [${tierTag}]</span>
+
+                    <div class="grid grid-cols-3 gap-1 text-[10px] font-cinzel font-bold">
+                        <button onclick="UI.devTab='grants'; UI.renderDevTestDrawer();" class="py-1 border ${tab === 'grants' ? 'bg-emerald-700 text-white border-emerald-300' : 'bg-slate-900 text-slate-400 border-slate-700'}">GRANTS</button>
+                        <button onclick="UI.devTab='world'; UI.renderDevTestDrawer();" class="py-1 border ${tab === 'world' ? 'bg-sky-700 text-white border-sky-300' : 'bg-slate-900 text-slate-400 border-slate-700'}">WORLD</button>
+                        <button onclick="UI.devTab='unlocks'; UI.renderDevTestDrawer();" class="py-1 border ${tab === 'unlocks' ? 'bg-fuchsia-700 text-white border-fuchsia-300' : 'bg-slate-900 text-slate-400 border-slate-700'}">UNLOCKS</button>
+                    </div>
+
+                    ${tab === 'grants' ? `
+                        <div class="bg-slate-950/90 p-2.5 border border-emerald-700/60 flex flex-col gap-2">
+                            <div class="text-[10px] font-cinzel font-bold text-emerald-300">GRANT CURRENCY / ITEMS (CUSTOM QTY)</div>
+                            <select id="dev-res-type" onchange="UI.devGrantType=this.value;" class="bg-slate-900 border border-sky-700 text-[11px] font-cinzel font-bold text-white px-2 py-1 w-full">
+                                <option value="gold" ${grantType === 'gold' ? 'selected' : ''}>Credits (₵)</option>
+                                <option value="scrap" ${grantType === 'scrap' ? 'selected' : ''}>Alloy Scrap (S)</option>
+                                <option value="tp" ${grantType === 'tp' ? 'selected' : ''}>Tech Points (TP)</option>
+                                <option value="sp" ${grantType === 'sp' ? 'selected' : ''}>Spec Points (SP)</option>
+                                <option value="parts" ${grantType === 'parts' ? 'selected' : ''}>All Gun Parts (T1–T4)</option>
+                                <option value="mats" ${grantType === 'mats' ? 'selected' : ''}>All Attachment Mats</option>
+                                <option value="cores" ${grantType === 'cores' ? 'selected' : ''}>All 4 Cyber-Cores</option>
+                                <option value="ascCores" ${grantType === 'ascCores' ? 'selected' : ''}>Neo / Amp / Fusion Cores</option>
+                                <option value="allMats" ${grantType === 'allMats' ? 'selected' : ''}>All Parts + Mats + All Cores</option>
+                                <option value="levels" ${grantType === 'levels' ? 'selected' : ''}>Operative Levels (+Lvl)</option>
+                                <option value="pots" ${grantType === 'pots' ? 'selected' : ''}>Belt + Reserve Stims</option>
+                            </select>
+                            <div class="flex gap-1.5 items-center">
+                                <input id="dev-res-qty" type="number" min="1" value="${grantQty}" onchange="UI.devGrantQty=Math.max(1, parseInt(this.value,10)||1);" class="flex-1 bg-slate-900 border border-emerald-500/80 text-white font-cinzel font-bold text-xs px-2 py-1 focus:outline-none w-24"/>
+                                <button onclick="UI.devGrantSelectedResource()" class="arpg-btn-gold px-3.5 py-1 text-[11px] font-extrabold">GRANT</button>
+                            </div>
+                            <div class="grid grid-cols-6 gap-1 text-[9px]">
+                                ${[1, 10, 50, 500, 5000, 50000].map(q => `
+                                    <button onclick="UI.devGrantQty=${q}; document.getElementById('dev-res-qty').value=${q};" class="arpg-btn py-0.5 text-sky-300 font-bold">${q >= 1000 ? (q / 1000) + 'k' : q}</button>
+                                `).join('')}
+                            </div>
                         </div>
-                        <div class="text-[10px] font-bold text-amber-300 truncate">${selLayoutName}</div>
-                        <div class="grid grid-cols-3 gap-1 text-[10px] mt-0.5">
-                            <button onclick="UI.devStepLayoutId(-1)" class="arpg-btn py-1 text-sky-300 font-bold" ${selId <= 0 ? 'disabled' : ''}>-Prev</button>
-                            <button onclick="UI.devStepLayoutId(1)" class="arpg-btn py-1 text-sky-300 font-bold" ${selId >= 39 ? 'disabled' : ''}>Next+</button>
-                            <button onclick="UI.devLoadSelectedLayout()" class="arpg-btn-gold py-1 text-[10px] font-extrabold">LOAD #${selId}</button>
+
+                        <div class="bg-slate-950/90 p-2 border border-slate-800 flex flex-col gap-1.5">
+                            <div class="text-[9px] font-cinzel font-bold text-amber-300">SPAWN TEST CHEST AT PLAYER</div>
+                            <div class="grid grid-cols-3 gap-1 text-[9px]">
+                                <button onclick="UI.devSpawnTestChest('common')" class="arpg-btn py-1 text-slate-200">Common</button>
+                                <button onclick="UI.devSpawnTestChest('purple_gold')" class="arpg-btn py-1 text-fuchsia-300 border-fuchsia-500/70">Purple-Gold</button>
+                                <button onclick="UI.devSpawnTestChest('silver_gold')" class="arpg-btn py-1 text-amber-300 border-amber-400/70">Silver-Gold</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="text-[10px] text-slate-300 bg-slate-950/90 p-1.5 border border-slate-800 flex justify-between">
-                        <span>Rank ${rInfo.rankNumber}/${RANK_TIERS.length} (${rInfo.title})</span>
-                        <span class="text-cyan-300 font-bold">Grid: ${dims.cols}x${dims.rows}</span>
-                    </div>
-                    <div class="border-b border-slate-800 pb-1.5 flex flex-col gap-1">
-                        <div class="flex justify-between items-center text-[9px] font-cinzel text-amber-300 font-bold">
-                            <span>FLOOR STEPPER:</span>
-                            <span class="text-white">${floorTxt}</span>
+
+                        <div class="grid grid-cols-2 gap-1 text-[10px]">
+                            <button onclick="Game.resetPlayerCombatState(); UI.updateHUD(); AudioEngine.sfx('potion');" class="arpg-btn py-1 text-emerald-300">Full Heal / Ammo</button>
+                            <button onclick="['weapon','secondary','armor','helm','relic','boots'].forEach(s=>{const it=Game.state.equipped[s]; if(it){it.mk=7; Game.recalculateItemStats(it);}}); UI.RefreshDevState();" class="arpg-btn py-1 text-yellow-300">Equipped → Mk.VII</button>
                         </div>
-                        <div class="grid grid-cols-3 gap-1 text-[10px]">
-                            <button onclick="UI.devStepFloor(-1)" class="arpg-btn py-1 text-sky-300" ${!inDungeon || Game.dungeonFloor <= 1 ? 'disabled' : ''}>-1 Flr</button>
-                            <button onclick="UI.devStepFloor(1)" class="arpg-btn py-1 text-emerald-300" ${!inDungeon || Game.dungeonFloor >= Game.maxDungeonFloors ? 'disabled' : ''}>+1 Flr</button>
-                            <button onclick="UI.devStepFloor('boss')" class="arpg-btn py-1 text-rose-300 border-rose-500/70" ${!inDungeon ? 'disabled' : ''}>Boss Flr</button>
+                    ` : (tab === 'world' ? `
+                        <button onclick="Game.instantReturnToHub(); UI.renderDevTestDrawer();" class="arpg-btn-gold py-1.5 text-[10px] w-full font-extrabold border-sky-300" ${!inDungeon ? 'disabled' : ''}>
+                            INSTANT LOBBY RECALL (NO DEATH)
+                        </button>
+                        <button onclick="UI.devClearFloorEnemies()" class="arpg-btn py-1.5 text-[10px] text-rose-300 border-rose-500/70 w-full font-bold" ${!inDungeon ? 'disabled' : ''}>
+                            CLEAR ALL HOSTILES ON FLOOR
+                        </button>
+                        <div class="border-y border-slate-800 py-1.5 flex flex-col gap-1 bg-slate-950/90 px-2">
+                            <div class="flex justify-between items-center text-[9px] font-cinzel font-bold">
+                                <span class="text-cyan-300">LAYOUT TESTER (0–39):</span>
+                                <span class="px-1.5 py-0.2 bg-sky-950 text-sky-200 border border-sky-500/60">ID: ${selId} [${tierTag}]</span>
+                            </div>
+                            <div class="text-[10px] font-bold text-amber-300 truncate">${selLayoutName}</div>
+                            <div class="grid grid-cols-3 gap-1 text-[10px] mt-0.5">
+                                <button onclick="UI.devStepLayoutId(-1)" class="arpg-btn py-1 text-sky-300 font-bold" ${selId <= 0 ? 'disabled' : ''}>-Prev</button>
+                                <button onclick="UI.devStepLayoutId(1)" class="arpg-btn py-1 text-sky-300 font-bold" ${selId >= 39 ? 'disabled' : ''}>Next+</button>
+                                <button onclick="UI.devLoadSelectedLayout()" class="arpg-btn-gold py-1 text-[10px] font-extrabold">LOAD #${selId}</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-1.5 text-[10px]">
-                        <button onclick="Game.state.gold+=25000; UI.RefreshDevState();" class="arpg-btn py-1 text-amber-300">+25,000₵ Credits</button>
-                        <button onclick="Game.state.soulScrap=(Game.state.soulScrap||0)+5000; UI.RefreshDevState();" class="arpg-btn py-1 text-teal-300">+5,000 Alloy Scrap</button>
-                        <button onclick="Game.state.statPts+=15; Game.state.skillPts+=15; UI.RefreshDevState();" class="arpg-btn py-1 text-cyan-300">+15 Spec & +15 TP</button>
-                        <button onclick="Object.keys(GUN_PARTS_META).forEach(k=>Game.state.gunParts[k]=(Game.state.gunParts[k]||0)+25); Object.keys(ATTACHMENT_MATS_META).forEach(k=>Game.state.attMats[k]=(Game.state.attMats[k]||0)+25); UI.RefreshDevState();" class="arpg-btn py-1 text-orange-300">+25 All Parts/Mods</button>
-                        <button onclick="Object.keys(CYBER_CORES_META).forEach(k=>Game.state.cores[k]=(Game.state.cores[k]||0)+10); Game.state.cores.neoCore=(Game.state.cores.neoCore||0)+10; Game.state.cores.ampCore=(Game.state.cores.ampCore||0)+10; Game.state.cores.fusionCore=(Game.state.cores.fusionCore||0)+10; UI.RefreshDevState();" class="arpg-btn py-1 text-fuchsia-300 col-span-2">+10 All Cyber, Neo, Amp & Fusion Cores</button>
-                    </div>
-                    <div class="border-t border-slate-800 pt-1.5 flex flex-col gap-1">
-                        <span class="text-[9px] font-cinzel text-sky-300 font-bold">RANK STEPPER (AUGMENT MATRIX SIZE):</span>
-                        <div class="grid grid-cols-4 gap-1 text-[10px]">
-                            <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)-5; UI.RefreshDevState();" class="arpg-btn py-1 text-rose-300">-5 Rnk</button>
-                            <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)-1; UI.RefreshDevState();" class="arpg-btn py-1 text-rose-200">-1 Rnk</button>
-                            <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)+1; UI.RefreshDevState();" class="arpg-btn py-1 text-emerald-200">+1 Rnk</button>
-                            <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)+5; UI.RefreshDevState();" class="arpg-btn py-1 text-emerald-300">+5 Rnk</button>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center text-[9px] font-cinzel text-amber-300 font-bold">
+                                <span>FLOOR STEPPER:</span>
+                                <span class="text-white">${floorTxt}</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-1 text-[10px]">
+                                <button onclick="UI.devStepFloor(-1)" class="arpg-btn py-1 text-sky-300" ${!inDungeon || Game.dungeonFloor <= 1 ? 'disabled' : ''}>-1 Flr</button>
+                                <button onclick="UI.devStepFloor(1)" class="arpg-btn py-1 text-emerald-300" ${!inDungeon || Game.dungeonFloor >= Game.maxDungeonFloors ? 'disabled' : ''}>+1 Flr</button>
+                                <button onclick="UI.devStepFloor('boss')" class="arpg-btn py-1 text-rose-300 border-rose-500/70" ${!inDungeon ? 'disabled' : ''}>Boss Flr</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="border-t border-slate-800 pt-1.5 flex flex-col gap-1 text-[10px]">
-                        <button onclick="UI.unlockAllLoreForReading(); if(!Game.state.viewedCutscenes)Game.state.viewedCutscenes={}; BIOMES.forEach((_,i)=>{Game.state.viewedCutscenes['sec_'+i+'_norm']=true;Game.state.viewedCutscenes['sec_'+i+'_hard']=true;}); Game.state.viewedCutscenes['sec_9_tensor']=true; UI.RefreshDevState();" class="arpg-btn py-1 text-emerald-300 w-full">Decrypt All Lore & Cutscenes</button>
-                        <button onclick="SOUL_WELL_UPGRADES.filter(u=>u.isProto).forEach(u=>Game.state.soulWell[u.id]=1); UI.RefreshDevState();" class="arpg-btn py-1 text-rose-300 border-rose-500/70 w-full">Unlock All 19 Proto-Augments</button>
-                        <button onclick="Game.state.unlockedBiomes=BIOMES.length; BIOMES.forEach((_,i)=>{Game.state.clearedBiomes[i]=true; Game.state.clearedHardBiomes[i]=true;}); if(Game.mode==='sanctuary') Game.buildSanctuaryScene(); UI.RefreshDevState();" class="arpg-btn py-1 text-purple-300 w-full">Unlock All Sectors & Tensor Rift</button>
-                        <button onclick="UI.devUnlockAllAchievements();" class="arpg-btn py-1 text-yellow-300 border-yellow-500/70 w-full">Unlock All Achievements & Cosmetics</button>
-                    </div>
+                    ` : `
+                        <div class="text-[10px] text-slate-300 bg-slate-950/90 p-1.5 border border-slate-800 flex justify-between">
+                            <span>Rank ${rInfo.rankNumber}/${RANK_TIERS.length} (${rInfo.title})</span>
+                            <span class="text-cyan-300 font-bold">Grid: ${dims.cols}x${dims.rows}</span>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[9px] font-cinzel text-sky-300 font-bold">RANK STEPPER (AUGMENT MATRIX SIZE):</span>
+                            <div class="grid grid-cols-4 gap-1 text-[10px]">
+                                <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)-5; UI.RefreshDevState();" class="arpg-btn py-1 text-rose-300">-5 Rnk</button>
+                                <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)-1; UI.RefreshDevState();" class="arpg-btn py-1 text-rose-200">-1 Rnk</button>
+                                <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)+1; UI.RefreshDevState();" class="arpg-btn py-1 text-emerald-200">+1 Rnk</button>
+                                <button onclick="Game.state.debugRankOffset=(Game.state.debugRankOffset||0)+5; UI.RefreshDevState();" class="arpg-btn py-1 text-emerald-300">+5 Rnk</button>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1 text-[10px]">
+                            <button onclick="SOUL_WELL_UPGRADES.filter(u=>u.isProto||u.isSpecialCore).forEach(u=>Game.state.soulWell[u.id]=1); UI.RefreshDevState();" class="arpg-btn py-1 text-rose-300 border-rose-500/70 w-full">Unlock All ${protoCount} Proto-Augments + Core</button>
+                            <button onclick="SOUL_WELL_UPGRADES.filter(u=>!u.isProto&&!u.isSpecialCore).forEach(u=>Game.state.soulWell[u.id]=u.maxLvl); UI.RefreshDevState();" class="arpg-btn py-1 text-amber-300 w-full">Max Base Cyber-Augments (7x Each)</button>
+                            <div class="grid grid-cols-3 gap-1">
+                                <button onclick="SKILL_TREE.forEach(s=>Game.state.skills[s.id]=5); UI.RefreshDevState();" class="arpg-btn py-1 text-sky-300">Skills R5</button>
+                                <button onclick="SKILL_TREE.forEach(s=>Game.state.skills[s.id]=6); UI.RefreshDevState();" class="arpg-btn py-1 text-cyan-300">Skills R6</button>
+                                <button onclick="SKILL_TREE.forEach(s=>Game.state.skills[s.id]=7); UI.RefreshDevState();" class="arpg-btn py-1 text-rose-300">Skills R7</button>
+                            </div>
+                            <button onclick="UI.unlockAllLoreForReading(); if(!Game.state.viewedCutscenes)Game.state.viewedCutscenes={}; BIOMES.forEach((_,i)=>{Game.state.viewedCutscenes['sec_'+i+'_norm']=true;Game.state.viewedCutscenes['sec_'+i+'_hard']=true;}); Game.state.viewedCutscenes['sec_9_tensor']=true; UI.RefreshDevState();" class="arpg-btn py-1 text-emerald-300 w-full">Decrypt All Lore & Cutscenes</button>
+                            <button onclick="Game.state.unlockedBiomes=BIOMES.length; BIOMES.forEach((_,i)=>{Game.state.clearedBiomes[i]=true; Game.state.clearedHardBiomes[i]=true;}); if(Game.mode==='sanctuary') Game.buildSanctuaryScene(); UI.RefreshDevState();" class="arpg-btn py-1 text-purple-300 w-full">Unlock All Sectors (Norm/HM) & Tensor</button>
+                            <button onclick="UI.devUnlockAllAchievements();" class="arpg-btn py-1 text-yellow-300 border-yellow-500/70 w-full">Unlock All Achievements & Cosmetics</button>
+                        </div>
+                    `)}
                 `;
             },
 
@@ -31364,7 +31586,7 @@ const LORE_ENTRIES = [
                                 <div class="grid grid-cols-1 gap-2.5 overflow-y-auto flex-1 pr-1">
                                     ${[
                             { key: 'weapon', label: '1° PRIMARY WEAPON (100% OUTPUT)', isSec: false },
-                            { key: 'secondary', label: '2° SECONDARY BACKUP (PISTOLS: 100% / OTHERS: -35% DMG)', isSec: true },
+                            { key: 'secondary', label: '2° SECONDARY BACKUP ((91/65)% OUTPUT (PISTOLS/OTHERS))', isSec: true },
                             { key: 'armor', label: 'EXO-SUIT BODY ARMOR', isSec: false },
                             { key: 'helm', label: 'OPTIC HUD VISOR', isSec: false },
                             { key: 'relic', label: 'NEURAL TAC-CHIP', isSec: false },
@@ -33010,7 +33232,7 @@ const LORE_ENTRIES = [
               return;
           }
           st.cores.ampCore -= 4;
-          st.skillPts -= 52;
+          st.skillPts -= 55;
           st.gold -= 18000;
           st.skills[skillId] = 6;
           AudioEngine.sfx('levelup');
@@ -33669,7 +33891,7 @@ const LORE_ENTRIES = [
                 const activeBuffsEl = document.getElementById('hud-active-buffs');
                 if (activeBuffsEl) {
                     const pills = [];
-                    if (p.quickDrawTimer > 0) pills.push(`<span class="px-1.5 py-0.5 bg-emerald-950 border border-emerald-400 text-emerald-300 text-[9px] font-cinzel font-bold">⚡ QUICK-DRAW ${p.quickDrawTimer.toFixed(1)}s</span>`);
+                    if (p.sidearmStamCd > 0) pills.push(`<span class="px-1.5 py-0.5 bg-slate-900 border border-emerald-700 text-emerald-300 text-[9px] font-cinzel font-bold">🔫 SIDEARM STAM CD ${p.sidearmStamCd.toFixed(1)}s</span>`);
                     if (p.overclockTimer > 0) pills.push(`<span class="px-1.5 py-0.5 bg-amber-950 border border-amber-400 text-amber-200 text-[9px] font-cinzel font-bold">💉 STIM TEMPO ${p.overclockTimer.toFixed(1)}s</span>`);
                     if (p.stealthTimer > 0) pills.push(`<span class="px-1.5 py-0.5 bg-cyan-950 border border-cyan-400 text-cyan-200 text-[9px] font-cinzel font-bold">👁️ CAMO ${p.stealthTimer.toFixed(1)}s</span>`);
                     if (p.chronoAnchorTimer > 0) pills.push(`<span class="px-1.5 py-0.5 bg-teal-950 border border-teal-400 text-teal-200 text-[9px] font-cinzel font-bold">⏳ ANCHOR ${p.chronoAnchorTimer.toFixed(1)}s</span>`);
@@ -35208,7 +35430,7 @@ const LORE_ENTRIES = [
                     </svg>
                     <div>
                         <div style="font-weight:700;color:#7dd3fc;letter-spacing:.1em;margin-bottom:4px;">2. GUNPLAY, SIDEARM SPECIALISTS, SHIELD & STAMINA</div>
-                        <div>Rifles and Snipers reward stationary burst-firing and <b>Right-Click ADS</b>, whereas SMGs maintain tight accuracy while moving. Swap weapons with <b>X</b> or <b>Scroll Wheel</b>: <b>Pistols suffer 0% penalty in the 2° Secondary slot</b> (other classes take -35% Dmg / -20% Mag) and grant a 2s <b>Quick-Draw</b> (+25% Crit & Reload) on swap! Your <b>Armor Shield</b> absorbs 100% of damage before Health and recharges after 4s out of combat.</div>
+                        <div>Rifles and Snipers reward stationary burst-firing and <b>Right-Click ADS</b>, whereas SMGs maintain tight accuracy while moving. Swap weapons with <b>X</b> or <b>Scroll Wheel</b>: <b>Pistols suffer only 25% of the 2° Secondary slot penalty (-9% Dmg / -5% Mag)</b> (other classes take -35% Dmg / -20% Mag) and 2° Pistol kills refund <b>10% Stamina</b> (7s CD)! Your <b>Armor Shield</b> absorbs 100% of damage before Health and recharges after 4s out of combat.</div>
                     </div>
                 </div>
 
