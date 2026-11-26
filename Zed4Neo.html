@@ -6032,6 +6032,24 @@ boss_tensor: {
             { id: 'face_ach_golden_god', slot: 'face', slotLabel: 'Face', price: 0, exclusiveAch: 'dmg10m', icon: 'fa-sun', color: 'text-yellow-300', name: 'ACH // Golden Divinity Gaze', desc: 'My electricity bill is higher than your gross domestic product.' },
             { id: 'face_unkillable', slot: 'face', slotLabel: 'Face', price: 0, exclusiveTensor: true, icon: 'fa-circle-radiation', color: 'text-red-400', name: 'UNKILLABLE // World-Eater Eclipse', desc: 'I lived, bitch.' },
 
+            // EXPRESSIVE PACK (16)
+            { id: 'face_exp_deadpan', slot: 'face', slotLabel: 'Face', price: 400, icon: 'fa-face-meh', color: 'text-slate-300', name: 'Deadpan (-_-)', desc: 'When Central calls an orbital bombardment a "routine maintenance drill."' },
+            { id: 'face_exp_pout', slot: 'face', slotLabel: 'Face', price: 550, icon: 'fa-face-frown', color: 'text-pink-300', name: 'Pouty Cheeks (>:T)', desc: 'Quartermaster refused to validate my hazard-pay parking ticket.' },
+            { id: 'face_exp_cry_laugh', slot: 'face', slotLabel: 'Face', price: 750, icon: 'fa-face-grin-tears', color: 'text-sky-300', name: 'Tears of Joy (XD)', desc: 'Watched a Shield Enforcer trip over his own deployable barricade.' },
+            { id: 'face_exp_starry', slot: 'face', slotLabel: 'Face', price: 900, icon: 'fa-face-grin-stars', color: 'text-yellow-300', name: 'Star-Struck Idol (★_★)', desc: 'When a Zenith crate actually drops the attachment you wanted.' },
+            { id: 'face_exp_shy', slot: 'face', slotLabel: 'Face', price: 1100, icon: 'fa-face-flushed', color: 'text-rose-300', name: 'Flustered Blush (///_///)', desc: 'Stop inspecting my loadout stats in the middle of the hub.' },
+            { id: 'face_exp_yawn', slot: 'face', slotLabel: 'Face', price: 1250, icon: 'fa-face-tired', color: 'text-slate-300', name: 'Mid-Briefing Yawn (o_o)', desc: 'This sector briefing has been three slides longer than my battery life.' },
+            { id: 'face_exp_eyeroll', slot: 'face', slotLabel: 'Face', price: 1400, icon: 'fa-face-rolling-eyes', color: 'text-cyan-300', name: 'Tactical Eye-Roll (¬_¬)', desc: 'Yes, Commander, I\'m sure the venting plasma conduits are "up to code."' },
+            { id: 'face_exp_battlecry', slot: 'face', slotLabel: 'Face', price: 1650, icon: 'fa-bolt', color: 'text-orange-400', name: 'Overdrive Warcry (>O<)', desc: 'Volume calibrated to drown out both klaxons and legal disclaimers.' },
+            { id: 'face_exp_zen', slot: 'face', slotLabel: 'Face', price: 1850, icon: 'fa-spa', color: 'text-emerald-300', name: 'Ascended Serenity (^‿^)', desc: 'Everything is on fire, my ammo is empty, and I have achieved inner peace.' },
+            { id: 'face_exp_blep', slot: 'face', slotLabel: 'Face', price: 2050, icon: 'fa-face-grin-tongue-wink', color: 'text-amber-300', name: 'Combat Blep (:P)', desc: 'Dodge-rolled through three rockets just to disrespect the turret.' },
+            { id: 'face_exp_unhinged', slot: 'face', slotLabel: 'Face', price: 2350, icon: 'fa-bullseye', color: 'text-rose-400', name: 'Core Meltdown (◎_◎)', desc: 'Drinking six Espresso-Stims in one elevator ride was a tactical mistake.' },
+            { id: 'face_exp_confused', slot: 'face', slotLabel: 'Face', price: 2500, icon: 'fa-question', color: 'text-indigo-300', name: 'Diagnostic Error (?_?)', desc: 'Wait, which end of the X-99 barrel am I not supposed to look into?' },
+            { id: 'face_exp_hollow', slot: 'face', slotLabel: 'Face', price: 2700, icon: 'fa-ghost', color: 'text-slate-400', name: '404 Soul Not Found (._.)', desc: 'Salvaged forty crates and got nothing but Titanium Scrap.' },
+            { id: 'face_exp_tsundere', slot: 'face', slotLabel: 'Face', price: 2950, icon: 'fa-face-angry', color: 'text-rose-300', name: 'Not Flustered (>_<)', desc: 'I threw that Nano-MedBeacon for tactical utility, not because I care!' },
+            { id: 'face_exp_manic_wink', slot: 'face', slotLabel: 'Face', price: 3300, icon: 'fa-wand-sparkles', color: 'text-fuchsia-300', name: 'Headshot Confetti (★‿<)', desc: 'Style points don\'t pay rent, but they sure look good on replay.' },
+            { id: 'face_exp_villain', slot: 'face', slotLabel: 'Face', price: 3900, icon: 'fa-mask', color: 'text-red-400', name: 'Final Boss Smug (▼_▼)', desc: 'You brought a shield to a railgun argument.' },
+
             // HAIR (15)
             { id: 'hair_crimson_twintails', slot: 'hair', slotLabel: 'Hair', price: 800, icon: 'fa-scissors', color: 'text-rose-400', name: 'Crimson Drill-Tails', desc: 'OSHA says these count as rotating industrial drill bits.' },
             { id: 'hair_miku_cyan_long', slot: 'hair', slotLabel: 'Hair', price: 1100, icon: 'fa-music', color: 'text-cyan-300', name: 'Vocal-Idol Cyan Twin-Streams', desc: 'Gets caught in the blast doors at least four times a week.' },
@@ -6995,6 +7013,202 @@ const LORE_ENTRIES = [
                 skinGrad.addColorStop(1, '#f9d4c2');
                 ctx.fillStyle = skinGrad;
                 ctx.fillRect(0, 0, 512, 256);
+
+                const EXP_FACE_TAGS = {
+                    face_exp_deadpan: 'deadpan', face_exp_pout: 'pout', face_exp_cry_laugh: 'cry_laugh', face_exp_starry: 'starry',
+                    face_exp_shy: 'shy', face_exp_yawn: 'yawn', face_exp_eyeroll: 'eyeroll', face_exp_battlecry: 'battlecry',
+                    face_exp_zen: 'zen', face_exp_blep: 'blep', face_exp_unhinged: 'unhinged', face_exp_confused: 'confused',
+                    face_exp_hollow: 'hollow', face_exp_tsundere: 'tsundere', face_exp_manic_wink: 'manic_wink', face_exp_villain: 'villain'
+                };
+                if (faceId && EXP_FACE_TAGS[faceId]) {
+                    const fTag = EXP_FACE_TAGS[faceId];
+                    if (fTag === 'hollow') {
+                        const gloom = ctx.createLinearGradient(0, 52, 0, 140);
+                        gloom.addColorStop(0, 'rgba(30, 41, 82, 0.42)');
+                        gloom.addColorStop(1, 'rgba(30, 41, 82, 0.0)');
+                        ctx.fillStyle = gloom;
+                        ctx.fillRect(140, 52, 232, 92);
+                    } else if (fTag === 'villain' || fTag === 'unhinged') {
+                        const sh = ctx.createLinearGradient(0, 64, 0, 128);
+                        sh.addColorStop(0, 'rgba(15, 23, 42, 0.34)');
+                        sh.addColorStop(1, 'rgba(15, 23, 42, 0)');
+                        ctx.fillStyle = sh;
+                        ctx.fillRect(150, 64, 212, 66);
+                    }
+                    const blushAlphaMap = { shy: 0.78, tsundere: 0.72, pout: 0.65, zen: 0.50, starry: 0.52, cry_laugh: 0.48, blep: 0.50, hollow: 0.08, deadpan: 0.22 };
+                    const bAlpha = blushAlphaMap[fTag] ?? 0.42;
+                    ctx.fillStyle = fTag === 'zen' ? `rgba(52, 211, 153, ${bAlpha * 0.45})` : `rgba(244, 114, 182, ${bAlpha})`;
+                    ctx.beginPath(); ctx.ellipse(198, 150, fTag === 'pout' ? 21 : 17.5, fTag === 'pout' ? 12 : 9.0, -0.06, 0, Math.PI * 2); ctx.fill();
+                    ctx.beginPath(); ctx.ellipse(314, 150, fTag === 'pout' ? 21 : 17.5, fTag === 'pout' ? 12 : 9.0, 0.06, 0, Math.PI * 2); ctx.fill();
+                    if (fTag === 'shy' || fTag === 'tsundere') {
+                        ctx.strokeStyle = 'rgba(225, 29, 72, 0.68)';
+                        ctx.lineWidth = 2.2;
+                        [-1, 1].forEach(s => {
+                            const bx = 256 + s * 58;
+                            for (let k = -10; k <= 10; k += 6.5) {
+                                ctx.beginPath(); ctx.moveTo(bx + k - 4, 144); ctx.lineTo(bx + k + 3, 156); ctx.stroke();
+                            }
+                        });
+                    }
+
+                    const drawExpStar = (sx, sy, rOut, rIn, fillCol, strokeCol) => {
+                        ctx.fillStyle = fillCol;
+                        if (strokeCol) { ctx.strokeStyle = strokeCol; ctx.lineWidth = 1.6; }
+                        ctx.beginPath();
+                        for (let p = 0; p < 8; p++) {
+                            const rad = p % 2 === 0 ? rOut : rIn;
+                            const ang = (p * Math.PI) / 4 - Math.PI / 2;
+                            const px = sx + Math.cos(ang) * rad;
+                            const py = sy + Math.sin(ang) * rad;
+                            if (p === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+                        }
+                        ctx.closePath(); ctx.fill();
+                        if (strokeCol) ctx.stroke();
+                    };
+
+                    const drawExpEye = (cx, cy, isLeft) => {
+                        const dir = isLeft ? -1 : 1;
+                        ctx.strokeStyle = '#0f172a';
+                        ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                        if (fTag === 'deadpan' || fTag === 'yawn') {
+                            ctx.fillStyle = '#ffffff';
+                            ctx.beginPath(); ctx.ellipse(cx, cy + 2, 19, 13, 0, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#0369a1';
+                            ctx.beginPath(); ctx.arc(cx, cy + 4, 9.5, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#090d16';
+                            ctx.beginPath(); ctx.arc(cx, cy + 4, 4.5, 0, Math.PI * 2); ctx.fill();
+                            ctx.fillStyle = '#fce0d2';
+                            ctx.fillRect(cx - 21, cy - 18, 42, fTag === 'yawn' ? 19 : 16);
+                            ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 4.6;
+                            ctx.beginPath(); ctx.moveTo(cx - 20, cy + (fTag === 'yawn' ? 1 : -2)); ctx.lineTo(cx + 20, cy + (fTag === 'yawn' ? 1 : -2)); ctx.stroke();
+                            if (fTag === 'yawn') {
+                                ctx.fillStyle = '#7dd3fc';
+                                ctx.beginPath(); ctx.arc(cx + dir * 18, cy + 8, 4.0, 0, Math.PI * 2); ctx.fill();
+                            }
+                        } else if (fTag === 'cry_laugh' || fTag === 'tsundere' || (fTag === 'blep' && isLeft) || (fTag === 'manic_wink' && isLeft)) {
+                            ctx.lineWidth = 5.0;
+                            ctx.beginPath();
+                            ctx.moveTo(cx - dir * 15, cy - 10);
+                            ctx.lineTo(cx + dir * 13, cy + 1);
+                            ctx.lineTo(cx - dir * 15, cy + 11);
+                            ctx.stroke();
+                            if (fTag === 'cry_laugh') {
+                                ctx.fillStyle = '#38bdf8';
+                                ctx.beginPath(); ctx.ellipse(cx + dir * 21, cy + 12, 5.2, 7.6, dir * -0.45, 0, Math.PI * 2); ctx.fill();
+                                ctx.fillStyle = '#e0f2fe';
+                                ctx.beginPath(); ctx.arc(cx + dir * 20, cy + 10, 2.0, 0, Math.PI * 2); ctx.fill();
+                            }
+                        } else if (fTag === 'zen') {
+                            ctx.lineWidth = 4.8;
+                            ctx.beginPath(); ctx.arc(cx, cy + 8, 17, Math.PI * 1.15, Math.PI * 1.85); ctx.stroke();
+                        } else if (fTag === 'hollow') {
+                            ctx.fillStyle = '#0f172a';
+                            ctx.beginPath(); ctx.ellipse(cx, cy + 3, 5.5, 6.8, 0, 0, Math.PI * 2); ctx.fill();
+                        } else {
+                            // Open stylized anime eyes
+                            ctx.fillStyle = '#ffffff';
+                            const eyRy = (fTag === 'confused' && !isLeft) ? 13 : ((fTag === 'unhinged' || fTag === 'starry') ? 20.5 : 18.5);
+                            ctx.beginPath(); ctx.ellipse(cx, cy, 20, eyRy, 0, 0, Math.PI * 2); ctx.fill();
+                            const offX = fTag === 'shy' ? -4.5 : (fTag === 'pout' ? 4.5 : 0);
+                            const offY = fTag === 'eyeroll' ? -6.5 : 1.5;
+                            const irisCol = (fTag === 'battlecry' || fTag === 'villain') ? '#dc2626' : (fTag === 'manic_wink' ? '#d946ef' : (fTag === 'unhinged' ? '#f43f5e' : '#0284c7'));
+                            ctx.fillStyle = irisCol;
+                            const irR = fTag === 'unhinged' ? 14.5 : ((fTag === 'battlecry') ? 12.0 : 14.8);
+                            ctx.beginPath(); ctx.ellipse(cx + offX, cy + offY, irR, irR * (eyRy / 19.5), 0, 0, Math.PI * 2); ctx.fill();
+                            if (fTag === 'starry' || (fTag === 'manic_wink' && !isLeft)) {
+                                drawExpStar(cx + offX, cy + offY, 11.5, 4.2, '#fde047', '#ffffff');
+                            } else if (fTag === 'unhinged') {
+                                ctx.strokeStyle = '#fecdd3'; ctx.lineWidth = 2.0;
+                                ctx.beginPath(); ctx.arc(cx, cy + offY, 9.5, 0, Math.PI * 2); ctx.stroke();
+                                ctx.fillStyle = '#090d16';
+                                ctx.beginPath(); ctx.arc(cx, cy + offY, 3.6, 0, Math.PI * 2); ctx.fill();
+                            } else {
+                                ctx.fillStyle = '#090d16';
+                                ctx.beginPath(); ctx.arc(cx + offX, cy + offY, fTag === 'battlecry' ? 4.2 : 6.8, 0, Math.PI * 2); ctx.fill();
+                            }
+                            ctx.fillStyle = '#ffffff';
+                            ctx.beginPath(); ctx.arc(cx + offX - 5, cy + offY - 5, 4.0, 0, Math.PI * 2); ctx.fill();
+                            if (fTag === 'eyeroll' || fTag === 'villain') {
+                                ctx.fillStyle = '#fce0d2';
+                                ctx.fillRect(cx - 21, cy - 22, 42, fTag === 'eyeroll' ? 12 : 14);
+                                ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 4.6;
+                                ctx.beginPath();
+                                if (fTag === 'villain') {
+                                    ctx.moveTo(cx - dir * 19, cy - 11); ctx.lineTo(cx + dir * 20, cy - 4);
+                                } else {
+                                    ctx.moveTo(cx - 19, cy - 9); ctx.lineTo(cx + 19, cy - 9);
+                                }
+                                ctx.stroke();
+                            } else {
+                                ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 4.8;
+                                ctx.beginPath(); ctx.ellipse(cx, cy + 2, 20.4, eyRy, 0, Math.PI * 1.08, Math.PI * 1.92); ctx.stroke();
+                            }
+                        }
+                        // Eyebrows
+                        ctx.strokeStyle = '#1e293b'; ctx.lineWidth = 3.6;
+                        ctx.beginPath();
+                        if (fTag === 'pout' || fTag === 'battlecry' || fTag === 'villain' || fTag === 'tsundere') {
+                            ctx.moveTo(cx - dir * 17, cy - 14); ctx.lineTo(cx + dir * 16, cy - 25);
+                        } else if (fTag === 'shy' || fTag === 'hollow') {
+                            ctx.moveTo(cx - dir * 15, cy - 22); ctx.lineTo(cx + dir * 15, cy - 16);
+                        } else if (fTag === 'confused') {
+                            const yOff = isLeft ? -29 : -15;
+                            ctx.moveTo(cx - 15, cy + yOff); ctx.quadraticCurveTo(cx, cy + yOff - 7, cx + 15, cy + yOff + (isLeft ? 4 : -1));
+                        } else if (fTag === 'eyeroll' && !isLeft) {
+                            ctx.moveTo(cx - 16, cy - 24); ctx.quadraticCurveTo(cx, cy - 31, cx + 16, cy - 22);
+                        } else if (fTag === 'deadpan') {
+                            ctx.moveTo(cx - 16, cy - 17); ctx.lineTo(cx + 16, cy - 17);
+                        } else {
+                            ctx.arc(cx, cy - 16, 16, Math.PI * 1.2, Math.PI * 1.8);
+                        }
+                        ctx.stroke();
+                    };
+
+                    drawExpEye(220, 122, true);
+                    drawExpEye(292, 122, false);
+
+                    // Expressions Mouths
+                    ctx.strokeStyle = '#881337'; ctx.lineWidth = 3.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                    if (fTag === 'deadpan' || fTag === 'hollow') {
+                        ctx.beginPath(); ctx.moveTo(244, 156); ctx.lineTo(268, 156); ctx.stroke();
+                    } else if (fTag === 'pout') {
+                        ctx.beginPath(); ctx.arc(256, 162, 10, Math.PI * 1.15, Math.PI * 1.85); ctx.stroke();
+                    } else if (fTag === 'cry_laugh' || fTag === 'battlecry') {
+                        ctx.fillStyle = fTag === 'battlecry' ? '#7f1d1d' : '#be123c';
+                        ctx.beginPath();
+                        ctx.moveTo(240, 148); ctx.lineTo(272, 148);
+                        ctx.quadraticCurveTo(270, 171, 256, 171); ctx.quadraticCurveTo(242, 171, 240, 148);
+                        ctx.closePath(); ctx.fill(); ctx.stroke();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.fillRect(243, 149, 26, 4.5);
+                    } else if (fTag === 'yawn') {
+                        ctx.fillStyle = '#9f1239';
+                        ctx.beginPath(); ctx.ellipse(256, 158, 7.5, 9.5, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+                    } else if (fTag === 'shy' || fTag === 'confused' || fTag === 'tsundere') {
+                        ctx.beginPath();
+                        ctx.moveTo(242, 157);
+                        ctx.quadraticCurveTo(249, 152, 256, 157);
+                        ctx.quadraticCurveTo(263, 162, 270, 157);
+                        ctx.stroke();
+                    } else if (fTag === 'eyeroll') {
+                        ctx.beginPath(); ctx.moveTo(244, 158); ctx.quadraticCurveTo(258, 159, 269, 151); ctx.stroke();
+                    } else if (fTag === 'blep') {
+                        ctx.beginPath(); ctx.moveTo(242, 153); ctx.quadraticCurveTo(256, 160, 270, 153); ctx.stroke();
+                        ctx.fillStyle = '#fb7185';
+                        ctx.beginPath(); ctx.moveTo(251, 156); ctx.lineTo(251, 166); ctx.arc(256, 166, 5.0, Math.PI, 0, true); ctx.lineTo(261, 156); ctx.closePath();
+                        ctx.fill(); ctx.stroke();
+                    } else if (fTag === 'unhinged') {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath(); ctx.moveTo(239, 151); ctx.quadraticCurveTo(256, 172, 273, 151); ctx.quadraticCurveTo(256, 157, 239, 151);
+                        ctx.fill(); ctx.stroke();
+                    } else if (fTag === 'villain') {
+                        ctx.beginPath(); ctx.moveTo(240, 154); ctx.quadraticCurveTo(256, 166, 274, 147); ctx.stroke();
+                    } else {
+                        ctx.beginPath(); ctx.arc(256, 149, 13.5, 0.16 * Math.PI, 0.84 * Math.PI); ctx.stroke();
+                    }
+                    this._cache[cacheKey] = new THREE.CanvasTexture(canvas);
+                    return this._cache[cacheKey];
+                }
 
                 if (faceId === 'powered_off') {
                     ctx.fillStyle = 'rgba(148, 163, 184, 0.22)';
@@ -9785,11 +9999,12 @@ const LORE_ENTRIES = [
                     baseHairNodes: { hairCap, hairBack, bangL, bangR, lockL, lockR, hairTail, hairTie, headband, cupL, cupR, hairMat },
                     outfitRefs: {
                         jacketMat, armorPlateMat, cyanTrimMat, darkPantsMat, skinMat,
-                        torso, waist, pelvis, chestPlate, jacketLapelL, jacketLapelR, collar,
-                        shoulderL, shoulderR, upperArmL, upperArmR, forearmR,
+                        torso, waist, pelvis, chestPlate, jacketLapelL, jacketLapelR, collar, emblem, belt, buckle, pouchR, neck, dorsalCore,
+                        shoulderL, shoulderR, upperArmL, upperArmR, forearmL, forearmR, handL, handR, elbowL, elbowR,
                         thighL: leftLegRig.thigh, thighR: rightLegRig.thigh,
                         shinLMesh: leftLegRig.shin, shinRMesh: rightLegRig.shin,
-                        bootL: leftLegRig.boot, bootR: rightLegRig.boot
+                        bootL: leftLegRig.boot, bootR: rightLegRig.boot,
+                        bootTrimL: leftLegRig.bootTrim, bootTrimR: rightLegRig.bootTrim
                     },
                     legL: leftLegRig.hipPivot,
                     shinL: leftLegRig.kneePivot,
@@ -9841,13 +10056,13 @@ const LORE_ENTRIES = [
                 else if (type === 'salute') AudioEngine.playZedVocal('dash');
             },
 
-            applyCosmeticsToRig(rig, ignoreFaceOverride = false) {
+            applyCosmeticsToRig(rig, ignoreFaceOverride = false, overrideEq = null) {
                 if (!rig || !rig.upperBody || !rig.headGroup) return;
                 this.ensureCosmeticsState();
-                const baseEq = this.state.cosmetics.equipped;
+                const baseEq = overrideEq || this.state.cosmetics.equipped;
                 const eq = Object.assign({}, baseEq);
 
-                if (rig === this.previewRig && UI.activeModal === 'shop_tab' && UI.previewShopCosId) {
+                if (!overrideEq && rig === this.previewRig && UI.activeModal === 'shop_tab' && UI.previewShopCosId) {
                     const pCos = COSMETIC_CATALOG.find(c => c.id === UI.previewShopCosId);
                     if (pCos) eq[pCos.slot] = pCos.id;
                 }
@@ -9865,9 +10080,15 @@ const LORE_ENTRIES = [
                         if (n.parent) n.parent.remove(n);
                     });
                 }
+                const staleCosNodes = [];
+                rig.group.traverse(ch => {
+                    if (ch.userData && ch.userData._isCosmeticNode && ch.parent) staleCosNodes.push(ch);
+                });
+                staleCosNodes.forEach(ch => ch.parent.remove(ch));
                 rig.cosmeticNodes = [];
 
                 const addNode = (parent, mesh) => {
+                    mesh.userData._isCosmeticNode = true;
                     if (parent === rig.headGroup) {
                         mesh.traverse(ch => { if (ch.isMesh) ch.userData.isHairOrFace = true; });
                     }
@@ -10306,11 +10527,31 @@ const LORE_ENTRIES = [
                         outfit_null_duster: { jCol: 0x0f051d, pCol: 0x581c87, tCol: 0xc084fc, tEm: 0x9333ea, dCol: 0x05020a, bareMidriff: false, bareArms: false, bareThighs: false }
                     };
                     const th = outfitThemes[eq.outfit || 'default'] || outfitThemes.default;
-                    o.jacketMat.color.setHex(th.jCol);
-                    o.armorPlateMat.color.setHex(th.pCol);
+                    o.jacketMat.color.setHex(th.jCol); o.jacketMat.needsUpdate = true;
+                    o.armorPlateMat.color.setHex(th.pCol); o.armorPlateMat.needsUpdate = true;
                     o.cyanTrimMat.color.setHex(th.tCol);
                     o.cyanTrimMat.emissive.setHex(th.tEm);
-                    o.darkPantsMat.color.setHex(th.dCol);
+                    o.cyanTrimMat.emissiveIntensity = 0.35;
+                    o.cyanTrimMat.needsUpdate = true;
+                    o.darkPantsMat.color.setHex(th.dCol); o.darkPantsMat.needsUpdate = true;
+
+                    if (o.collar) o.collar.material = o.cyanTrimMat;
+                    if (o.belt) o.belt.material = o.cyanTrimMat;
+                    if (o.jacketLapelL) o.jacketLapelL.material = o.cyanTrimMat;
+                    if (o.jacketLapelR) o.jacketLapelR.material = o.cyanTrimMat;
+                    if (o.torso) o.torso.material = o.jacketMat;
+                    if (o.chestPlate) o.chestPlate.material = o.armorPlateMat;
+                    if (o.pelvis) o.pelvis.material = o.darkPantsMat;
+                    if (o.shinLMesh) o.shinLMesh.material = o.jacketMat;
+                    if (o.shinRMesh) o.shinRMesh.material = o.jacketMat;
+                    if (o.bootL) o.bootL.material = o.armorPlateMat;
+                    if (o.bootR) o.bootR.material = o.armorPlateMat;
+                    if (o.bootTrimL) o.bootTrimL.material = o.cyanTrimMat;
+                    if (o.bootTrimR) o.bootTrimR.material = o.cyanTrimMat;
+                    if (o.emblem && o.emblem.material) {
+                        o.emblem.material.color.setHex(eq.outfit ? th.tCol : 0x7dd3fc);
+                        o.emblem.material.needsUpdate = true;
+                    }
 
                     o.waist.material = th.bareMidriff ? o.skinMat : o.darkPantsMat;
                     o.upperArmL.material = th.bareArms ? o.skinMat : o.jacketMat;
@@ -11256,6 +11497,169 @@ const LORE_ENTRIES = [
                 }
             },
 
+            renderCosmeticThumbDataUrl(cos, renderer) {
+                if (!cos || !renderer) return '';
+                if (!this._cosThumbScene) {
+                    this._cosThumbScene = new THREE.Scene();
+                    this._cosThumbScene.background = new THREE.Color(0x071022);
+                    // Narrow studio-telephoto FOV avoids wide-angle sphere/mesh distortion
+                    this._cosThumbCam = new THREE.PerspectiveCamera(22, 1, 0.05, 40);
+                    const amb = new THREE.AmbientLight(0xe2e8f0, 1.05);
+                    const key = new THREE.DirectionalLight(0xffffff, 1.22);
+                    key.position.set(2.2, 3.6, 3.8);
+                    const fill = new THREE.PointLight(0x38bdf8, 1.05, 12);
+                    fill.position.set(-2.2, 1.8, 2.4);
+                    const back = new THREE.PointLight(0xe879f9, 0.9, 12);
+                    back.position.set(2.0, 2.2, -2.6);
+                    this._cosThumbLights = { amb, key, fill, back };
+                    this._cosThumbScene.add(amb, key, fill, back);
+                    this._cosThumbRig = this.buildOperativeRig(true);
+                    this._cosThumbDefaultHeadMat = this._cosThumbRig.headMesh.material;
+                    this._cosThumbDefaultHeadMat.roughness = 0.52;
+                    this._cosThumbGhostHeadMat = new THREE.MeshStandardMaterial({
+                        color: 0x0f172a, roughness: 0.4, metalness: 0.3, transparent: true, opacity: 0.34
+                    });
+                    this._cosThumbScene.add(this._cosThumbRig.group);
+                }
+
+                const rig = this._cosThumbRig;
+                const cam = this._cosThumbCam;
+                const L = this._cosThumbLights;
+                cam.aspect = 1;
+                cam.updateProjectionMatrix();
+
+                rig.group.traverse(ch => { ch.visible = true; });
+                rig.headMesh.material = this._cosThumbDefaultHeadMat;
+                rig.headMesh.material.color.setHex(0xffffff);
+                rig.headMesh.material.roughness = 0.52;
+                // Keep 1:1 true spherical head/hair proportions in thumbnails instead of 0.95x1.02 oval stretch
+                rig.headMesh.scale.set(1.0, 1.0, 1.0);
+                if (rig.baseHairNodes && rig.baseHairNodes.hairCap) {
+                    rig.baseHairNodes.hairCap.scale.set(1.005, 1.005, 1.005);
+                }
+                rig.group.rotation.set(0, 0, 0);
+
+                const eqOnly = { face: null, hair: null, hat: null, outfit: null, accessory: null };
+                eqOnly[cos.slot] = cos.id;
+                this.applyCosmeticsToRig(rig, false, eqOnly);
+
+                // Studio lighting: dial back intensity on pale faces so spherical shading/depth isn't blown out to flat white
+                if (cos.slot === 'face') {
+                    L.amb.color.setHex(0xdbeafe);
+                    L.amb.intensity = 0.42;
+                    L.key.intensity = 0.72;
+                    L.key.position.set(2.8, 2.6, 2.5);
+                    L.fill.intensity = 0.30;
+                    L.fill.position.set(-2.5, 0.9, 1.8);
+                    L.back.intensity = 0.48;
+                    rig.headMesh.material.color.setHex(0xe8ded8);
+                    rig.headMesh.material.roughness = 0.72;
+                } else {
+                    L.amb.color.setHex(0xe2e8f0);
+                    L.amb.intensity = 1.05;
+                    L.key.intensity = 1.22;
+                    L.key.position.set(2.2, 3.6, 3.8);
+                    L.fill.intensity = 1.05;
+                    L.fill.position.set(-2.2, 1.8, 2.4);
+                    L.back.intensity = 0.90;
+                }
+
+                const o = rig.outfitRefs;
+                const bh = rig.baseHairNodes;
+                const hideBaseBody = (keepHeadMesh = false, ghostHead = false) => {
+                    if (o) {
+                        [o.torso, o.waist, o.pelvis, o.chestPlate, o.jacketLapelL, o.jacketLapelR, o.collar, o.emblem, o.belt, o.buckle, o.pouchR, o.neck, o.dorsalCore,
+                         o.shoulderL, o.shoulderR, o.upperArmL, o.upperArmR, o.forearmL, o.forearmR, o.handL, o.handR, o.elbowL, o.elbowR,
+                         o.thighL, o.thighR, o.shinLMesh, o.shinRMesh, o.bootL, o.bootR, o.bootTrimL, o.bootTrimR].forEach(m => { if (m) m.visible = false; });
+                    }
+                    if (rig.armL) rig.armL.visible = false;
+                    if (rig.armR) rig.armR.visible = false;
+                    if (rig.legL) rig.legL.visible = false;
+                    if (rig.legR) rig.legR.visible = false;
+                    if (rig.wingL) rig.wingL.visible = false;
+                    if (rig.wingR) rig.wingR.visible = false;
+                    if (rig.headMesh) {
+                        rig.headMesh.visible = keepHeadMesh;
+                        if (ghostHead) rig.headMesh.material = this._cosThumbGhostHeadMat;
+                    }
+                };
+                const hideDefaultHair = () => {
+                    if (!bh) return;
+                    [bh.hairCap, bh.hairBack, bh.bangL, bh.bangR, bh.lockL, bh.lockR, bh.hairTail, bh.hairTie, bh.headband, bh.cupL, bh.cupR].forEach(m => {
+                        if (m) m.visible = false;
+                    });
+                };
+
+                rig.group.updateMatrixWorld(true);
+                const box = new THREE.Box3();
+
+                if (cos.slot === 'face') {
+                    hideBaseBody(true, false);
+                    hideDefaultHair();
+                    rig.group.rotation.y = 0.08;
+                    rig.group.updateMatrixWorld(true);
+                    box.setFromObject(rig.headGroup);
+                } else if (cos.slot === 'hair') {
+                    hideBaseBody(true, true);
+                    if (bh.headband) bh.headband.visible = false;
+                    if (bh.cupL) bh.cupL.visible = false;
+                    if (bh.cupR) bh.cupR.visible = false;
+                    rig.group.rotation.y = 0.42;
+                    rig.group.updateMatrixWorld(true);
+                    box.setFromObject(rig.headGroup);
+                } else if (cos.slot === 'hat') {
+                    hideBaseBody(true, true);
+                    hideDefaultHair();
+                    rig.group.rotation.y = -0.34;
+                    rig.group.updateMatrixWorld(true);
+                    if (rig.cosmeticNodes && rig.cosmeticNodes.length > 0) {
+                        rig.cosmeticNodes.forEach(n => box.expandByObject(n));
+                    } else {
+                        box.setFromObject(rig.headGroup);
+                    }
+                } else if (cos.slot === 'outfit') {
+                    rig.headGroup.visible = false;
+                    if (rig.wingL) rig.wingL.visible = false;
+                    if (rig.wingR) rig.wingR.visible = false;
+                    if (o && o.dorsalCore) o.dorsalCore.visible = false;
+                    rig.group.rotation.y = -0.32;
+                    rig.group.updateMatrixWorld(true);
+                    box.setFromObject(rig.group);
+                } else {
+                    const isHeadAcc = (cos.id === 'acc_eyepatch' || cos.id === 'acc_mask' || cos.id === 'acc_visor' || cos.id === 'acc_steam_monocle');
+                    const isBackAcc = !isHeadAcc && cos.id !== 'acc_bandolier_heavy' && cos.id !== 'acc_katana_hip';
+                    hideBaseBody(isHeadAcc, isHeadAcc);
+                    hideDefaultHair();
+                    rig.group.rotation.y = isHeadAcc ? -0.25 : (isBackAcc ? 2.55 : -0.45);
+                    rig.group.updateMatrixWorld(true);
+                    if (rig.cosmeticNodes && rig.cosmeticNodes.length > 0) {
+                        rig.cosmeticNodes.forEach(n => box.expandByObject(n));
+                    } else {
+                        box.setFromObject(rig.headGroup);
+                    }
+                }
+
+                const center = new THREE.Vector3();
+                const size = new THREE.Vector3();
+                if (box.isEmpty()) {
+                    center.set(0, 1.35, 0);
+                    size.set(0.6, 0.6, 0.6);
+                } else {
+                    box.getCenter(center);
+                    box.getSize(size);
+                }
+                const maxDim = Math.max(0.28, size.x, size.y, size.z);
+                const fovRad = THREE.MathUtils.degToRad(cam.fov);
+                const dist = (maxDim * 0.5) / Math.tan(fovRad * 0.5) * (cos.slot === 'face' ? 1.24 : 1.42) + size.z * 0.35;
+                const elev = (cos.slot === 'hat' || cos.slot === 'outfit') ? dist * 0.10 : (cos.slot === 'face' ? 0.015 : dist * 0.08);
+                cam.position.set(center.x, center.y + elev, center.z + dist);
+                cam.lookAt(center);
+                renderer.setViewport(0, 0, 384, 384);
+                renderer.setScissorTest(false);
+                renderer.render(this._cosThumbScene, cam);
+                return renderer.domElement.toDataURL('image/png');
+            },
+
             updateCosmeticsVisuals() {
                 if (this.player && this.player.rigRef) {
                     this.applyCosmeticsToRig(this.player.rigRef);
@@ -12022,11 +12426,22 @@ const LORE_ENTRIES = [
                     }, { passive: false });
                 }
 
-                const w = container.clientWidth || 320;
-                const h = container.clientHeight || 310;
-                this.previewRenderer.setSize(w, h);
-                this.previewCamera.aspect = w / h;
-                this.previewCamera.updateProjectionMatrix();
+                const syncPreviewSize = () => {
+                    const el = document.getElementById('operative-preview-mount');
+                    if (!el || !this.previewRenderer || !this.previewCamera) return;
+                    const pw = el.clientWidth || 320;
+                    const ph = el.clientHeight || 310;
+                    if (pw > 0 && ph > 0) {
+                        this.previewRenderer.setSize(pw, ph);
+                        this.previewCamera.aspect = pw / ph;
+                        this.previewCamera.updateProjectionMatrix();
+                    }
+                };
+                syncPreviewSize();
+                if (!this._previewResizeBound) {
+                    this._previewResizeBound = true;
+                    window.addEventListener('resize', syncPreviewSize);
+                }
                 container.innerHTML = '';
                 container.appendChild(this.previewRenderer.domElement);
                 this.updateWeaponMeshModel();
@@ -12636,7 +13051,7 @@ const LORE_ENTRIES = [
                         this.player.camPitch = 0;
                     }
                     if (!this.emoteWheelOpen && canvas && canvas.requestPointerLock && document.getElementById('modal-backdrop').classList.contains('hidden')) {
-                        try { canvas.requestPointerLock(); } catch (e) { }
+                        try { const _pl = canvas.requestPointerLock(); if (_pl && typeof _pl.catch === 'function') _pl.catch(() => {}); } catch (e) { }
                     }
                 } else if (document.pointerLockElement && document.exitPointerLock) {
                     try { document.exitPointerLock(); } catch (e) { }
@@ -12694,7 +13109,7 @@ const LORE_ENTRIES = [
                 if (this.isThirdPersonCamera() && document.getElementById('modal-backdrop').classList.contains('hidden') && !document.getElementById('zn-menu')?.classList.contains('open')) {
                     const canvas = document.getElementById('game-canvas');
                     if (canvas && canvas.requestPointerLock) {
-                        try { canvas.requestPointerLock(); } catch (e) { }
+                        try { const _pl = canvas.requestPointerLock(); if (_pl && typeof _pl.catch === 'function') _pl.catch(() => {}); } catch (e) { }
                     }
                 }
             },
@@ -22873,7 +23288,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 if (this.isThirdPersonCamera()) {
                     const canvas = document.getElementById('game-canvas');
                     if (canvas && canvas.requestPointerLock && document.pointerLockElement !== canvas && document.getElementById('modal-backdrop').classList.contains('hidden')) {
-                        try { canvas.requestPointerLock(); } catch (e) { }
+                        try { const _pl = canvas.requestPointerLock(); if (_pl && typeof _pl.catch === 'function') _pl.catch(() => {}); } catch (e) { }
                     }
                     this.player.rotY = this.player.camYaw;
                     this.player.mesh.rotation.y = this.player.rotY;
@@ -32391,6 +32806,135 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 };
             },
 
+            renderCutsceneKeyFrameThumb(csKey, sectorIdx, isHardMode = false, bonusIdx = null, renderer) {
+                if (!renderer) return '';
+                const isTen = (sectorIdx === 9);
+                const hm = Boolean(isHardMode || isTen);
+                const stageScene = new THREE.Scene();
+                stageScene.background = new THREE.Color(0x050912);
+                stageScene.fog = new THREE.FogExp2(0x050912, 0.016);
+                const stageCamera = new THREE.PerspectiveCamera(48, 16 / 9, 0.1, 260);
+                const ambLight = new THREE.AmbientLight(0xdbeafe, 0.98);
+                const dirLight = new THREE.DirectionalLight(0xffffff, 1.18);
+                dirLight.position.set(18, 28, 22);
+                const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.70);
+                rimLight.position.set(-20, 14, -18);
+                stageScene.add(ambLight, dirLight, rimLight);
+
+                const script = this.getCutsceneScript(csKey, sectorIdx, hm, bonusIdx);
+                const fired = {};
+                const ctx = {
+                    stageScene,
+                    stageCamera,
+                    bayX: (bIdx) => bIdx * 95,
+                    setAtmo: (bgHex, fogHex, dens = 0.016) => {
+                        stageScene.background.setHex(bgHex);
+                        stageScene.fog.color.setHex(fogHex);
+                        stageScene.fog.density = dens;
+                    },
+                    camCut: (ex, ey, ez, lx, ly, lz) => {
+                        stageCamera.position.set(ex, ey, ez);
+                        stageCamera.lookAt(lx, ly, lz);
+                    },
+                    camLerp: (eyeVec, lookVec, dt, spd = 5) => {
+                        stageCamera.position.lerp(eyeVec, Math.min(1, spd * dt));
+                        stageCamera.lookAt(lookVec);
+                    },
+                    makeFloor: (bIdx, w, d, biomeId, floorVar = 0) => {
+                        const bx = bIdx * 95;
+                        const tex = TextureGen.getBiomeFloorTexture(biomeId, floorVar);
+                        tex.repeat.set(Math.max(2, Math.round(w / 5)), Math.max(2, Math.round(d / 5)));
+                        const fl = new THREE.Mesh(
+                            new THREE.PlaneGeometry(w, d),
+                            new THREE.MeshStandardMaterial({ map: tex, metalness: 0.45, roughness: 0.55 })
+                        );
+                        fl.rotation.x = -Math.PI / 2;
+                        fl.position.set(bx, 0, 0);
+                        stageScene.add(fl);
+                        return fl;
+                    },
+                    makeWall: (bIdx, x, y, z, w, h, d, colHex = 0x1e293b, trimHex = 0x38bdf8) => {
+                        const grp = new THREE.Group();
+                        grp.position.set(bIdx * 95 + x, y, z);
+                        const box = new THREE.Mesh(
+                            new THREE.BoxGeometry(w, h, d),
+                            new THREE.MeshStandardMaterial({ color: colHex, metalness: 0.72, roughness: 0.35 })
+                        );
+                        grp.add(box);
+                        if (trimHex) {
+                            const trim = new THREE.Mesh(
+                                new THREE.BoxGeometry(w + 0.08, 0.14, d + 0.08),
+                                new THREE.MeshBasicMaterial({ color: trimHex })
+                            );
+                            trim.position.y = h * 0.35;
+                            grp.add(trim);
+                        }
+                        stageScene.add(grp);
+                        return grp;
+                    },
+                    makeZed3: (bIdx, x, y, z, opts = {}) => {
+                        const rig = this.buildCutsceneRigInstance(opts);
+                        rig.group.position.set(bIdx * 95 + x, y, z);
+                        stageScene.add(rig.group);
+                        return { rig, root: rig.group, setFace: (f) => this.setCutsceneRigFace(rig, f) };
+                    },
+                    makeZed2: (bIdx, x, y, z, opts = {}) => {
+                        const rig = this.buildCutsceneRigInstance(Object.assign({ isZed2: true }, opts));
+                        rig.group.position.set(bIdx * 95 + x, y, z);
+                        stageScene.add(rig.group);
+                        return { rig, root: rig.group, setFace: (f) => this.setCutsceneRigFace(rig, f) };
+                    },
+                    makeEnemy: (bIdx, typeId, x, y, z, cfgObj = {}) => {
+                        const rig = this.buildCustomEnemyMesh(cfgObj, false, false, typeId, false);
+                        rig.position.set(bIdx * 95 + x, y, z);
+                        stageScene.add(rig);
+                        return rig;
+                    },
+                    makeBoss: (bIdx, bossCfg, x, y, z, scaleMult = 1.0) => {
+                        const rig = this.buildCustomEnemyMesh(bossCfg, true, false, bossCfg.id, false);
+                        rig.position.set(bIdx * 95 + x, y, z);
+                        rig.scale.setScalar((bossCfg.scale || 1.8) * scaleMult);
+                        stageScene.add(rig);
+                        return rig;
+                    },
+                    animateEnemy: (rig, wc, dt) => this.animateCutsceneActorRig(rig, wc, dt),
+                    setCutsceneRigFace: (rig, fId) => this.setCutsceneRigFace(rig, fId),
+                    beat: (key, fn) => { if (!fired[key]) { fired[key] = true; fn(); } },
+                    burst: () => { },
+                    ring: (x, y, z, colorHex = 0x38bdf8, maxScale = 4.0) => {
+                        const m = new THREE.Mesh(
+                            new THREE.TorusGeometry(Math.max(0.6, maxScale * 0.25), 0.08, 8, 28),
+                            new THREE.MeshBasicMaterial({ color: colorHex, transparent: true, opacity: 0.72 })
+                        );
+                        m.rotation.x = Math.PI / 2;
+                        m.position.set(x, y, z);
+                        stageScene.add(m);
+                    },
+                    tracer: (a, b, colorHex = 0x38bdf8) => {
+                        const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), new THREE.LineBasicMaterial({ color: colorHex }));
+                        stageScene.add(ln);
+                    }
+                };
+
+                const origSfx = AudioEngine.sfx;
+                let dataUrl = '';
+                try {
+                    AudioEngine.sfx = () => { };
+                    const stateData = script.setup(ctx) || {};
+                    [0.04, 0.55, 1.35, 3.65, 6.45].forEach(ts => {
+                        if (ts <= (script.duration || 9.0)) script.update(ctx, stateData, ts, 0.05);
+                    });
+                    renderer.render(stageScene, stageCamera);
+                    dataUrl = renderer.domElement.toDataURL('image/png');
+                } catch (e) {
+                    dataUrl = '';
+                } finally {
+                    AudioEngine.sfx = origSfx;
+                    while (stageScene.children.length > 0) stageScene.remove(stageScene.children[0]);
+                }
+                return dataUrl;
+            },
+
             startSectorCutscene(sectorIdx, isHardMode = false, isReplayFromCodex = false, bonusIdx = null) {
                 const isTen = (sectorIdx === 9);
                 const hm = Boolean(isHardMode || isTen);
@@ -39686,7 +40230,104 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 } else if (modalId === 'cores_tab') {
                     setTimeout(() => Game.mountAugmentPreviewCanvas(), 15);
                 } else if (modalId === 'codex') {
-                    setTimeout(() => UI.renderCodexSchematicCanvas(), 15);
+                    setTimeout(() => {
+                        UI.renderCodexSchematicCanvas();
+                        UI.scheduleMovieThumbHydration();
+                    }, 15);
+                }
+                if (modalId === 'shop_tab' || modalId === 'inventory') {
+                    setTimeout(() => UI.scheduleCosmeticThumbHydration(), 20);
+                }
+            },
+
+            getSharedThumbRenderer() {
+                if (!this._cosThumbRenderer) {
+                    this._cosThumbRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+                }
+                this._cosThumbRenderer.setPixelRatio(1);
+                this._cosThumbRenderer.setSize(384, 384, false);
+                return this._cosThumbRenderer;
+            },
+
+            getCosmeticThumbUrl(cosId) {
+                if (!this._cosmeticThumbs) this._cosmeticThumbs = {};
+                return this._cosmeticThumbs[cosId] || '';
+            },
+
+            scheduleCosmeticThumbHydration() {
+                if (!this._cosmeticThumbs) this._cosmeticThumbs = {};
+                const imgs = Array.from(document.querySelectorAll('#modal-body-content img[data-cos-thumb]'))
+                    .filter(img => !img.getAttribute('src'));
+                if (imgs.length === 0) return;
+                const renderer = this.getSharedThumbRenderer();
+                let batch = 0;
+                for (const img of imgs) {
+                    const cid = img.getAttribute('data-cos-thumb');
+                    let url = this._cosmeticThumbs[cid];
+                    if (!url) {
+                        if (batch >= 24) break;
+                        const cos = COSMETIC_CATALOG.find(c => c.id === cid);
+                        if (cos && typeof Game.renderCosmeticThumbDataUrl === 'function') {
+                            url = Game.renderCosmeticThumbDataUrl(cos, renderer);
+                            this._cosmeticThumbs[cid] = url;
+                        }
+                        batch++;
+                    }
+                    if (url) {
+                        img.src = url;
+                        img.classList.remove('opacity-0');
+                    }
+                }
+                const remaining = Array.from(document.querySelectorAll('#modal-body-content img[data-cos-thumb]'))
+                    .some(img => !img.getAttribute('src'));
+                if (remaining) {
+                    requestAnimationFrame(() => {
+                        if (this.activeModal === 'shop_tab' || this.activeModal === 'inventory') {
+                            this.scheduleCosmeticThumbHydration();
+                        }
+                    });
+                }
+            },
+
+            scheduleMovieThumbHydration() {
+                if (!this._movieThumbs) this._movieThumbs = {};
+                const imgs = Array.from(document.querySelectorAll('#modal-body-content img[data-movie-thumb]'))
+                    .filter(img => !img.getAttribute('src'));
+                if (imgs.length === 0) return;
+                if (!this._movieRenderer) {
+                    this._movieRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, preserveDrawingBuffer: true });
+                }
+                this._movieRenderer.setSize(320, 180, false);
+                this._movieRenderer.setPixelRatio(1);
+                let batch = 0;
+                for (const img of imgs) {
+                    const csKey = img.getAttribute('data-movie-thumb');
+                    let url = this._movieThumbs[csKey];
+                    if (!url) {
+                        if (batch >= 6) break;
+                        const secIdx = parseInt(img.getAttribute('data-sec-idx') || '0', 10);
+                        const hm = img.getAttribute('data-hard') === '1';
+                        const bonAttr = img.getAttribute('data-bonus-idx');
+                        const bonIdx = (bonAttr !== null && bonAttr !== '') ? parseInt(bonAttr, 10) : null;
+                        if (typeof Game.renderCutsceneKeyFrameThumb === 'function') {
+                            url = Game.renderCutsceneKeyFrameThumb(csKey, secIdx, hm, bonIdx, this._movieRenderer);
+                            this._movieThumbs[csKey] = url;
+                        }
+                        batch++;
+                    }
+                    if (url) {
+                        img.src = url;
+                        img.classList.remove('opacity-0');
+                    }
+                }
+                const remaining = Array.from(document.querySelectorAll('#modal-body-content img[data-movie-thumb]'))
+                    .some(img => !img.getAttribute('src'));
+                if (remaining) {
+                    requestAnimationFrame(() => {
+                        if (this.activeModal === 'codex' && this.codexSubtab === 'movies') {
+                            this.scheduleMovieThumbHydration();
+                        }
+                    });
                 }
             },
 
@@ -39707,7 +40348,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 if (Game.isThirdPersonCamera && Game.isThirdPersonCamera() && !Game.emoteWheelOpen) {
                     const canvas = document.getElementById('game-canvas');
                     if (canvas && canvas.requestPointerLock) {
-                        try { canvas.requestPointerLock(); } catch (e) { }
+                        try { const _pl = canvas.requestPointerLock(); if (_pl && typeof _pl.catch === 'function') _pl.catch(() => {}); } catch (e) { }
                     }
                 }
             },
@@ -40065,12 +40706,16 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 const cos = COSMETIC_CATALOG.find(c => c.id === cosId);
                 if (!cos || !st.cosmetics.owned.includes(cosId)) return;
                 st.cosmetics.equipped[cos.slot] = cosId;
+                if (this.previewShopCosId) {
+                    const p = COSMETIC_CATALOG.find(c => c.id === this.previewShopCosId);
+                    if (p && p.slot === cos.slot) this.previewShopCosId = cosId;
+                }
                 AudioEngine.sfx('loot');
                 Game.updateCosmeticsVisuals();
                 Game.triggerPreviewEmote('wave');
                 Game.saveGame();
-                if (this.activeModal === 'inventory') {
-                    this.openModal('inventory');
+                if (this.activeModal === 'inventory' || this.activeModal === 'shop_tab') {
+                    this.openModal(this.activeModal);
                 }
             },
 
@@ -40079,12 +40724,16 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 Game.ensureCosmeticsState();
                 if (!st.cosmetics.equipped[slot]) return;
                 st.cosmetics.equipped[slot] = null;
+                if (this.previewShopCosId) {
+                    const p = COSMETIC_CATALOG.find(c => c.id === this.previewShopCosId);
+                    if (p && p.slot === slot) this.previewShopCosId = null;
+                }
                 AudioEngine.sfx('reload');
                 Game.updateCosmeticsVisuals();
                 Game.triggerPreviewEmote('confused');
                 Game.saveGame();
-                if (this.activeModal === 'inventory') {
-                    this.openModal('inventory');
+                if (this.activeModal === 'inventory' || this.activeModal === 'shop_tab') {
+                    this.openModal(this.activeModal);
                 }
             },
 
@@ -40971,7 +41620,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                                 `).join('')}
                                             </div>
 
-                                            <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 overflow-y-auto flex-1 pr-1 content-start">
+                                            <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2.5 overflow-y-auto flex-1 pr-1 content-start" style="grid-auto-rows: max-content;">
                                                 ${filteredOwnedCos.length === 0 ? `
                                                     <div class="col-span-full text-sm text-slate-400 text-center py-12 ui-surface p-6">
                                                         No cosmetics unlocked in this category yet.<br>
@@ -40981,21 +41630,26 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                                     </div>
                                                 ` : filteredOwnedCos.map(cos => {
                                                     const isEq = eqCos[cos.slot] === cos.id;
+                                                    const cachedThumb = this.getCosmeticThumbUrl(cos.id);
                                                     return `
-                                                        <div class="ui-surface p-3.5 border ${isEq ? 'border-fuchsia-400 bg-fuchsia-950/25' : (cos.exclusiveTensor ? 'border-rose-500/80' : 'border-slate-800')} flex flex-col justify-between gap-2.5">
-                                                            <div>
-                                                                <div class="flex justify-between items-center text-[11px] font-cinzel uppercase text-slate-400">
-                                                                    <span>${cos.slotLabel}</span>
-                                                                    ${isEq ? '<span class="text-fuchsia-300 font-bold">EQUIPPED</span>' : ''}
-                                                                </div>
-                                                                <div class="text-sm font-bold ${cos.color} mt-0.5">${cos.name}</div>
-                                                                <div class="text-xs text-slate-400 mt-1 leading-snug">${cos.desc}</div>
+                                                        <div class="ui-surface border ${isEq ? 'border-fuchsia-400 bg-fuchsia-950/25 ring-1 ring-fuchsia-400/50' : (cos.exclusiveTensor ? 'border-rose-500/80' : 'border-slate-800 hover:border-slate-600')} flex flex-col justify-between transition">
+                                                            <div class="relative shrink-0 w-full bg-[#071022] border-b border-slate-800/90 flex items-center justify-center overflow-hidden" style="aspect-ratio: 1 / 1; min-height: 130px;">
+                                                                <i class="fa-solid ${cos.icon} text-3xl text-slate-600/70 absolute pointer-events-none"></i>
+                                                                <img data-cos-thumb="${cos.id}" ${cachedThumb ? `src="${cachedThumb}"` : ''} alt="${cos.name}" class="relative z-10 w-full h-full object-contain transition-opacity duration-200 ${cachedThumb ? '' : 'opacity-0'}"/>
+                                                                <span class="absolute z-20 top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-slate-950/85 border border-slate-700/80 text-[9px] font-cinzel uppercase text-slate-300">${cos.slotLabel}</span>
+                                                                ${isEq ? '<span class="absolute z-20 top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-fuchsia-900/90 border border-fuchsia-400 text-[9px] font-cinzel font-bold text-fuchsia-200">EQUIPPED</span>' : ''}
                                                             </div>
-                                                            ${isEq ? `
-                                                                <button onclick="UI.unequipCosmetic('${cos.slot}')" class="arpg-btn py-1.5 text-xs text-rose-300 w-full">Remove</button>
-                                                            ` : `
-                                                                <button onclick="UI.equipCosmetic('${cos.id}')" class="arpg-btn-gold py-1.5 text-xs w-full">Equip</button>
-                                                            `}
+                                                            <div class="p-2.5 flex flex-col justify-between gap-2 flex-1">
+                                                                <div title="${cos.name} — ${cos.desc}">
+                                                                    <div class="text-xs font-bold ${cos.color} truncate">${cos.name}</div>
+                                                                    <div class="text-[11px] text-slate-400 line-clamp-2 leading-tight mt-0.5">${cos.desc}</div>
+                                                                </div>
+                                                                ${isEq ? `
+                                                                    <button onclick="UI.unequipCosmetic('${cos.slot}')" class="arpg-btn py-1.5 text-[11px] text-rose-300 w-full">Remove</button>
+                                                                ` : `
+                                                                    <button onclick="UI.equipCosmetic('${cos.id}')" class="arpg-btn-gold py-1.5 text-[11px] w-full">Equip</button>
+                                                                `}
+                                                            </div>
                                                         </div>
                                                     `;
                                                 }).join('')}
@@ -41674,7 +42328,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                     </div>
                                 </div>
                             ` : `
-                                <div class="arpg-panel p-5 flex flex-col gap-4 border-fuchsia-500/45 h-full">
+                                <div class="arpg-panel p-5 flex flex-col gap-4 border-fuchsia-500/45">
                                     <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-3 gap-2 shrink-0">
                                         <h4 class="font-cinzel font-bold text-sm text-fuchsia-300">
                                             Operative Cosmetics Boutique (${st.cosmetics.owned.length}/${COSMETIC_CATALOG.length} Unlocked)
@@ -41694,33 +42348,39 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                             `).join('')}
                                         </div>
                                     </div>
-                                    <div class="grid grid-cols-1 ${this.previewShopCosId ? 'lg:grid-cols-3' : ''} gap-4 flex-1 min-h-0">
-                                        <div class="${this.previewShopCosId ? 'lg:col-span-2' : ''} grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 ${this.previewShopCosId ? '' : 'lg:grid-cols-4'} gap-3 text-xs overflow-y-auto pr-1 content-start">
+                                    <div class="grid grid-cols-1 ${this.previewShopCosId ? 'lg:grid-cols-3' : ''} gap-4 items-start">
+                                        <div class="${this.previewShopCosId ? 'lg:col-span-2 grid-cols-2 sm:grid-cols-3 xl:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'} grid gap-3 text-xs content-start" style="grid-auto-rows: max-content;">
                                             ${shopBoutiqueList.filter(c => !c.exclusiveAch && (!this.selectedShopCosSlot || this.selectedShopCosSlot === 'All' || c.slot === this.selectedShopCosSlot)).map(cos => {
                                                 const owned = st.cosmetics.owned.includes(cos.id);
                                                 const equipped = st.cosmetics.equipped[cos.slot] === cos.id;
                                                 const isPrev = this.previewShopCosId === cos.id;
+                                                const cachedThumb = this.getCosmeticThumbUrl(cos.id);
                                                 return `
-                                                    <div class="ui-surface p-3.5 border ${isPrev ? 'border-cyan-400 ring-1 ring-cyan-300' : (equipped ? 'border-fuchsia-400 bg-fuchsia-950/20' : (owned ? 'border-emerald-600/60' : 'border-slate-800'))} flex flex-col justify-between gap-2.5">
-                                                        <div>
-                                                            <div class="flex justify-between items-center text-[11px] font-cinzel uppercase text-slate-400">
-                                                                <span>${cos.slotLabel}</span>
-                                                                ${owned ? '<span class="text-emerald-400 font-bold">OWNED</span>' : `<span class="text-amber-400 font-bold">${cos.price.toLocaleString()}₵</span>`}
-                                                            </div>
-                                                            <div class="font-bold ${cos.color} mt-1 text-sm">${cos.name}</div>
-                                                            <div class="text-xs text-slate-400 mt-1 leading-snug">${cos.desc}</div>
+                                                    <div class="ui-surface border ${isPrev ? 'border-cyan-400 ring-1 ring-cyan-300 bg-cyan-950/15' : (equipped ? 'border-fuchsia-400 bg-fuchsia-950/20' : (owned ? 'border-emerald-600/60' : 'border-slate-800 hover:border-slate-600'))} flex flex-col justify-between transition">
+                                                        <div onclick="UI.previewShopCosmetic('${cos.id}')" class="relative shrink-0 w-full bg-[#071022] border-b border-slate-800/90 flex items-center justify-center overflow-hidden cursor-pointer group" style="aspect-ratio: 1 / 1; min-height: 140px;" title="Click to Try On on Zed3">
+                                                            <i class="fa-solid ${cos.icon} text-3xl text-slate-600/70 absolute pointer-events-none"></i>
+                                                            <img data-cos-thumb="${cos.id}" ${cachedThumb ? `src="${cachedThumb}"` : ''} alt="${cos.name}" class="relative z-10 w-full h-full object-contain group-hover:scale-105 transition-transform duration-200 ${cachedThumb ? '' : 'opacity-0'}"/>
+                                                            <span class="absolute z-20 top-1.5 left-1.5 px-1.5 py-0.5 rounded bg-slate-950/85 border border-slate-700/80 text-[9px] font-cinzel uppercase text-slate-300">${cos.slotLabel}</span>
+                                                            ${equipped ? '<span class="absolute z-20 top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-fuchsia-900/90 border border-fuchsia-400 text-[9px] font-cinzel font-bold text-fuchsia-200">EQUIPPED</span>' : (owned ? '<span class="absolute z-20 top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-emerald-950/90 border border-emerald-500/70 text-[9px] font-cinzel font-bold text-emerald-300">OWNED</span>' : `<span class="absolute z-20 top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-slate-950/90 border border-amber-500/60 text-[10px] font-cinzel font-bold text-amber-300">${cos.price.toLocaleString()}₵</span>`)}
+                                                            ${isPrev ? '<span class="absolute z-20 bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-cyan-900/90 border border-cyan-300 text-[9px] font-cinzel font-bold text-cyan-200">TRYING ON</span>' : ''}
                                                         </div>
-                                                        <div class="flex gap-2 pt-1">
-                                                            <button onclick="UI.previewShopCosmetic('${cos.id}')" class="arpg-btn px-3 py-1.5 text-xs ${isPrev ? 'text-cyan-200 border-cyan-400' : 'text-sky-300'}" title="Try On in 3D Preview">
-                                                                Preview
-                                                            </button>
-                                                            ${!owned ? `
-                                                                <button onclick="UI.buyCosmetic('${cos.id}')" class="arpg-btn-gold py-1.5 text-xs flex-1" ${st.gold < cos.price ? 'disabled' : ''}>Buy (${cos.price.toLocaleString()}₵)</button>
-                                                            ` : (equipped ? `
-                                                                <button onclick="UI.unequipCosmetic('${cos.slot}'); UI.openModal('shop_tab');" class="arpg-btn py-1.5 text-xs text-rose-300 flex-1">Remove</button>
-                                                            ` : `
-                                                                <button onclick="UI.equipCosmetic('${cos.id}'); UI.openModal('shop_tab');" class="arpg-btn py-1.5 text-xs text-emerald-300 flex-1">Equip</button>
-                                                            `)}
+                                                        <div class="p-2.5 flex flex-col justify-between gap-2 flex-1">
+                                                            <div title="${cos.name} — ${cos.desc}">
+                                                                <div class="font-bold ${cos.color} text-xs truncate">${cos.name}</div>
+                                                                <div class="text-[11px] text-slate-400 line-clamp-2 leading-tight mt-0.5">${cos.desc}</div>
+                                                            </div>
+                                                            <div class="flex gap-1.5 pt-0.5">
+                                                                <button onclick="UI.previewShopCosmetic('${cos.id}')" class="arpg-btn px-2 py-1.5 text-[11px] ${isPrev ? 'text-cyan-200 border-cyan-400' : 'text-sky-300'}" title="Try On in 3D Preview">
+                                                                    <i class="fa-solid fa-eye"></i>
+                                                                </button>
+                                                                ${!owned ? `
+                                                                    <button onclick="UI.buyCosmetic('${cos.id}')" class="arpg-btn-gold py-1.5 text-[11px] flex-1 truncate" ${st.gold < cos.price ? 'disabled' : ''}>Buy ${cos.price.toLocaleString()}₵</button>
+                                                                ` : (equipped ? `
+                                                                    <button onclick="UI.unequipCosmetic('${cos.slot}'); UI.openModal('shop_tab');" class="arpg-btn py-1.5 text-[11px] text-rose-300 flex-1">Remove</button>
+                                                                ` : `
+                                                                    <button onclick="UI.equipCosmetic('${cos.id}'); UI.openModal('shop_tab');" class="arpg-btn py-1.5 text-[11px] text-emerald-300 flex-1">Equip</button>
+                                                                `)}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 `;
@@ -41730,7 +42390,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                             const pCos = COSMETIC_CATALOG.find(c => c.id === this.previewShopCosId);
                                             const pOwned = pCos && st.cosmetics.owned.includes(pCos.id);
                                             return `
-                                                <div class="ui-surface-elevated p-4 border-cyan-400 flex flex-col gap-3">
+                                                <div class="ui-surface-elevated p-4 border-cyan-400 flex flex-col gap-3 lg:sticky lg:top-0 self-start">
                                                     <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                                                         <span class="text-xs font-cinzel font-bold text-cyan-300">TRY-ON PREVIEW: ${pCos ? pCos.name : ''}</span>
                                                         <button onclick="UI.previewShopCosId=null; Game.updateCosmeticsVisuals(); UI.openModal('shop_tab');" class="text-xs text-rose-400 hover:text-white">✕</button>
@@ -42520,77 +43180,87 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 </div>
 
                 ${cSub === 'movies' ? `
-                <!-- MOVIES SUBPAGE: CUTSCENE BRIEFING THEATER -->
+                <!-- MOVIES SUBPAGE: UNIFORM CUTSCENE BRIEFING THEATER -->
                 <div class="arpg-panel p-5 border-cyan-500/60 flex-1 overflow-y-auto flex flex-col gap-4">
                     <div class="flex flex-wrap justify-between items-center border-b border-cyan-900/80 pb-3 gap-2">
                         <div>
-                            <h4 class="font-cinzel font-bold text-base text-cyan-300"><i class="fa-solid fa-clapperboard mr-2"></i>SECTOR BRIEFING CUTSCENE ARCHIVES</h4>
+                            <h4 class="font-cinzel font-bold text-base text-cyan-300"><i class="fa-solid fa-clapperboard mr-2"></i>SECTOR BRIEFING CUTSCENE ARCHIVES (21 ENTRIES)</h4>
                             <p class="text-xs text-slate-400">Replay unlocked deployment cinematics across Normal Sectors, Hard Mode Overrides, Tensor, and Bonus Protocols.</p>
                         </div>
                         <span class="text-[11px] font-cinzel text-cyan-200 bg-cyan-950/60 border border-cyan-700/70 px-3 py-1">
                             Unlocked upon first sector deployment
                         </span>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-xs">
-                        ${BIOMES.map((b, idx) => {
-                            const vc = st.viewedCutscenes || {};
-                            const normSeen = Boolean(vc[`sec_${idx}_norm`]);
-                            const hardSeen = Boolean(vc[`sec_${idx}_hard`]);
-                            return `
-                                <div class="bg-slate-950/90 p-3.5 border border-slate-800 flex flex-col justify-between gap-3 hover:border-sky-500/60 transition">
-                                    <div>
-                                        <span class="text-[10px] font-cinzel text-slate-400 uppercase tracking-widest">SECTOR 0${idx + 1}</span>
-                                        <div class="font-cinzel font-bold text-sm text-sky-300 truncate mt-0.5">${b.name}</div>
-                                        <div class="text-[11px] text-slate-400 truncate">${b.subtitle}</div>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button onclick="Game.startSectorCutscene(${idx}, false, true)" class="arpg-btn flex-1 py-1.5 text-[11px] ${normSeen ? 'text-emerald-300 border-emerald-600/70' : 'opacity-40'}" ${normSeen && !isDeployed ? '' : 'disabled'}>
-                                            ▶ Normal
-                                        </button>
-                                        <button onclick="Game.startSectorCutscene(${idx}, true, true)" class="arpg-btn flex-1 py-1.5 text-[11px] ${hardSeen ? 'text-fuchsia-300 border-fuchsia-600/70' : 'opacity-40'}" ${hardSeen && !isDeployed ? '' : 'disabled'}>
-                                            ▶ Hard Mode
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                        }).join('')}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 text-xs content-start" style="grid-auto-rows: max-content;">
                         ${(() => {
                             const vc = st.viewedCutscenes || {};
-                            const tenSeen = Boolean(vc['sec_9_tensor']);
-                            const bon0Seen = Boolean(vc['bonus_0']);
-                            const bon1Seen = Boolean(vc['bonus_1']);
-                            return `
-                                <div class="bg-rose-950/20 p-3.5 border border-rose-700/80 flex flex-col justify-between gap-3">
-                                    <div>
-                                        <span class="text-[10px] font-cinzel text-rose-400 uppercase tracking-widest">OMEGA ANOMALY // SECTOR X</span>
-                                        <div class="font-cinzel font-bold text-sm text-rose-300 truncate mt-0.5">Zed Annihilation Tensor</div>
-                                        <div class="text-[11px] text-slate-400">20-Floor Omega Tower Intro</div>
+                            const movieCards = [];
+                            BIOMES.forEach((b, idx) => {
+                                movieCards.push({
+                                    csKey: `sec_${idx}_norm`, secIdx: idx, hard: false, bonusIdx: null,
+                                    tag: `SECTOR 0${idx + 1} // NORMAL`, title: b.name, sub: b.subtitle,
+                                    borderCls: 'border-sky-600/70', badgeCls: 'text-sky-300 border-sky-500/60', btnCls: 'text-emerald-300 border-emerald-600/70',
+                                    seen: Boolean(vc[`sec_${idx}_norm`]), lockHint: `Deploy to Sector 0${idx + 1}`
+                                });
+                                movieCards.push({
+                                    csKey: `sec_${idx}_hard`, secIdx: idx, hard: true, bonusIdx: null,
+                                    tag: `SECTOR 0${idx + 1} // HARD`, title: b.name, sub: 'Hard Mode Override Cinematic',
+                                    borderCls: 'border-fuchsia-600/70', badgeCls: 'text-fuchsia-300 border-fuchsia-500/60', btnCls: 'text-fuchsia-300 border-fuchsia-600/70',
+                                    seen: Boolean(vc[`sec_${idx}_hard`]), lockHint: `Deploy to Sector 0${idx + 1} (Hard)`
+                                });
+                            });
+                            movieCards.push({
+                                csKey: 'sec_9_tensor', secIdx: 9, hard: true, bonusIdx: null,
+                                tag: 'SECTOR X // OMEGA', title: 'Zed Annihilation Tensor', sub: '20-Floor Omega Tower Intro',
+                                borderCls: 'border-rose-600/80', badgeCls: 'text-rose-300 border-rose-500/70', btnCls: 'text-rose-300 border-rose-500',
+                                seen: Boolean(vc['sec_9_tensor']), lockHint: 'Deploy to Annihilation Tensor'
+                            });
+                            movieCards.push({
+                                csKey: 'bonus_0', secIdx: 0, hard: false, bonusIdx: 0,
+                                tag: 'BONUS PROTOCOL 01', title: 'Mag-Train 00-EXPRESS', sub: 'Sub-Orbital Vacuum Express',
+                                borderCls: 'border-cyan-600/80', badgeCls: 'text-cyan-300 border-cyan-500/70', btnCls: 'text-cyan-300 border-cyan-500',
+                                seen: Boolean(vc['bonus_0']), lockHint: 'Deploy to Bonus Protocol 01'
+                            });
+                            movieCards.push({
+                                csKey: 'bonus_1', secIdx: 0, hard: false, bonusIdx: 1,
+                                tag: 'BONUS PROTOCOL 02', title: 'The Void Graveyard', sub: 'Dismantled Orbital Drydock 08',
+                                borderCls: 'border-indigo-600/80', badgeCls: 'text-indigo-300 border-indigo-500/70', btnCls: 'text-indigo-300 border-indigo-500',
+                                seen: Boolean(vc['bonus_1']), lockHint: 'Deploy to Bonus Protocol 02'
+                            });
+
+                            return movieCards.map(mc => {
+                                const cachedThumb = mc.seen && this._movieThumbs ? (this._movieThumbs[mc.csKey] || '') : '';
+                                const playCall = `Game.startSectorCutscene(${mc.secIdx}, ${mc.hard ? 'true' : 'false'}, true, ${mc.bonusIdx === null ? 'null' : mc.bonusIdx})`;
+                                return `
+                                    <div class="bg-slate-950/95 border ${mc.seen ? mc.borderCls : 'border-slate-800'} flex flex-col justify-between h-full">
+                                        <div class="relative shrink-0 w-full bg-[#040814] border-b border-slate-800/90 overflow-hidden flex items-center justify-center ${mc.seen && !isDeployed ? 'cursor-pointer group' : ''}" style="aspect-ratio: 16 / 9; min-height: 120px;" ${mc.seen && !isDeployed ? `onclick="${playCall}"` : ''}>
+                                            ${mc.seen ? `
+                                                <img data-movie-thumb="${mc.csKey}" data-sec-idx="${mc.secIdx}" data-hard="${mc.hard ? '1' : '0'}" data-bonus-idx="${mc.bonusIdx === null ? '' : mc.bonusIdx}" ${cachedThumb ? `src="${cachedThumb}"` : ''} alt="${mc.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${cachedThumb ? '' : 'opacity-0'}"/>
+                                                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40 pointer-events-none"></div>
+                                                <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                                    <span class="w-10 h-10 rounded-full bg-slate-950/85 border border-cyan-300 flex items-center justify-center text-cyan-200 text-sm shadow-lg"><i class="fa-solid fa-play ml-0.5"></i></span>
+                                                </div>
+                                            ` : `
+                                                <div class="w-full h-full flex flex-col items-center justify-center gap-1.5 bg-[repeating-linear-gradient(0deg,rgba(15,23,42,0.75)_0px,rgba(15,23,42,0.75)_2px,rgba(2,6,23,0.95)_2px,rgba(2,6,23,0.95)_5px)] text-slate-500 px-3 text-center">
+                                                    <i class="fa-solid fa-lock text-lg text-slate-600"></i>
+                                                    <span class="font-cinzel font-bold text-[10px] tracking-widest text-slate-400">SIGNAL ENCRYPTED</span>
+                                                    <span class="text-[10px] text-slate-500 truncate max-w-full">${mc.lockHint}</span>
+                                                </div>
+                                            `}
+                                            <span class="absolute top-1.5 left-1.5 px-1.5 py-0.5 bg-slate-950/90 border ${mc.seen ? mc.badgeCls : 'border-slate-700 text-slate-500'} text-[9px] font-cinzel font-bold tracking-wider">${mc.tag}</span>
+                                        </div>
+                                        <div class="p-3 flex flex-col justify-between gap-2.5 flex-1">
+                                            <div>
+                                                <div class="font-cinzel font-bold text-sm ${mc.seen ? 'text-white' : 'text-slate-500'} truncate">${mc.title}</div>
+                                                <div class="text-[11px] text-slate-400 truncate mt-0.5">${mc.sub}</div>
+                                            </div>
+                                            <button onclick="${playCall}" class="arpg-btn py-1.5 text-[11px] w-full ${mc.seen ? mc.btnCls : 'opacity-40 text-slate-500'}" ${mc.seen && !isDeployed ? '' : 'disabled'}>
+                                                ${mc.seen ? '▶ Replay Cutscene' : '<i class="fa-solid fa-lock mr-1"></i> Encrypted'}
+                                            </button>
+                                        </div>
                                     </div>
-                                    <button onclick="Game.startSectorCutscene(9, true, true)" class="arpg-btn py-1.5 text-[11px] w-full ${tenSeen ? 'text-rose-300 border-rose-500' : 'opacity-40'}" ${tenSeen && !isDeployed ? '' : 'disabled'}>
-                                        ▶ Replay Tensor Intro
-                                    </button>
-                                </div>
-                                <div class="bg-cyan-950/20 p-3.5 border border-cyan-700/80 flex flex-col justify-between gap-3">
-                                    <div>
-                                        <span class="text-[10px] font-cinzel text-cyan-400 uppercase tracking-widest">BONUS PROTOCOL 01</span>
-                                        <div class="font-cinzel font-bold text-sm text-cyan-300 truncate mt-0.5">Mag-Train 00-EXPRESS</div>
-                                        <div class="text-[11px] text-slate-400">Sub-Orbital Vacuum Express</div>
-                                    </div>
-                                    <button onclick="Game.startSectorCutscene(0, false, true, 0)" class="arpg-btn py-1.5 text-[11px] w-full ${bon0Seen ? 'text-cyan-300 border-cyan-500' : 'opacity-40'}" ${bon0Seen && !isDeployed ? '' : 'disabled'}>
-                                        ▶ Replay Mag-Train Intro
-                                    </button>
-                                </div>
-                                <div class="bg-indigo-950/20 p-3.5 border border-indigo-700/80 flex flex-col justify-between gap-3">
-                                    <div>
-                                        <span class="text-[10px] font-cinzel text-indigo-400 uppercase tracking-widest">BONUS PROTOCOL 02</span>
-                                        <div class="font-cinzel font-bold text-sm text-indigo-300 truncate mt-0.5">The Void Graveyard</div>
-                                        <div class="text-[11px] text-slate-400">Dismantled Orbital Drydock 08</div>
-                                    </div>
-                                    <button onclick="Game.startSectorCutscene(0, false, true, 1)" class="arpg-btn py-1.5 text-[11px] w-full ${bon1Seen ? 'text-indigo-300 border-indigo-500' : 'opacity-40'}" ${bon1Seen && !isDeployed ? '' : 'disabled'}>
-                                        ▶ Replay Void Graveyard Intro
-                                    </button>
-                                </div>
-                            `;
+                                `;
+                            }).join('');
                         })()}
                     </div>
                 </div>
@@ -42618,7 +43288,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                 onclick="UI.handleCodexCanvasClick(event)"
                                 onmousemove="UI.handleCodexCanvasHover(event)"
                                 onmouseleave="UI.hoveredDossierId = null; UI.renderCodexSchematicCanvas();"
-                                class="w-full h-full object-contain cursor-pointer select-none"></canvas>
+                                class="block cursor-pointer select-none"></canvas>
                         </div>
 
                         <!-- Bottom Quick-Node Strip + Prev/Next -->
@@ -43302,30 +43972,34 @@ ${selLog.text}
                 input.click();
             },
 
-            getCodexNodePositions() {
-                const cx = 300, cy = 195;
+            getCodexNodePositions(w = 600, h = 390) {
+                const cx = w * 0.5, cy = h * 0.5;
+                const R = Math.max(120, Math.min(w, h) * 0.42);
+                const rNorm = R * 0.44;
+                const rHard = R * 0.72;
+                const rBonus = R * 0.96;
                 const nodes = [];
                 LORE_ENTRIES.forEach(log => {
                     let nx = cx, ny = cy, col = '#34d399', cat = 'NORMAL', shortTag = 'D';
                     if (log.id === 'lore_hub') {
                         nx = cx; ny = cy; col = '#38bdf8'; cat = 'SPECIAL'; shortTag = 'FOB';
                     } else if (log.id === 'lore_tensor') {
-                        nx = cx; ny = cy - 42; col = '#fb7185'; cat = 'SPECIAL'; shortTag = 'TX';
+                        nx = cx; ny = cy - R * 0.21; col = '#fb7185'; cat = 'SPECIAL'; shortTag = 'TX';
                     } else if (log.id.startsWith('lore_bonus_')) {
                         const bIdx = Math.max(0, (parseInt(log.id.replace('lore_bonus_', ''), 10) || 1) - 1);
                         const bAng = -Math.PI * 0.78 + (bIdx / 5) * Math.PI * 1.56;
-                        nx = cx + Math.cos(bAng) * 238;
-                        ny = cy + Math.sin(bAng) * 162;
+                        nx = cx + Math.cos(bAng) * rBonus;
+                        ny = cy + Math.sin(bAng) * rBonus;
                         col = '#22d3ee'; cat = 'BONUS'; shortTag = `B${bIdx + 1}`;
                     } else if (log.isHardMode) {
                         const ang = -Math.PI * 0.5 + (log.realmIdx / 9) * Math.PI * 2 + 0.16;
-                        nx = cx + Math.cos(ang) * 158;
-                        ny = cy + Math.sin(ang) * 124;
+                        nx = cx + Math.cos(ang) * rHard;
+                        ny = cy + Math.sin(ang) * rHard;
                         col = '#e879f9'; cat = 'HARD'; shortTag = `H${log.realmIdx + 1}`;
                     } else {
                         const ang = -Math.PI * 0.5 + (log.realmIdx / 9) * Math.PI * 2;
-                        nx = cx + Math.cos(ang) * 102;
-                        ny = cy + Math.sin(ang) * 84;
+                        nx = cx + Math.cos(ang) * rNorm;
+                        ny = cy + Math.sin(ang) * rNorm;
                         col = '#34d399'; cat = 'NORMAL'; shortTag = `S${log.realmIdx + 1}`;
                     }
                     nodes.push({ id: log.id, x: nx, y: ny, col, cat, shortTag, log });
@@ -43338,28 +44012,53 @@ ${selLog.text}
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
                 if (!ctx) return;
-                const w = canvas.width, h = canvas.height;
-                const cx = 300, cy = 195;
+
+                if (!this._codexResizeBound) {
+                    this._codexResizeBound = true;
+                    window.addEventListener('resize', () => {
+                        if (this.activeModal === 'codex' && (this.codexSubtab || 'documents') === 'documents') {
+                            this.renderCodexSchematicCanvas();
+                        }
+                    });
+                }
+
+                const wrap = canvas.parentElement;
+                const w = Math.max(320, Math.floor((wrap && wrap.clientWidth) ? wrap.clientWidth : 600));
+                const h = Math.max(250, Math.floor((wrap && wrap.clientHeight) ? wrap.clientHeight : 390));
+                const dpr = Math.min(2, window.devicePixelRatio || 1);
+                const targetW = Math.round(w * dpr);
+                const targetH = Math.round(h * dpr);
+                if (canvas.width !== targetW || canvas.height !== targetH) {
+                    canvas.width = targetW;
+                    canvas.height = targetH;
+                }
+                canvas.style.width = `${w}px`;
+                canvas.style.height = `${h}px`;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                const cx = w * 0.5, cy = h * 0.5;
+                const R = Math.max(120, Math.min(w, h) * 0.42);
                 const discoveredSet = new Set(Game.state?.discoveredLore || []);
                 const filt = this.codexFilter || 'ALL';
-                const nodes = this.getCodexNodePositions();
+                const nodes = this.getCodexNodePositions(w, h);
                 this._codexSchematicNodes = nodes;
 
                 ctx.clearRect(0, 0, w, h);
                 ctx.fillStyle = '#030712';
                 ctx.fillRect(0, 0, w, h);
 
-                // Blueprint grid lines
+                // Blueprint grid lines (crisp 0.5px pixel alignment)
                 ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
                 ctx.lineWidth = 1;
-                for (let gx = 0; gx <= w; gx += 30) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, h); ctx.stroke(); }
-                for (let gy = 0; gy <= h; gy += 30) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(w, gy); ctx.stroke(); }
+                for (let gx = 0; gx <= w; gx += 32) { ctx.beginPath(); ctx.moveTo(gx + 0.5, 0); ctx.lineTo(gx + 0.5, h); ctx.stroke(); }
+                for (let gy = 0; gy <= h; gy += 32) { ctx.beginPath(); ctx.moveTo(0, gy + 0.5); ctx.lineTo(w, gy + 0.5); ctx.stroke(); }
 
-                // Orbital Station Rings (Inner Normal, Outer Hard, Far Bonus Orbit)
-                [[102, 84, 'rgba(52,211,153,0.22)'], [158, 124, 'rgba(232,121,249,0.22)'], [238, 162, 'rgba(34,211,238,0.18)']].forEach(([rx, ry, sc]) => {
+                // True Circular Orbital Station Rings (never stretched ellipses!)
+                [[R * 0.44, 'rgba(52,211,153,0.26)'], [R * 0.72, 'rgba(232,121,249,0.26)'], [R * 0.96, 'rgba(34,211,238,0.20)']].forEach(([rad, sc]) => {
                     ctx.strokeStyle = sc;
+                    ctx.lineWidth = 1.1;
                     ctx.beginPath();
-                    ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+                    ctx.arc(cx, cy, rad, 0, Math.PI * 2);
                     ctx.stroke();
                 });
 
@@ -43369,7 +44068,7 @@ ${selLog.text}
                     const match = filt === 'ALL' || n.cat === filt;
                     if (!match) return;
                     ctx.strokeStyle = n.id === this.selectedDossierId ? n.col : 'rgba(100,116,139,0.22)';
-                    ctx.lineWidth = n.id === this.selectedDossierId ? 1.8 : 0.8;
+                    ctx.lineWidth = n.id === this.selectedDossierId ? 1.8 : 0.9;
                     ctx.beginPath();
                     ctx.moveTo(cx, cy);
                     ctx.lineTo(n.x, n.y);
@@ -43401,20 +44100,20 @@ ${selLog.text}
                     ctx.stroke();
 
                     ctx.fillStyle = disc ? '#e2e8f0' : '#64748b';
-                    ctx.font = 'bold 9px monospace';
+                    ctx.font = 'bold 10px monospace';
                     ctx.textAlign = 'center';
-                    ctx.fillText(n.shortTag, n.x, n.y + (n.y < cy ? -13 : 19));
+                    ctx.fillText(n.shortTag, n.x, n.y + (n.y < cy ? -13 : 20));
                 });
                 ctx.globalAlpha = 1.0;
 
                 // Legend HUD strip on canvas
                 ctx.fillStyle = '#94a3b8';
-                ctx.font = 'bold 10px monospace';
+                ctx.font = 'bold 11px monospace';
                 ctx.textAlign = 'left';
-                ctx.fillText('CITADEL-9 // ORBITAL TELEMETRY', 12, 18);
+                ctx.fillText('CITADEL-9 // ORBITAL TELEMETRY', 14, 20);
                 ctx.fillStyle = '#38bdf8';
                 ctx.textAlign = 'right';
-                ctx.fillText(`ACTIVE: ${(this.selectedDossierId || '').toUpperCase()}`, w - 12, 18);
+                ctx.fillText(`ACTIVE: ${(this.selectedDossierId || '').toUpperCase()}`, w - 14, 20);
             },
 
             _getCodexCanvasCoords(evt) {
@@ -43423,8 +44122,8 @@ ${selLog.text}
                 const rect = canvas.getBoundingClientRect();
                 if (rect.width <= 0 || rect.height <= 0) return null;
                 return {
-                    x: ((evt.clientX - rect.left) / rect.width) * canvas.width,
-                    y: ((evt.clientY - rect.top) / rect.height) * canvas.height
+                    x: evt.clientX - rect.left,
+                    y: evt.clientY - rect.top
                 };
             },
 
@@ -46436,7 +47135,7 @@ ${selLog.text}
                 if (G.isThirdPersonCamera && G.isThirdPersonCamera() && !UI.activeModal && !G.emoteWheelOpen) {
                     const canvas = document.getElementById('game-canvas');
                     if (canvas && canvas.requestPointerLock) {
-                        try { canvas.requestPointerLock(); } catch (e) { }
+                        try { const _pl = canvas.requestPointerLock(); if (_pl && typeof _pl.catch === 'function') _pl.catch(() => {}); } catch (e) { }
                     }
                 }
             }
