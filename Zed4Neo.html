@@ -3525,19 +3525,26 @@ boss_tensor: {
                     if (AudioCtx) {
                         this.ctx = new AudioCtx();
 
-                        // 1. Punchy Master Bus Compressor
+                        // 1. Clean Brickwall Ceiling Master Limiter (prevents hard digital clipping without ducking music on gun bursts)
                         const comp = this.ctx.createDynamicsCompressor();
-                        comp.threshold.value = -15;
-                        comp.knee.value = 14;
-                        comp.ratio.value = 5.0;
-                        comp.attack.value = 0.004;
-                        comp.release.value = 0.16;
+                        comp.threshold.value = -2.5;
+                        comp.knee.value = 4;
+                        comp.ratio.value = 14.0;
+                        comp.attack.value = 0.001;
+                        comp.release.value = 0.06;
                         comp.connect(this.ctx.destination);
                         this.masterBus = comp;
 
-                        // 2. Pure, Noise-Free Warm Mastering Bus (Bass Shelf + Analog 6.8kHz Low-Pass Roll-Off, Zero WaveShaper Buzz!)
+                        // 2. Pure, Noise-Free Warm Mastering Bus (Dedicated smooth music compressor + Bass Shelf + Warm Roll-Off)
                         this.musicBus = this.ctx.createGain();
                         this.musicBus.gain.value = this.musicVol;
+
+                        const musicComp = this.ctx.createDynamicsCompressor();
+                        musicComp.threshold.value = -14;
+                        musicComp.knee.value = 14;
+                        musicComp.ratio.value = 3.0;
+                        musicComp.attack.value = 0.008;
+                        musicComp.release.value = 0.18;
 
                         const bassShelf = this.ctx.createBiquadFilter();
                         bassShelf.type = 'lowshelf';
@@ -3551,7 +3558,8 @@ boss_tensor: {
 
                         this.musicBus.connect(bassShelf);
                         bassShelf.connect(warmRollOff);
-                        warmRollOff.connect(this.masterBus);
+                        warmRollOff.connect(musicComp);
+                        musicComp.connect(this.masterBus);
 
                         // Pre-allocated Stereo Panner Buses
                         this.panBuses = {};
@@ -3566,10 +3574,25 @@ boss_tensor: {
                             }
                         });
 
-                        // 3. SFX Bus
+                        // 3. Dedicated SFX Bus with independent SFX compression (never pumps music!) + pre-allocated spatial attenuation lanes
                         this.sfxBus = this.ctx.createGain();
                         this.sfxBus.gain.value = this.sfxVol;
-                        this.sfxBus.connect(this.masterBus);
+                        const sfxComp = this.ctx.createDynamicsCompressor();
+                        sfxComp.threshold.value = -9;
+                        sfxComp.knee.value = 10;
+                        sfxComp.ratio.value = 4.5;
+                        sfxComp.attack.value = 0.003;
+                        sfxComp.release.value = 0.09;
+                        this.sfxBus.connect(sfxComp);
+                        sfxComp.connect(this.masterBus);
+
+                        this.attenBuses = {};
+                        for (let aStep = 1; aStep <= 10; aStep++) {
+                            const g = this.ctx.createGain();
+                            g.gain.value = aStep / 10;
+                            g.connect(this.sfxBus);
+                            this.attenBuses[aStep] = g;
+                        }
 
                         const len = this.ctx.sampleRate * 2;
                         this.noiseBuffer = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
@@ -3613,7 +3636,13 @@ boss_tensor: {
             },
 
             out() {
-                return this.sfxBus || this.masterBus || (this.ctx && this.ctx.destination);
+                return this._sfxOutOverride || this.sfxBus || this.masterBus || (this.ctx && this.ctx.destination);
+            },
+
+            getAttenBus(atten = 1.0) {
+                if (!this.attenBuses) return this.out();
+                const step = Math.max(1, Math.min(10, Math.round(atten * 10)));
+                return this.attenBuses[step] || this.sfxBus;
             },
 
             musicOut() {
@@ -5332,6 +5361,29 @@ boss_tensor: {
             },
 
             sfx(name) {
+                if (this.muted) return;
+                const nowMs = performance.now();
+                if (!this._lastSfxMs) this._lastSfxMs = {};
+                const isRemote = Boolean(this._isRemoteSfx);
+                const throttleMap = {
+                    hit: 36, crit: 40, shieldHit: 40,
+                    smg: 36, minigun: 36, dagger: 36, pistol: 36, rifle: 34, suppressed: 36,
+                    buzzsaw_hit: 45, nanite_swarm: 60, electric_zap: 50
+                };
+                const minGap = isRemote ? Math.max(58, throttleMap[name] || 52) : (throttleMap[name] || 0);
+                if (minGap > 0) {
+                    const key = (isRemote ? 'r:' : 'l:') + name;
+                    if (nowMs - (this._lastSfxMs[key] || 0) < minGap) return false;
+                    this._lastSfxMs[key] = nowMs;
+                }
+                if (isRemote) {
+                    if (!this._remoteSfxWindow) this._remoteSfxWindow = [];
+                    while (this._remoteSfxWindow.length > 0 && nowMs - this._remoteSfxWindow[0] > 75) {
+                        this._remoteSfxWindow.shift();
+                    }
+                    if (this._remoteSfxWindow.length >= 4) return false;
+                    this._remoteSfxWindow.push(nowMs);
+                }
                 switch (name) {
                     case 'cleave':
                     case 'rifle':
@@ -5913,13 +5965,13 @@ boss_tensor: {
                 hp: 195000, // [BOSS_TUNING] SeraphimZeroHPHere (Sector 9 Normal)
                 dmg: 235,   // [BOSS_TUNING] SeraphimZeroDamageHere (Sector 9 Normal)
                 color: 0xfacc15, scale: 2.55, modelStyle: 'solar_architect', behavior: 'solar_architect', maxPhases: 3,
-                patterns: ['Dyson Solar Eclipse Flare', 'Collector Prism-Link', 'Supernova Accretion Ring']
+                patterns: ['Solar Eclipse Corona Judgment', 'Heliostat Prism Mortar Array', 'Solar Lance Crossing Blitz']
             },
             debrief: {
                 client: 'Executive Liquidation Board // Ticket #999-FINAL',
                 why: 'Top floor of the spire. Seraphim-Zero is venting raw solar plasma from the Dyson collector ring straight into the station grid. Put it down and your contract is officially complete.',
                 hazard: 'Orbital Solar Beams & Solar Lens Weavers — Each Solar Lens Weaver on the deck sustains 3–4 active drifting solar beams from the moment you arrive. Eliminate the Weavers to clear the beams!',
-                bossNote: 'Seraphim-Zero spans 3 phases, charges a blinding Solar Eclipse Flare (break line-of-sight behind a solid wall/pillar to block it!), and deploys golden Dyson Prisms—shatter them for a free 3s Overclock.'
+                bossNote: 'Seraphim-Zero spans 3 phases: sweeps rotating Solar Eclipse beam crosses paired with flare strikes, deploys shield-linked Heliostat Prisms that lob solar mortars (shatter them to stun & gain Tempo!), and chains high-speed Solar Lance dashes.'
             },
             desc: '12 Floors • 3 Checkpoints'
         }
@@ -9341,6 +9393,10 @@ const LORE_ENTRIES = [
                 bestTimesBonus: {},
                 lifetimeCreditsSpent: 0,
                 bountyContractKills: 0,
+                secondaryKills: 0,
+                cosmeticCreditsSpent: 0,
+                rankCosmetic100kLatched: false,
+                overdriveUses: 0,
                 flawlessNormalSectors: {},
                 flawlessHardSectors: {},
                 totalNeoGunsCreated: 0,
@@ -9757,6 +9813,35 @@ const LORE_ENTRIES = [
             return 1800; // 30 minutes per Bonus Protocol gauntlet
         },
 
+            checkCosmetic100kEquipLatch() {
+                const st = this.state;
+                if (!st) return false;
+                if (st.rankCosmetic100kLatched) return true;
+                this.ensureCosmeticsState();
+                const eq = st.cosmetics.equipped || {};
+                let equippedShopCosValue = 0;
+                let equippedShopCount = 0;
+                ['face', 'hair', 'hat', 'outfit', 'acc'].forEach(slot => {
+                    const cid = eq[slot];
+                    if (!cid) return;
+                    const c = COSMETIC_CATALOG.find(x => x.id === cid);
+                    if (c && !c.exclusiveTensor && !c.exclusiveAch && !c.exclusiveSpeedrun && (c.price || 0) > 0) {
+                        equippedShopCosValue += (c.price || 0);
+                        equippedShopCount++;
+                    }
+                });
+                const ownedShopValue = (st.cosmetics.owned || []).reduce((acc, cid) => {
+                    const c = COSMETIC_CATALOG.find(x => x.id === cid);
+                    return acc + ((c && !c.exclusiveTensor && !c.exclusiveAch && !c.exclusiveSpeedrun) ? (c.price || 0) : 0);
+                }, 0);
+                const spentOnCos = Math.max(st.cosmeticCreditsSpent || 0, ownedShopValue);
+                if (equippedShopCosValue >= 100000 || (spentOnCos >= 100000 && equippedShopCount >= 4)) {
+                    st.rankCosmetic100kLatched = true;
+                    return true;
+                }
+                return false;
+            },
+
             getOperativeRankInfo() {
             const st = this.state;
             const allSkillIds = SKILL_TREE.map(s => s.id);
@@ -9825,6 +9910,21 @@ const LORE_ENTRIES = [
             const bountyKillCnt = st.bountyContractKills || 0;
             const maxComboStat = (window.ZedEnhanced && window.ZedEnhanced.stats && window.ZedEnhanced.stats.maxCombo) || 0;
             const spentLifetime = st.lifetimeCreditsSpent || 0;
+            const secKills = st.secondaryKills || 0;
+            const cos100kLatched = this.checkCosmetic100kEquipLatch();
+            const equippedShopVal = ['face', 'hair', 'hat', 'outfit', 'acc'].reduce((acc, sl) => {
+                const cid = st.cosmetics && st.cosmetics.equipped ? st.cosmetics.equipped[sl] : null;
+                const c = cid && COSMETIC_CATALOG.find(x => x.id === cid);
+                return acc + ((c && !c.exclusiveTensor && !c.exclusiveAch && !c.exclusiveSpeedrun) ? (c.price || 0) : 0);
+            }, 0);
+            const odUses = Math.max(st.overdriveUses || 0, (window.ZedEnhanced && window.ZedEnhanced.stats && window.ZedEnhanced.stats.odUses) || 0);
+            let installedAugCount = Array.isArray(st.augmentPlacements)
+                ? st.augmentPlacements.filter(pl => pl && pl.row >= 0 && pl.col >= 0 && ((st.soulWell && st.soulWell[pl.id]) || 0) > (pl.copyIdx || 0)).length
+                : 0;
+            const bankAugId = ((st.skills && st.skills.cyberneticArchitect) || 0) >= 7 ? st.protoBankAugmentId : null;
+            if (bankAugId && st.soulWell && st.soulWell[bankAugId] > 0 && !(st.augmentPlacements || []).some(p => p.id === bankAugId && p.row >= 0 && p.col >= 0)) {
+                installedAugCount++;
+            }
 
             const conditions = [
                 { label: `Unlocked 10 Abilities (${Math.min(10, unlockedSkillsCount)}/10)`, met: unlockedSkillsCount >= 10 },
@@ -9874,7 +9974,12 @@ const LORE_ENTRIES = [
                 { label: `Grand Arsenals: Equip a Mk.VII item in all 6 Loadout slots (${mk7EquippedCnt}/6)`, met: mk7EquippedCnt >= 6 },
                 { label: `Bounty Assassin: Use HVT Bounty Contract Tech to eliminate 15 Bounty targets (${Math.min(15, bountyKillCnt)}/15)`, met: bountyKillCnt >= 15 },
                 { label: `Execution Streak: Reach a x50 Kill Combo (${Math.min(50, maxComboStat)}/50)`, met: maxComboStat >= 50 },
-                { label: `Syndicate Financier: Spend 1,000,000₵ Credits lifetime (${spentLifetime.toLocaleString()}₵ / 1,000,000₵)`, met: spentLifetime >= 1000000 }
+                { label: `Syndicate Financier: Spend 1,000,000₵ Credits lifetime (${spentLifetime.toLocaleString()}₵ / 1,000,000₵)`, met: spentLifetime >= 1000000 },
+                // 4 Newly Approved Early & Progression Conditions (Brings total to 49 = Ranks 1–50)
+                { label: `Tactical Specialist: Eliminate 250 enemies with Secondary weapon (${Math.min(250, secKills)}/250)`, met: secKills >= 250 },
+                { label: `Boutique Virtuoso: Spend 100,000₵+ on Boutique Cosmetics & wear equipped set (${cos100kLatched ? 'UNLOCKED' : Math.min(100000, equippedShopVal).toLocaleString() + '₵ / 100,000₵'})`, met: cos100kLatched },
+                { label: `Adrenaline Overdrive: Trigger Overdrive 15 times (${Math.min(15, odUses)}/15)`, met: odUses >= 15 },
+                { label: `Matrix Architect: Install 12+ Cyber-Augment modules in Dorsal Grid (${Math.min(12, installedAugCount)}/12)`, met: installedAugCount >= 12 }
             ];
 
             const rawMetCount = conditions.filter(c => c.met).length;
@@ -13638,6 +13743,7 @@ const LORE_ENTRIES = [
                 this.player.protoHeat = 0;
                 this.player.protoOverheatedTimer = 0;
                 this.player.protoMartyrInvulnTimer = 0;
+                this.player.coopSpawnSafeTimer = 0;
                 this.player.protoHemlockTimer = 0;
                 this.player.protoHemlockSelfDmgTimer = 0;
                 this.player.protoBlinkCooldown = 0;
@@ -27337,7 +27443,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
     },
 
     damagePlayer(rawDmg, hitDir = null) {
-        if (this.player.dashActiveTimer > 0 || (this.player.swordChargeDashTimer || 0) > 0 || (this.player.movementSkillGraceTimer || 0) > 0 || (this.player.protoMartyrInvulnTimer || 0) > 0 || this.isDefeatPending || this.cutsceneState) return;
+        if (this.player.dashActiveTimer > 0 || (this.player.swordChargeDashTimer || 0) > 0 || (this.player.movementSkillGraceTimer || 0) > 0 || (this.player.protoMartyrInvulnTimer || 0) > 0 || (this.player.coopSpawnSafeTimer || 0) > 0 || this.isDefeatPending || this.cutsceneState) return;
         if (hitDir && hitDir.lengthSq && hitDir.lengthSq() > 0.0001) {
             this.player.lastHitDir = hitDir.clone().setY(0).normalize();
         } else {
@@ -28288,6 +28394,42 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
             en.bodyRig.scale.set(1, 1, 1);
         },
 
+        rollPartDropTier(sourceKind = 'enemy', chestRarity = 'common', isElite = false, isBoss = false) {
+            if (this.isTensorRun) return 4;
+            const secIdx = Math.max(0, Math.min(8, this.activeBiomeIndex || 0));
+            const hm = Boolean(this.isHardMode);
+            const biome = BIOMES[secIdx] || BIOMES[0];
+            const hmProf = this.getHardModeProfile(secIdx);
+            const baseTier = hm ? (hmProf.rewardTier || 3) : (biome.tier || 1);
+            const r = Math.random();
+
+            if (!hm) {
+                if (baseTier === 1) {
+                    const t3EarlyChance = secIdx >= 2
+                        ? (sourceKind === 'chest'
+                            ? (chestRarity === 'silver_gold' ? 0.22 : (chestRarity === 'purple_gold' ? 0.14 : 0.08))
+                            : (isBoss ? 0.24 : (isElite ? 0.15 : 0.09)))
+                        : 0;
+                    const t2Chance = sourceKind === 'chest'
+                        ? (chestRarity === 'silver_gold' ? (0.40 + secIdx * 0.05) : (chestRarity === 'purple_gold' ? (0.28 + secIdx * 0.04) : (0.18 + secIdx * 0.04)))
+                        : (isBoss ? (0.35 + secIdx * 0.08) : (isElite ? (0.25 + secIdx * 0.05) : (0.16 + secIdx * 0.05)));
+                    if (r < t3EarlyChance) return 3;
+                    if (r < t3EarlyChance + t2Chance) return 2;
+                    return 1;
+                }
+                const t3Chance = sourceKind === 'chest'
+                    ? (chestRarity === 'silver_gold' ? (0.44 + Math.max(0, secIdx - 4) * 0.05) : (chestRarity === 'purple_gold' ? (0.30 + Math.max(0, secIdx - 4) * 0.04) : (0.20 + Math.max(0, secIdx - 4) * 0.04)))
+                    : (isBoss ? (0.45 + Math.max(0, secIdx - 4) * 0.06) : (isElite ? (0.32 + Math.max(0, secIdx - 4) * 0.04) : (0.22 + Math.max(0, secIdx - 4) * 0.04)));
+                if (r < Math.min(0.75, t3Chance)) return 3;
+                return baseTier;
+            }
+            const nextChance = sourceKind === 'chest'
+                ? (chestRarity === 'silver_gold' ? 0.42 : (chestRarity === 'purple_gold' ? 0.28 : 0.18))
+                : (isBoss ? 0.45 : (isElite ? 0.30 : 0.20));
+            if (baseTier < 4 && r < nextChance) return Math.min(4, baseTier + 1);
+            return baseTier;
+        },
+
         handleEnemyDeath(en) {
             if (this.isDefeatPending) return;
             const idx = this.enemies.indexOf(en);
@@ -28334,6 +28476,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
 
                 // Sidearm Specialist: Killing an enemy with a Pistol in 2° Secondary refunds 10% Stamina (7s CD)
                 if (!en.isDummy && !en._lastHitWasAbility && this.player.activeWeaponSlot === 'secondary') {
+                    this.state.secondaryKills = (this.state.secondaryKills || 0) + 1;
                     const secArch = this.getEquippedArchetype();
                     if (secArch && secArch.isSidearmSpecialist && (this.player.sidearmStamCd || 0) <= 0) {
                         const stamRefund = Math.max(5, Math.round(this.player.maxStamina * 0.10));
@@ -28477,20 +28620,27 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 droppedTextParts.push(`+1 ${CYBER_CORES_META[ck].short}!`);
             }
 
+            const pickPartKeyForTier = (tNum) => {
+                const keys = Object.keys(GUN_PARTS_META).filter(k => k.startsWith(`t${tNum}_`));
+                return keys[Math.floor(Math.random() * keys.length)];
+            };
             const rolledMk = this.rollItemMk('drop', this.activeBiomeIndex, en.isElite, en.isBoss || en.isMiniBoss);
             const gearSlots = ['armor', 'helm', 'relic', 'boots', 'weapon'];
 
             if (en.isBoss || en.isMiniBoss) {
+                const bossTiers = [];
                 for (let b = 0; b < 3; b++) {
-                    const pk = tierPartKeys[Math.floor(Math.random() * tierPartKeys.length)];
+                    const dropTier = this.rollPartDropTier('enemy', 'common', false, true);
+                    const pk = pickPartKeyForTier(dropTier);
                     const amt = Math.max(1, Math.round(1 * scavMult));
                     this.state.gunParts[pk] = (this.state.gunParts[pk] || 0) + amt;
-                    if (this.runStats) this.runStats.partsLooted[`t${sectorTier}`] += amt;
+                    if (this.runStats) this.runStats.partsLooted[`t${dropTier}`] = (this.runStats.partsLooted[`t${dropTier}`] || 0) + amt;
+                    if (!bossTiers.includes(dropTier)) bossTiers.push(dropTier);
                 }
                 const ak = attMatKeys[Math.floor(Math.random() * attMatKeys.length)];
                 this.state.attMats[ak] = (this.state.attMats[ak] || 0) + 2;
                 if (this.runStats) this.runStats.partsLooted.mod += 2;
-                droppedTextParts.push(`+T${sectorTier} Boss Salvage!`);
+                droppedTextParts.push(`+T${bossTiers.sort().join('/T')} Boss Salvage!`);
                 if (Math.random() < 0.35) {
                     const droppedItem = this.generateItem(gearSlots[Math.floor(Math.random() * gearSlots.length)], en.level, rarityForTier, null, null, rolledMk);
                     this.state.inventory.push(droppedItem);
@@ -28499,9 +28649,10 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 }
             } else if (en.isElite) {
                 if (Math.random() < 0.42) {
-                    const pk = tierPartKeys[Math.floor(Math.random() * tierPartKeys.length)];
+                    const dropTier = this.rollPartDropTier('enemy', 'common', true, false);
+                    const pk = pickPartKeyForTier(dropTier);
                     this.state.gunParts[pk] = (this.state.gunParts[pk] || 0) + 1;
-                    if (this.runStats) this.runStats.partsLooted[`t${sectorTier}`] += 1;
+                    if (this.runStats) this.runStats.partsLooted[`t${dropTier}`] = (this.runStats.partsLooted[`t${dropTier}`] || 0) + 1;
                     droppedTextParts.push(`+1 ${GUN_PARTS_META[pk].short}`);
                 }
                 if (Math.random() < 0.32) {
@@ -28519,9 +28670,10 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
             } else {
                 if (Math.random() < 0.18) {
                     if (Math.random() < 0.65) {
-                        const pk = tierPartKeys[Math.floor(Math.random() * tierPartKeys.length)];
+                        const dropTier = this.rollPartDropTier('enemy', 'common', false, false);
+                        const pk = pickPartKeyForTier(dropTier);
                         this.state.gunParts[pk] = (this.state.gunParts[pk] || 0) + 1;
-                        if (this.runStats) this.runStats.partsLooted[`t${sectorTier}`] += 1;
+                        if (this.runStats) this.runStats.partsLooted[`t${dropTier}`] = (this.runStats.partsLooted[`t${dropTier}`] || 0) + 1;
                         droppedTextParts.push(`+1 ${GUN_PARTS_META[pk].short}`);
                     } else {
                         const ak = attMatKeys[Math.floor(Math.random() * attMatKeys.length)];
@@ -28726,6 +28878,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
             this.interactables.push({
                 pos: new THREE.Vector3(px, elevY, pz),
                 radius: 3.0,
+                radarKind: isExtraction ? 'portal_extract' : 'portal',
                 label: isExtraction ? 'Extract to Citadel-9 FOB (+Sector Completion Cache!)' : (this.dungeonFloor >= this.maxDungeonFloors ? 'Command Deck Extraction' : `Descend to Floor ${this.dungeonFloor + 1}`),
                 rotMesh: ring,
                 onInteract: () => {
@@ -29100,6 +29253,10 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     this.spawnBurstParticles(this.player.pos.clone().add(new THREE.Vector3(0, 1.0, 0)), 0x38bdf8, 16);
                     UI.updateHUD();
                 }
+            },
+
+            getCoopBossHealMult() {
+                return (typeof Coop !== 'undefined' && Coop.isActive()) ? 0.40 : 1.0;
             },
 
             usePotion(type) {
@@ -29697,17 +29854,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     const hmProf = this.getHardModeProfile(this.activeBiomeIndex);
                     const baseTier = this.isTensorRun ? 4 : (hm ? hmProf.rewardTier : (biome.tier || 1));
 
-                    const rollLootTier = () => {
-                        const r = Math.random();
-                        if (rarity === 'silver_gold') {
-                            if (r < 0.25) return Math.min(4, baseTier + 1);
-                            return baseTier;
-                        } else if (rarity === 'purple_gold') {
-                            if (r < 0.12) return Math.min(4, baseTier + 1);
-                            return baseTier;
-                        }
-                        return baseTier;
-                    };
+                    const rollLootTier = () => this.rollPartDropTier('chest', rarity);
 
                     const drops = [];
                     const rarityCreditMult = rarity === 'silver_gold' ? 2.4 : (rarity === 'purple_gold' ? 1.65 : 1.0);
@@ -30494,7 +30641,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                         this.spawnTelegraph(depPos.x, depPos.z, 6.5, 0.5, Math.round(zed2.dmg * 0.85));
                         this.playZed2Sfx('dash');
                         zed2.pos.copy(savedPos);
-                        const healAmt = 75000;
+                        const healAmt = Math.round(75000 * this.getCoopBossHealMult());
                         zed2.hp = Math.min(zed2.maxHp, zed2.hp + healAmt);
                         zed2.hpFillMesh.scale.x = Math.max(0.001, zed2.hp / zed2.maxHp);
                         this.spawnBurstParticles(zed2.pos.clone().add(new THREE.Vector3(0, 1.1, 0)), 0x2dd4bf, 24);
@@ -30646,6 +30793,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     stunDur: 1.5,
                     dmgMult: 1.2,
                     coreColor: colorHex,
+                    propLabel: label,
                     propLife: life,
                     onBreak,
                     onExpire
@@ -31277,7 +31425,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                             }
 
                             const brokenCount = 6 - aliveCount;
-                            const healPctPerSec = Math.max(0, 0.04 - brokenCount * 0.005);
+                            const healPctPerSec = Math.max(0, 0.04 - brokenCount * 0.005) * this.getCoopBossHealMult();
                             healAccum += (boss.maxHp * healPctPerSec) * dt;
                             if (healAccum >= 1) {
                                 const addHp = Math.floor(healAccum);
@@ -31291,6 +31439,99 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                         cleanup: () => this.scene.remove(orbGroup)
                     });
                 }
+            },
+
+            getBossBaseWeights(boss, sigIdx = 0) {
+                const isP2Plus = Boolean(boss && (boss.phase || 1) >= 2);
+                const sigW = isP2Plus ? 30 : 20;
+                const otherW = isP2Plus ? 35 : 40;
+                return [0, 1, 2].map(i => (i === sigIdx ? sigW : otherW));
+            },
+
+            adjustBossAbilityWeights(weights, boostIdx, delta = 10) {
+                if (!Array.isArray(weights) || weights.length !== 3 || weights[boostIdx] <= 0) return weights;
+                const activeOthers = [0, 1, 2].filter(i => i !== boostIdx && weights[i] > 0);
+                if (activeOthers.length === 0) return weights;
+                const perCut = delta / activeOthers.length;
+                let applied = 0;
+                activeOthers.forEach(i => {
+                    const take = Math.min(Math.max(0, weights[i] - 5), perCut);
+                    weights[i] -= take;
+                    applied += take;
+                });
+                weights[boostIdx] += applied;
+                return weights;
+            },
+
+            pickWeightedIndex(weights) {
+                const safe = weights.map(w => Math.max(0, Number(w) || 0));
+                const total = safe.reduce((a, b) => a + b, 0);
+                if (total <= 0) return Math.floor(Math.random() * weights.length);
+                let r = Math.random() * total;
+                for (let i = 0; i < safe.length; i++) {
+                    r -= safe[i];
+                    if (r <= 0) return i;
+                }
+                return safe.length - 1;
+            },
+
+            pickSmartBossAbilityIdx(boss, secIdx) {
+                if (!boss) return 0;
+                const sigMap = { 0: 0, 1: 1, 2: 1, 3: 2, 4: 0, 5: 2, 6: 0, 7: 0, 8: 0 };
+                const sigIdx = (secIdx in sigMap) ? sigMap[secIdx] : 0;
+                const weights = this.getBossBaseWeights(boss, sigIdx);
+
+                const targetPos = (window.Coop && Coop.isActive()) ? Coop.getEnemyTargetPos(boss) : this.player.pos;
+                const dist = boss.pos.distanceTo(targetPos);
+                const playerBehindCover = (boss._playerCoverTime || 0) >= 1.8 || !this.hasLineOfSight(boss.pos, targetPos);
+                const hasProp = (lbl) => Boolean(this.archEntities && this.archEntities.some(a => a.propLabel === lbl && a.hitsLeft > 0));
+                const playerSlowed = Boolean(this.player && this.player.blizzardSlowTimer > 0);
+
+                if (secIdx === 0) {
+                    if (hasProp('Shock Pylon')) weights[0] = 0;
+                    else if (dist > 15) this.adjustBossAbilityWeights(weights, 2, 10);
+                } else if (secIdx === 1) {
+                    if (hasProp('Bio-Cocoon')) weights[1] = 0;
+                    else if (dist > 14 && !playerSlowed) this.adjustBossAbilityWeights(weights, 0, 10);
+                } else if (secIdx === 2) {
+                    if (boss.isBulldozing) weights[1] = 0;
+                    if (playerBehindCover) this.adjustBossAbilityWeights(weights, 2, 10);
+                    else if (dist <= 9.5) this.adjustBossAbilityWeights(weights, 0, 10);
+                } else if (secIdx === 3) {
+                    if (playerSlowed) this.adjustBossAbilityWeights(weights, 1, 10);
+                    else if (dist > 16) this.adjustBossAbilityWeights(weights, 0, 10);
+                } else if (secIdx === 4) {
+                    if (Array.isArray(boss._vaelenMinionWaves)) {
+                        boss._vaelenMinionWaves = boss._vaelenMinionWaves
+                            .map(w => w.filter(e => e && e.hp > 0 && this.enemies.includes(e)))
+                            .filter(w => w.length > 0);
+                        if (boss._vaelenMinionWaves.length >= 2) {
+                            weights[2] = 0;
+                        }
+                    }
+                    if (this.vaelenClones && this.vaelenClones.some(c => c.hitsLeft > 0)) {
+                        weights[0] = 0;
+                    }
+                    if (weights[2] > 0 && playerBehindCover) this.adjustBossAbilityWeights(weights, 2, 10);
+                } else if (secIdx === 5) {
+                    if (boss.inBlitzSequence) weights[1] = 0;
+                    if (playerBehindCover) this.adjustBossAbilityWeights(weights, 2, 10);
+                } else if (secIdx === 6) {
+                    if (hasProp('Siege Pod')) weights[2] = 0;
+                    else if (playerBehindCover) this.adjustBossAbilityWeights(weights, 2, 10);
+                    if (boss.isAirborne) weights[0] = 0;
+                } else if (secIdx === 7) {
+                    if (playerSlowed) this.adjustBossAbilityWeights(weights, 2, 10);
+                    else if (dist <= 11) this.adjustBossAbilityWeights(weights, 0, 10);
+                } else if (secIdx === 8) {
+                    if (hasProp('Solar Prism')) weights[1] = 0;
+                    else if (playerBehindCover) this.adjustBossAbilityWeights(weights, 1, 10);
+                    if (dist > 16 && !playerBehindCover) this.adjustBossAbilityWeights(weights, 2, 10);
+                }
+
+                boss._lastAbilityWeights = weights.slice();
+                if (weights.every(w => w <= 0)) return (sigIdx + 1) % 3;
+                return this.pickWeightedIndex(weights);
             },
 
             executeBossPattern(boss, forcedSecIdx = null, forcedUltIdx = null, _fromNet = null) {
@@ -31317,7 +31558,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 const hm = Boolean(this.isHardMode || this.isTensorRun || boss.isTensorPrimeBoss);
                 const p3 = (boss.isTensorPrimeBoss ? (boss.phase >= 5) : (boss.phase >= 3)) ? 1.10 : 1.0;
 
-                boss.ultCycleIdx = forcedUltIdx !== null ? forcedUltIdx : (((boss.ultCycleIdx || 0) + 1) % 3);
+                boss.ultCycleIdx = forcedUltIdx !== null ? forcedUltIdx : this.pickSmartBossAbilityIdx(boss, secIdx);
                 const uIdx = boss.ultCycleIdx;
                 const toPlayer = this.player.pos.clone().sub(boss.pos).setY(0);
                 const baseAngle = Math.atan2(toPlayer.x, toPlayer.z);
@@ -31563,7 +31804,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                             this.spawnFloatingText(boss.pos, 'COCOON RUPTURED!', '#34d399', 'text-sm');
                         }, () => {
                             if (!this.isDefeatPending && this.activeBoss) {
-                                boss.hp = Math.min(boss.maxHp, boss.hp + Math.round(boss.maxHp * 0.06));
+                                boss.hp = Math.min(boss.maxHp, boss.hp + Math.round(boss.maxHp * 0.06 * this.getCoopBossHealMult()));
                                 UI.updateBossHUD();
                                 this.spawnEnemy('crawler', boss.pos.x + 2, boss.pos.z, boss.level, false, true, false, 0);
                             }
@@ -32128,6 +32369,8 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
             } else {
                 setBanner('EXECUTIVE CROSSFIRE PINCER');
                 AudioEngine.sfx('stealth_cloak');
+                if (!Array.isArray(boss._vaelenMinionWaves)) boss._vaelenMinionWaves = [];
+                const waveAdds = [];
                 const decoyCount = hm ? 3 : 2;
                 for (let c = 0; c < decoyCount; c++) {
                     const a = baseAngle + (c === 0 ? -1.4 : (c === 1 ? 1.4 : Math.PI));
@@ -32140,6 +32383,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                         add.hp = add.maxHp;
                         add.dmg = Math.round(boss.dmg * 0.45);
                         add.alerted = true;
+                        waveAdds.push(add);
                     }
                 }
                 // Extra suicide bomber minion flanking alongside the decoys
@@ -32153,7 +32397,9 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     bomberAdd.hp = bomberAdd.maxHp;
                     bomberAdd.dmg = Math.round(boss.dmg * 0.85);
                     bomberAdd.alerted = true;
+                    waveAdds.push(bomberAdd);
                 }
+                if (waveAdds.length > 0) boss._vaelenMinionWaves.push(waveAdds);
                 for (let w = 0; w < 2; w++) {
                     setTimeout(() => {
                         if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return;
@@ -32607,41 +32853,229 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 }
             } else if (secIdx === 8) {
                 if (uIdx === 0) {
-                    setBanner('DYSON SOLAR ECLIPSE FLARE');
-                    const sunSphere = new THREE.Mesh(new THREE.SphereGeometry(2.8, 20, 20), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
-                    sunSphere.position.set(boss.pos.x, 7.5, boss.pos.z);
-                    this.scene.add(sunSphere);
-                    setTimeout(() => this.scene.remove(sunSphere), 2200);
-
-                    const flareRad = 16.5 * p3;
-                    this.spawnTelegraph(boss.pos.x, boss.pos.z, flareRad, 1.50, 0, () => {
-                        if (this.isDefeatPending || !this.activeBoss) return;
-                        AudioEngine.sfx('laserBeam');
-                        if (this.hasLineOfSight(boss.pos, this.player.pos) && this.player.pos.distanceTo(boss.pos) <= flareRad) {
-                            this.damagePlayer(Math.round(boss.dmg * 1.55));
-                        } else {
-                            this.spawnFloatingText(this.player.pos, 'ECLIPSE SHADOW — FLARE BLOCKED!', '#34d399', 'text-xs');
-                        }
+                    // Signature Ability: SOLAR ECLIPSE CORONA JUDGMENT (Rotating Laser Cross + Staggered Solar Meteor Flares + Expanding Corona Shockwave)
+                    setBanner('SOLAR ECLIPSE CORONA JUDGMENT');
+                    AudioEngine.sfx('bossRoar');
+                    boss.attackTimer = Math.max(boss.attackTimer || 0, 2.8);
+                    const beamCount = (hm || boss.phase >= 3) ? 6 : 4;
+                    const spinDir = Math.random() < 0.5 ? 1 : -1;
+                    const rotSpd = (hm ? 0.62 : 0.48) * p3 * spinDir;
+                    const beamDur = 3.8 * p3;
+                    for (let b = 0; b < beamCount; b++) {
+                        const ang = baseAngle + (b / beamCount) * Math.PI * 2;
+                        this.spawnWallPiercingLaser(
+                            boss.pos.clone(),
+                            ang,
+                            b % 2 === 0 ? 0xfacc15 : 0xf97316,
+                            Math.round(boss.dmg * 0.72),
+                            1.05,
+                            beamDur,
+                            rotSpd,
+                            0.65,
+                            boss
+                        );
+                    }
+                    const flareCount = (hm ? 5 : 4) + (boss.phase >= 3 ? 1 : 0);
+                    for (let f = 0; f < flareCount; f++) {
+                        setTimeout(() => {
+                            if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return;
+                            const aimAng = baseAngle + (f / flareCount) * Math.PI * 2;
+                            const offsetDist = f === 0 ? 0 : (5.0 + Math.random() * 4.0);
+                            const safePt = this.findSafeOpenSpot(this.player.pos.x + Math.cos(aimAng) * offsetDist, this.player.pos.z + Math.sin(aimAng) * offsetDist, 1.2, 0);
+                            if (this.tensorSanctumLocked) safePt.z = Math.min(-5.0, safePt.z);
+                            const fPt = new THREE.Vector3(safePt.x, 0, safePt.z);
+                            this.spawnTelegraph(fPt.x, fPt.z, 4.4 * p3, 1.10, Math.round(boss.dmg * 1.15), () => {
+                                if (this.isDefeatPending) return;
+                                AudioEngine.sfx('explosion');
+                                this.spawnSphereExplosionVisual(fPt, 4.4 * p3, 0xfacc15);
+                                if (hm || boss.phase >= 2) {
+                                    this.spawnLingeringHazardPool(fPt.x, fPt.z, 3.0, 4.0, Math.round(boss.dmg * 0.28), 0xf97316, false, 0);
+                                }
+                            });
+                        }, f * 320);
+                    }
+                    // Expanding Golden Corona Torus
+                    const torus = new THREE.Mesh(
+                        new THREE.TorusGeometry(2.0, 0.34, 12, 44),
+                        new THREE.MeshBasicMaterial({ color: 0xfef08a })
+                    );
+                    torus.rotation.x = Math.PI / 2;
+                    torus.position.set(boss.pos.x, 0.45, boss.pos.z);
+                    this.scene.add(torus);
+                    let cRad = 2.0;
+                    let cHit = false;
+                    const ox = boss.pos.x, oz = boss.pos.z;
+                    this.bossCustomEffects.push({
+                        mesh: torus,
+                        life: 2.5,
+                        update: (dt) => {
+                            cRad += 10.5 * dt;
+                            torus.geometry.dispose();
+                            torus.geometry = new THREE.TorusGeometry(cRad, 0.34, 12, 44);
+                            const dP = Math.hypot(this.player.pos.x - ox, this.player.pos.z - oz);
+                            if (!cHit && Math.abs(dP - cRad) <= 1.05 && this.player.dashActiveTimer <= 0 && (this.player.pos.y || 0) < 1.6) {
+                                cHit = true;
+                                this.damagePlayer(Math.round(boss.dmg * 1.10), this.player.pos.clone().sub(boss.pos).setY(0));
+                            }
+                            return cRad < 28.0;
+                        },
+                        cleanup: () => { torus.geometry.dispose(); this.scene.remove(torus); }
                     });
                 } else if (uIdx === 1) {
-                    setBanner('DYSON COLLECTOR PRISM-LINK');
-                    const pCount = (hm ? 4 : 3);
+                    // Ability 2: HELIOSTAT PRISM MORTAR ARRAY (Shield-linked Prisms lobbing over-wall solar mortars + lance bolts!)
+                    setBanner('HELIOSTAT PRISM MORTAR ARRAY');
+                    AudioEngine.sfx('deploy_mech');
+                    const pCount = (hm ? 4 : 3) + (boss.phase >= 3 ? 1 : 0);
+                    const prisms = [];
                     for (let i = 0; i < pCount; i++) {
-                        const a = (i / pCount) * Math.PI * 2;
-                        const px = boss.pos.x + Math.cos(a) * 11.5;
-                        const pz = boss.pos.z + Math.sin(a) * 11.5;
-                        this.spawnShootableBossProp(px, pz, 3, 2.8, 6.0, 0xfacc15, 'Dyson Prism', () => {
-                            this.player.overclockTimer = Math.max(this.player.overclockTimer, 3.0);
-                            this.spawnFloatingText(this.player.pos, 'SOLAR PRISM BROKEN (+3s TEMPO)!', '#fde047', 'text-xs');
-                        });
+                        const a = baseAngle + (i / pCount) * Math.PI * 2;
+                        const safeP = this.findSafeOpenSpot(boss.pos.x + Math.cos(a) * 11.5, boss.pos.z + Math.sin(a) * 11.5, 1.3, 0);
+                        if (this.tensorSanctumLocked) safeP.z = Math.min(-5.0, safeP.z);
+                        const prismGrp = new THREE.Group();
+                        const crystal = new THREE.Mesh(
+                            new THREE.OctahedronGeometry(0.85, 0),
+                            new THREE.MeshStandardMaterial({ color: 0xfacc15, emissive: 0xf59e0b, emissiveIntensity: 0.75, metalness: 0.6, roughness: 0.2 })
+                        );
+                        crystal.position.y = 1.65;
+                        const halo = new THREE.Mesh(new THREE.TorusGeometry(1.15, 0.08, 8, 24), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
+                        halo.rotation.x = Math.PI / 2;
+                        halo.position.y = 1.65;
+                        prismGrp.add(crystal, halo);
+                        const prObj = this.spawnShootableBossProp(safeP.x, safeP.z, hm ? 4 : 3, 2.4, 8.5, 0xfacc15, 'Solar Prism', () => {
+                            this.player.overclockTimer = Math.max(this.player.overclockTimer, 2.5);
+                            this.spawnFloatingText(new THREE.Vector3(safeP.x, 1.2, safeP.z), 'SOLAR PRISM SHATTERED (+2.5s TEMPO)!', '#fde047', 'text-xs');
+                        }, null, prismGrp);
+                        prisms.push(prObj);
                     }
+                    let fireTick = 0.65;
+                    boss.shieldTimer = Math.max(boss.shieldTimer || 0, 1.2);
+                    const tethers = prisms.map(pr => {
+                        const geo = new THREE.BufferGeometry().setFromPoints([pr.pos.clone().setY(1.6), boss.pos.clone().setY(1.8)]);
+                        const line = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0xfde047, transparent: true, opacity: 0.8 }));
+                        line.frustumCulled = false;
+                        this.scene.add(line);
+                        return { pr, line };
+                    });
+                    this.bossCustomEffects.push({
+                        life: 8.5,
+                        update: (dt) => {
+                            if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return false;
+                            const alivePrisms = prisms.filter(pr => pr.hitsLeft > 0 && this.archEntities.includes(pr));
+                            tethers.forEach(tl => {
+                                const alive = tl.pr.hitsLeft > 0 && this.archEntities.includes(tl.pr);
+                                tl.line.visible = alive;
+                                if (alive) {
+                                    if (tl.pr.mesh) tl.pr.mesh.rotation.y += dt * 2.2;
+                                    const attr = tl.line.geometry.attributes.position;
+                                    attr.setXYZ(0, tl.pr.pos.x, 1.6, tl.pr.pos.z);
+                                    attr.setXYZ(1, boss.pos.x, 1.8, boss.pos.z);
+                                    attr.needsUpdate = true;
+                                }
+                            });
+                            if (alivePrisms.length === 0) {
+                                boss.shieldTimer = 0;
+                                boss.stunTimer = Math.max(boss.stunTimer || 0, 1.6);
+                                this.spawnFloatingText(boss.pos, 'DYSON SHIELD RUPTURED — STUNNED!', '#34d399', 'text-sm');
+                                return false;
+                            }
+                            boss.shieldTimer = Math.max(boss.shieldTimer || 0, 0.35);
+                            fireTick -= dt;
+                            if (fireTick <= 0) {
+                                fireTick = hm ? 1.45 : 1.75;
+                                AudioEngine.sfx('arcane');
+                                alivePrisms.forEach((pr, idx) => {
+                                    const sAng = (idx / Math.max(1, alivePrisms.length)) * Math.PI * 2;
+                                    const aimPt = this.player.pos.clone().add(new THREE.Vector3(Math.cos(sAng) * 2.2, 0, Math.sin(sAng) * 2.2));
+                                    this.spawnArcingCanisterVisual(pr.pos.clone().setY(1.6), aimPt, 1.05, 0xfacc15, () => {
+                                        if (!this.isDefeatPending) {
+                                            AudioEngine.sfx('explosion');
+                                            this.spawnSphereExplosionVisual(aimPt, 3.4, 0xfacc15);
+                                        }
+                                    });
+                                    this.spawnTelegraph(aimPt.x, aimPt.z, 3.4, 1.05, Math.round(boss.dmg * 0.85));
+                                    const bDir = this.player.pos.clone().sub(pr.pos).setY(0).normalize();
+                                    this.spawnProjectile(pr.pos.clone(), bDir, 21.0, Math.round(boss.dmg * 0.58), false, 0xfef08a, false, false, 0, 32);
+                                });
+                            }
+                            return true;
+                        },
+                        cleanup: () => {
+                            tethers.forEach(tl => this.scene.remove(tl.line));
+                            prisms.forEach(pr => { pr.propLife = 0; });
+                        }
+                    });
                 } else {
-                    setBanner('SUPERNOVA ACCRETION RING');
-                    const orbCount = Math.round((hm ? 14 : 10) * p3);
-                    for (let i = 0; i < orbCount; i++) {
-                        const a = (i / orbCount) * Math.PI * 2;
-                        this.spawnProjectile(boss.pos.clone(), new THREE.Vector3(Math.sin(a), 0, Math.cos(a)), 18.5, Math.round(boss.dmg * 0.85), false, 0xfacc15, false, false, 0, 35.7);
-                    }
+                    // Ability 3: SOLAR LANCE CROSSING BLITZ (Telegraphed high-speed solar dashes + 8/10-way spiral flare bursts!)
+                    setBanner('SOLAR LANCE CROSSING BLITZ');
+                    const dashCount = (hm || boss.phase >= 3) ? 4 : 3;
+                    let stepIdx = 0;
+                    let stepTimer = 0.05;
+                    let waitingStrike = false;
+                    let activeWarn = null;
+                    let laneOrigin = null;
+                    let laneDir = null;
+                    boss.inBlitzSequence = true;
+                    const clearWarn = () => { if (activeWarn) { this.scene.remove(activeWarn); activeWarn = null; } };
+
+                    this.bossCustomEffects.push({
+                        life: dashCount * 0.82 + 0.6,
+                        update: (dt) => {
+                            if (this.isDefeatPending || !this.activeBoss || boss.hp <= 0) return false;
+                            boss.attackTimer = Math.max(boss.attackTimer || 0, 0.5);
+                            stepTimer -= dt;
+                            if (!waitingStrike && stepTimer <= 0) {
+                                if (stepIdx >= dashCount) return false;
+                                waitingStrike = true;
+                                stepTimer = hm ? 0.44 : 0.52;
+                                const toP = this.player.pos.clone().sub(boss.pos).setY(0);
+                                laneDir = toP.lengthSq() > 0.05 ? toP.normalize() : new THREE.Vector3(0, 0, 1);
+                                laneOrigin = boss.pos.clone();
+                                const ang = Math.atan2(laneDir.x, laneDir.z);
+                                const warnMesh = new THREE.Mesh(
+                                    new THREE.BoxGeometry(3.2, 0.14, 24.0),
+                                    new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.62 })
+                                );
+                                warnMesh.position.copy(laneOrigin).addScaledVector(laneDir, 11.5).setY(0.10);
+                                warnMesh.rotation.y = ang;
+                                this.scene.add(warnMesh);
+                                activeWarn = warnMesh;
+                            } else if (waitingStrike && stepTimer <= 0) {
+                                clearWarn();
+                                waitingStrike = false;
+                                stepIdx++;
+                                stepTimer = 0.16;
+                                AudioEngine.sfx('laserBeam');
+                                const endPos = this.findSafeOpenSpot(laneOrigin.x + laneDir.x * 21.0, laneOrigin.z + laneDir.z * 21.0, 1.3, 0);
+                                const dest = new THREE.Vector3(endPos.x, 0, endPos.z);
+                                if (this.tensorSanctumLocked) dest.z = Math.min(-4.0, dest.z);
+                                boss.pos.copy(dest);
+                                boss.mesh.rotation.y = Math.atan2(laneDir.x, laneDir.z);
+
+                                const seam = new THREE.Mesh(
+                                    new THREE.BoxGeometry(2.8, 0.35, 22.0),
+                                    new THREE.MeshBasicMaterial({ color: 0xf97316, transparent: true, opacity: 0.88 })
+                                );
+                                seam.position.copy(laneOrigin).addScaledVector(laneDir, 11.0).setY(0.95);
+                                seam.rotation.y = Math.atan2(laneDir.x, laneDir.z);
+                                this.scene.add(seam);
+                                setTimeout(() => this.scene.remove(seam), 450);
+
+                                const rel = this.player.pos.clone().sub(laneOrigin).setY(0);
+                                const proj = rel.dot(laneDir);
+                                const perpDist = Math.abs(rel.x * laneDir.z - rel.z * laneDir.x);
+                                if (proj >= -1.0 && proj <= 23.0 && perpDist <= 1.75) {
+                                    this.damagePlayer(Math.round(boss.dmg * 1.15), laneDir);
+                                }
+                                const spokes = (hm || boss.phase >= 3) ? 10 : 8;
+                                for (let s = 0; s < spokes; s++) {
+                                    const sAng = (s / spokes) * Math.PI * 2 + stepIdx * 0.35;
+                                    this.spawnProjectile(dest.clone(), new THREE.Vector3(Math.sin(sAng), 0, Math.cos(sAng)), 20.5 * p3, Math.round(boss.dmg * 0.58), false, s % 2 === 0 ? 0xfacc15 : 0xf97316, false, false, 0, 34);
+                                }
+                            }
+                            return true;
+                        },
+                        cleanup: () => { boss.inBlitzSequence = false; clearWarn(); }
+                    });
                 }
 
                 } else {
@@ -34926,6 +35360,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 if (this.player.quickDrawCooldown > 0) this.player.quickDrawCooldown = Math.max(0, this.player.quickDrawCooldown - dt);
                 if (this.player.aegisCapCdTimer > 0) this.player.aegisCapCdTimer = Math.max(0, this.player.aegisCapCdTimer - dt);
                 if (this.player.protoMartyrInvulnTimer > 0) this.player.protoMartyrInvulnTimer = Math.max(0, this.player.protoMartyrInvulnTimer - dt);
+                if (this.player.coopSpawnSafeTimer > 0) this.player.coopSpawnSafeTimer = Math.max(0, this.player.coopSpawnSafeTimer - dt);
                 if (this.player.protoBlinkCooldown > 0) this.player.protoBlinkCooldown = Math.max(0, this.player.protoBlinkCooldown - dt);
                 if (this.player.protoMirageCooldown > 0) this.player.protoMirageCooldown = Math.max(0, this.player.protoMirageCooldown - dt);
                 if (this.player.protoMirageSlowTimer > 0) this.player.protoMirageSlowTimer = Math.max(0, this.player.protoMirageSlowTimer - dt);
@@ -37514,41 +37949,77 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
             // Bonus Level 1: Sub-Orbital Mag-Train Active Environment Systems (Vista Pylons, Speed Streaks, Reactor & Overdrive Ambush!)
             if (this.mode === 'dungeon' && this.isBonusRun && this.activeBonusIndex === 0) {
                 const amb = this.trainAmbushState;
+                const isCoop = Boolean(window.Coop && Coop.isActive());
+                const isCoopClient = Boolean(isCoop && Coop.isClient());
+                if (!this.activateTrainCarAmbush) {
+                    this.activateTrainCarAmbush = (car, totalToSpawn = 15) => {
+                        if (!this.trainAmbushState || !car) return;
+                        const a = this.trainAmbushState;
+                        if (a.active) return;
+                        a.active = true;
+                        a.car = car;
+                        a.spawned = 0;
+                        a.totalToSpawn = totalToSpawn;
+                        a.waveTimer = 0.6;
+                        a.ambushEnemies = [];
+                        a.sealMeshes = [];
+                        a.sealColliders = [];
+                        [car.gateSouth, car.gateNorth].forEach(gz => {
+                            if (gz === null || gz === undefined) return;
+                            const sMat = new THREE.MeshBasicMaterial({ color: 0xf97316, transparent: true, opacity: 0.44, side: THREE.DoubleSide });
+                            const sMesh = new THREE.Mesh(new THREE.BoxGeometry(12.4, 7.6, 0.75), sMat);
+                            sMesh.position.set(0, 3.8, gz);
+                            this.scene.add(sMesh);
+                            this.worldMeshes.push(sMesh);
+                            const sCol = { minX: -6.3, maxX: 6.3, minZ: gz - 0.65, maxZ: gz + 0.65, minY: 0, maxY: 99, blocksSight: false };
+                            this.wallColliders.push(sCol);
+                            a.sealMeshes.push(sMesh);
+                            a.sealColliders.push(sCol);
+                        });
+                        this.player.pos.z = Math.max(car.zMin + 1.5, Math.min(car.zMax - 1.5, this.player.pos.z));
+                        AudioEngine.sfx('emp');
+                        this.screenShake = 0.48;
+                        this.spawnFloatingText(this.player.pos, 'OVERDRIVE AMBUSH // AIRLOCKS SEALED!', '#fb923c', 'text-sm', true);
+                        UI.announce('OVERDRIVE AMBUSH // CARRIER DETACHED!', `${car.name} coupler airlocks sealed!\nSurvive 5 boarding waves (3 hostiles per burst) at Mach 3.8!`);
+                        this.updateDungeonObjectiveText();
+                    };
+                    this.endTrainCarAmbush = () => {
+                        const a = this.trainAmbushState;
+                        if (!a || !a.active) return;
+                        (a.sealMeshes || []).forEach(m => {
+                            this.scene.remove(m);
+                            const wi = this.worldMeshes.indexOf(m);
+                            if (wi !== -1) this.worldMeshes.splice(wi, 1);
+                        });
+                        (a.sealColliders || []).forEach(c => {
+                            const ci = this.wallColliders.indexOf(c);
+                            if (ci !== -1) this.wallColliders.splice(ci, 1);
+                        });
+                        a.sealMeshes = [];
+                        a.sealColliders = [];
+                        a.active = false;
+                        a.car = null;
+                        a.cooldown = 120.0;
+                        AudioEngine.sfx('loot');
+                        UI.announce('COUPLER AIRLOCKS UNSEALED', 'Ambush waves neutralized — adjacent cars re-coupled.');
+                        this.updateDungeonObjectiveText();
+                    };
+                }
                 // Staggered ~2-Minute Overdrive Ambush (Floors 1-4 ONLY, never Boss Room)
                 if (amb && amb.enabled && !this.activeBoss && !this.floorPortalSpawned && !this.isDefeatPending && this.trainCarsMeta && this.trainCarsMeta.length > 0) {
                     if (!amb.active) {
-                        if (this.enemies.length > 0) {
+                        if (!isCoopClient && this.enemies.length > 0) {
                             amb.cooldown -= dt;
                             if (amb.cooldown <= 0) {
-                                const pz = this.player.pos.z;
-                                const car = this.trainCarsMeta.find(c => pz >= c.zMin + 4.5 && pz <= c.zMax - 4.5);
+                                const livingSquad = isCoop ? Coop.getAllLivingPlayers() : [{ pos: this.player.pos }];
+                                const car = livingSquad.length > 0
+                                    ? this.trainCarsMeta.find(c => livingSquad.every(pl => pl.pos.z >= c.zMin + 4.5 && pl.pos.z <= c.zMax - 4.5))
+                                    : null;
                                 if (car) {
-                                    amb.active = true;
-                                    amb.car = car;
-                                    amb.spawned = 0;
-                                    amb.totalToSpawn = 15;
-                                    amb.waveTimer = 0.6;
-                                    amb.ambushEnemies = [];
-                                    amb.sealMeshes = [];
-                                    amb.sealColliders = [];
-                                    [car.gateSouth, car.gateNorth].forEach(gz => {
-                                        if (gz === null || gz === undefined) return;
-                                        const sMat = new THREE.MeshBasicMaterial({ color: 0xf97316, transparent: true, opacity: 0.44, side: THREE.DoubleSide });
-                                        const sMesh = new THREE.Mesh(new THREE.BoxGeometry(12.4, 7.6, 0.75), sMat);
-                                        sMesh.position.set(0, 3.8, gz);
-                                        this.scene.add(sMesh);
-                                        this.worldMeshes.push(sMesh);
-                                        const sCol = { minX: -6.3, maxX: 6.3, minZ: gz - 0.65, maxZ: gz + 0.65, minY: 0, maxY: 99, blocksSight: false };
-                                        this.wallColliders.push(sCol);
-                                        amb.sealMeshes.push(sMesh);
-                                        amb.sealColliders.push(sCol);
-                                    });
-                                    this.player.pos.z = Math.max(car.zMin + 1.5, Math.min(car.zMax - 1.5, this.player.pos.z));
-                                    AudioEngine.sfx('emp');
-                                    this.screenShake = 0.48;
-                                    this.spawnFloatingText(this.player.pos, 'OVERDRIVE AMBUSH // AIRLOCKS SEALED!', '#fb923c', 'text-sm', true);
-                                    UI.announce('OVERDRIVE AMBUSH // CARRIER DETACHED!', `${car.name} coupler airlocks sealed!\nSurvive 5 boarding waves (3 hostiles per burst) at Mach 3.8!`);
-                                    this.updateDungeonObjectiveText();
+                                    this.activateTrainCarAmbush(car, 15);
+                                    if (isCoop && Coop.isHost()) {
+                                        Coop.broadcast({ t: 'TRAIN_AMBUSH_START', carId: car.id, totalToSpawn: 15 });
+                                    }
                                 }
                             }
                         }
@@ -37556,56 +38027,53 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                         if (amb.car) {
                             this.player.pos.z = Math.max(amb.car.zMin + 1.1, Math.min(amb.car.zMax - 1.1, this.player.pos.z));
                         }
-                        amb.ambushEnemies = amb.ambushEnemies.filter(e => e && e.hp > 0 && this.enemies.includes(e));
-                        if (amb.spawned < amb.totalToSpawn) {
-                            amb.waveTimer -= dt;
-                            if (amb.waveTimer <= 0) {
-                                amb.waveTimer = 3.5;
-                                const batch = Math.min(3, amb.totalToSpawn - amb.spawned);
-                                const bDef = BONUS_LEVELS[0];
-                                const ambLvl = (bDef.recLevel || 18) + (this.dungeonFloor - 1) * 2;
-                                const ambPool = ['railGrunt', 'magCouplerBreaker', 'skyRanger', 'aeroDrone', 'conductorHeavy'];
-                                for (let bi = 0; bi < batch; bi++) {
-                                    const ptIdx = (amb.spawned + bi) % amb.car.ambushPts.length;
-                                    const rawPt = amb.car.ambushPts[ptIdx];
-                                    const rx = rawPt[0] + (Math.random() - 0.5) * 4.5;
-                                    const rz = rawPt[1] + (Math.random() - 0.5) * 3.0;
-                                    const safeSp = this.findSafeOpenSpot(rx, rz, 1.0, 0);
-                                    const mType = ambPool[Math.floor(Math.random() * ambPool.length)];
-                                    const isEliteAmb = ((amb.spawned + bi) % 7 === 6);
-                                    const spY = (mType === 'aeroDrone') ? 1.8 : 0;
-                                    this.spawnEnemy(mType, safeSp.x, safeSp.z, ambLvl, false, isEliteAmb, false, spY);
-                                    const spawnedEn = this.enemies[this.enemies.length - 1];
-                                    if (spawnedEn) {
-                                        this.alertEnemy(spawnedEn, false);
-                                        amb.ambushEnemies.push(spawnedEn);
-                                        this.spawnBurstParticles(spawnedEn.pos.clone().setY(1.2), 0xf97316, 12);
+                        amb.ambushEnemies = amb.ambushEnemies.filter(e => e && e.hp > 0 && e.isTrainAmbushSpawn && this.enemies.includes(e));
+                        if (!isCoopClient) {
+                            if (amb.spawned < amb.totalToSpawn) {
+                                amb.waveTimer -= dt;
+                                if (amb.waveTimer <= 0) {
+                                    amb.waveTimer = 3.5;
+                                    const batch = Math.min(3, amb.totalToSpawn - amb.spawned);
+                                    const bDef = BONUS_LEVELS[0];
+                                    const ambLvl = (bDef.recLevel || 18) + (this.dungeonFloor - 1) * 2;
+                                    const ambPool = ['railGrunt', 'magCouplerBreaker', 'skyRanger', 'aeroDrone', 'conductorHeavy'];
+                                    const minCarZ = amb.car.zMin + 4.0;
+                                    const maxCarZ = amb.car.zMax - 4.0;
+                                    for (let bi = 0; bi < batch; bi++) {
+                                        const ptIdx = (amb.spawned + bi) % amb.car.ambushPts.length;
+                                        const rawPt = amb.car.ambushPts[ptIdx];
+                                        const rx = Math.max(-19.5, Math.min(19.5, rawPt[0] + (Math.random() - 0.5) * 4.0));
+                                        const rz = Math.max(minCarZ, Math.min(maxCarZ, rawPt[1] + (Math.random() - 0.5) * 3.0));
+                                        let safeSp = this.findSafeOpenSpot(rx, rz, 1.0, 0);
+                                        if (Math.abs(safeSp.x) > 20.0 || safeSp.z < amb.car.zMin + 3.0 || safeSp.z > amb.car.zMax - 3.0) {
+                                            safeSp = { x: Math.max(-19.0, Math.min(19.0, rawPt[0])), z: Math.max(minCarZ, Math.min(maxCarZ, rawPt[1])) };
+                                        }
+                                        const mType = ambPool[Math.floor(Math.random() * ambPool.length)];
+                                        const isEliteAmb = ((amb.spawned + bi) % 7 === 6);
+                                        const spY = (mType === 'aeroDrone') ? 1.8 : 0;
+                                        this.spawnEnemy(mType, safeSp.x, safeSp.z, ambLvl, false, isEliteAmb, false, spY);
+                                        const spawnedEn = this.enemies[this.enemies.length - 1];
+                                        if (spawnedEn) {
+                                            spawnedEn.isTrainAmbushSpawn = true;
+                                            spawnedEn.ambushCarId = amb.car.id;
+                                            spawnedEn.pos.z = Math.max(minCarZ, Math.min(maxCarZ, spawnedEn.pos.z));
+                                            this.alertEnemy(spawnedEn, false);
+                                            amb.ambushEnemies.push(spawnedEn);
+                                            this.spawnBurstParticles(spawnedEn.pos.clone().setY(1.2), 0xf97316, 12);
+                                        }
+                                        amb.spawned++;
                                     }
-                                    amb.spawned++;
+                                    AudioEngine.sfx('dash');
+                                    this.enemiesRemaining = Math.max(this.enemiesRemaining || 0, this.enemies.length);
+                                    this.updateDungeonObjectiveText();
+                                    UI.updateHUD();
                                 }
-                                AudioEngine.sfx('dash');
-                                this.enemiesRemaining = Math.max(this.enemiesRemaining || 0, this.enemies.length);
-                                this.updateDungeonObjectiveText();
-                                UI.updateHUD();
+                            } else if (amb.ambushEnemies.length === 0) {
+                                this.endTrainCarAmbush();
+                                if (isCoop && Coop.isHost()) {
+                                    Coop.broadcast({ t: 'TRAIN_AMBUSH_END' });
+                                }
                             }
-                        } else if (amb.ambushEnemies.length === 0) {
-                            amb.sealMeshes.forEach(m => {
-                                this.scene.remove(m);
-                                const wi = this.worldMeshes.indexOf(m);
-                                if (wi !== -1) this.worldMeshes.splice(wi, 1);
-                            });
-                            amb.sealColliders.forEach(c => {
-                                const ci = this.wallColliders.indexOf(c);
-                                if (ci !== -1) this.wallColliders.splice(ci, 1);
-                            });
-                            amb.sealMeshes = [];
-                            amb.sealColliders = [];
-                            amb.active = false;
-                            amb.car = null;
-                            amb.cooldown = 120.0;
-                            AudioEngine.sfx('loot');
-                            UI.announce('COUPLER AIRLOCKS UNSEALED', 'Ambush waves neutralized — adjacent cars re-coupled.');
-                            this.updateDungeonObjectiveText();
                         }
                     }
                 }
@@ -38343,6 +38811,11 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 if ((en.magnetTetherSlow || 0) > 0) en.magnetTetherSlow = Math.max(0, en.magnetTetherSlow - dt);
                 const effSlowMult = slowMult * magSlow;
                 const enOnRampNow = !en.isBoss && this.isPointOnRamp(en.pos.x, en.pos.z, 0.55);
+                if (en.isTrainAmbushSpawn && this.trainAmbushState && this.trainAmbushState.active && this.trainAmbushState.car) {
+                    const ambCar = this.trainAmbushState.car;
+                    en.pos.x = Math.max(-20.4, Math.min(20.4, en.pos.x));
+                    en.pos.z = Math.max(ambCar.zMin + 1.6, Math.min(ambCar.zMax - 1.6, en.pos.z));
+                }
                 if (!en.isBoss) {
                     const enFloorY = this.getFloorElevationAt(en.pos.x, en.pos.z, en.pos.y || 0, false);
                     en.pos.y = enOnRampNow ? enFloorY : THREE.MathUtils.lerp(en.pos.y || 0, enFloorY, 18 * dt);
@@ -38351,7 +38824,8 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 const coopTgtPos = (window.Coop && Coop.isActive()) ? Coop.getEnemyTargetPos(en) : this.player.pos;
                 const primaryTargetPos = tauntingCharmedEnemy ? tauntingCharmedEnemy.pos : (tauntingBot ? tauntingBot.pos : coopTgtPos);
                 const dist = Math.hypot(en.pos.x - primaryTargetPos.x, en.pos.z - primaryTargetPos.z);
-                const playerStealthed = !tauntingBot && !tauntingCharmedEnemy && (this.player.stealthTimer > 0);
+                const coopTargetProtected = Boolean(window.Coop && Coop.isActive() && !tauntingBot && !tauntingCharmedEnemy && Coop.isEnemyTargetSpawnSafe(en));
+                const playerStealthed = !tauntingBot && !tauntingCharmedEnemy && ((this.player.stealthTimer > 0 && (!window.Coop || !Coop.isActive())) || coopTargetProtected);
 
                 const enElevZone = en.isBoss ? 'ground' : this.getEntityElevZone(en.pos);
                 const plElevZone = (tauntingBot || tauntingCharmedEnemy) ? this.getEntityElevZone(primaryTargetPos) : (this.player.jumpPadArc ? 'air' : this.getEntityElevZone(this.player.pos));
@@ -38369,7 +38843,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 }
 
                 const closeVert = Math.abs((en.pos.y || 0) - (primaryTargetPos.y || 0)) <= 2.4;
-                if (canEngageElev && closeVert && dist <= (en.isSuicide ? 1.65 : 1.08)) {
+                if (!playerStealthed && canEngageElev && closeVert && dist <= (en.isSuicide ? 1.65 : 1.08)) {
                     if (en.isSuicide) {
                         AudioEngine.sfx('shotgun');
                         this.screenShake = 0.32;
@@ -39262,10 +39736,13 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                             }
                         }
 
-                        // Shared Special Ability Cycle (Fires strictly ONE ability at a time, ~4.0s-5.6s interval like sector bosses!)
+                        // Shared Special Ability Cycle (Weighted 20/40/40 -> 30/35/35 + smart cover/range weighting!)
                         if (en.specialTimer <= 0 && !en.blitzState && (!en.mortarCascade || en.mortarCascade.remaining <= 0)) {
-                            const nextIdx = (en.conductorNextSpec || 0) % 3;
-                            en.conductorNextSpec = nextIdx + 1;
+                            const cW = this.getBossBaseWeights(en, 0);
+                            if ((en._playerCoverTime || 0) >= 1.8) this.adjustBossAbilityWeights(cW, 2, 10);
+                            else if (distToP > 15) this.adjustBossAbilityWeights(cW, 0, 10);
+                            const nextIdx = this.pickWeightedIndex(cW);
+                            en.conductorNextSpec = nextIdx;
                             en.specialTimer = (en.phase >= 3 ? 4.0 : (en.phase >= 2 ? 4.8 : 5.6));
                             en.attackTimer = Math.max(en.attackTimer, 1.35);
                             en.atkAnimDur = 0.42; en.atkAnimTimer = 0.42; en.atkStyle = 'special'; en.atkComboFlip = (en.atkComboFlip || 0) + 1;
@@ -39381,10 +39858,13 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                             }
                         }
 
-                        // Shared Special Cycle (Fires strictly ONE ability at a time, ~3.9s-5.4s interval!)
+                        // Shared Special Cycle (Weighted 20/40/40 -> 30/35/35 + smart cover/vortex check!)
                         if (en.specialTimer <= 0 && !en.shipwrightVortex) {
-                            const nextIdx = (en.shipwrightNextSpec || 0) % 3;
-                            en.shipwrightNextSpec = nextIdx + 1;
+                            const swW = this.getBossBaseWeights(en, 1);
+                            if (en.shipwrightVortex) swW[1] = 0;
+                            if ((en._playerCoverTime || 0) >= 1.8) this.adjustBossAbilityWeights(swW, 0, 10);
+                            const nextIdx = this.pickWeightedIndex(swW);
+                            en.shipwrightNextSpec = nextIdx;
                             en.specialTimer = (en.phase >= 3 ? 3.9 : (en.phase >= 2 ? 4.6 : 5.4));
                             en.attackTimer = Math.max(en.attackTimer, 1.35);
                             en.atkAnimDur = 0.42; en.atkAnimTimer = 0.42; en.atkStyle = 'special'; en.atkComboFlip = (en.atkComboFlip || 0) + 1;
@@ -39653,7 +40133,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
 
                 if (en.rewindsHpOnce && !en.hasRewoundHp && en.hp > 0 && (en.hp / en.maxHp) < 0.30) {
                     en.hasRewoundHp = true;
-                    en.hp = Math.min(en.maxHp, en.hp + Math.round(en.maxHp * 0.35));
+                    en.hp = Math.min(en.maxHp, en.hp + Math.round(en.maxHp * 0.35 * this.getCoopBossHealMult()));
                     en.shieldTimer = 2.0;
                     en.hpFillMesh.scale.x = Math.max(0.001, en.hp / en.maxHp);
                     this.spawnBurstParticles(en.pos.clone().setY(1.2), 0x2dd4bf, 18);
@@ -39680,8 +40160,8 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                             en.kitMode = `ranged_${1 + Math.floor(Math.random() * maxR)}`;
                             en.kitVar = 1 + Math.floor(Math.random() * (isArtillery301 ? 3 : 2));
                             en.kitStateTimer = 4.5 + Math.random() * 2.5;
-                        } else if (roll < 0.88 && !isArtillery301) {
-                            en.kitMode = isDuelist121 && Math.random() < 0.55 ? 'melee_blink' : ((bSec === 7) ? 'melee_blink' : 'melee_lunge');
+                        } else if (isDuelist121 || (roll < 0.88 && !isArtillery301)) {
+                            en.kitMode = isDuelist121 ? (Math.random() < 0.55 ? 'melee_blink' : 'ranged_1') : ((bSec === 7) ? 'melee_blink' : 'melee_lunge');
                             en.kitVar = 1 + Math.floor(Math.random() * 2);
                             en.kitStateTimer = 1.4 + Math.random() * 0.8;
                         } else {
@@ -39705,8 +40185,8 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     if (m === 'util') {
                         en.attackTimer = 1.6 / rateDiv;
                         en.kitStateTimer = 0;
-                        if (en.hp < en.maxHp * 0.85) {
-                            const healAmt = Math.round(en.maxHp * 0.045);
+                        if (en.hp < en.maxHp * 0.85 && !isDuelist121 && en.behavior !== 'assassin_blinker') {
+                            const healAmt = Math.round(en.maxHp * 0.045 * this.getCoopBossHealMult());
                             en.hp = Math.min(en.maxHp, en.hp + healAmt);
                             en.hpFillMesh.scale.x = Math.max(0.001, en.hp / en.maxHp);
                             this.spawnFloatingText(en.pos, `+${healAmt.toLocaleString()} REPAIR`, '#34d399', 'text-xs');
@@ -39888,6 +40368,12 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                         }
                 }
 
+                if (!canSeePlayer) {
+                    en._playerCoverTime = (en._playerCoverTime || 0) + dt;
+                } else {
+                    en._playerCoverTime = Math.max(0, (en._playerCoverTime || 0) - dt * 2.0);
+                }
+
                 if (!en.isAirborne && !en.inBlitzSequence) {
                     en.specialTimer -= dt * slowMult;
                     if (en.specialTimer <= 0) {
@@ -39953,15 +40439,16 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                             }
                         } else if (en.healsAllies) {
                             let healed = 0;
+                            const healMult = this.getCoopBossHealMult();
                             if (en.hp < en.maxHp) {
-                                en.hp = Math.min(en.maxHp, en.hp + Math.round(en.maxHp * 0.06));
+                                en.hp = Math.min(en.maxHp, en.hp + Math.round(en.maxHp * 0.06 * healMult));
                                 en.hpFillMesh.scale.x = Math.max(0.001, en.hp / en.maxHp);
                             }
                             const injuredAllies = this.enemies
                                 .filter(a => a !== en && !a.isDummy && a.hp > 0 && a.hp < a.maxHp && a.pos.distanceTo(en.pos) <= 12.0)
                                 .sort((a, b) => (a.hp / a.maxHp) - (b.hp / b.maxHp));
                             for (const a of injuredAllies) {
-                                a.hp = Math.min(a.maxHp, a.hp + Math.round(a.maxHp * 0.32));
+                                a.hp = Math.min(a.maxHp, a.hp + Math.round(a.maxHp * 0.32 * healMult));
                                 a.hpFillMesh.scale.x = Math.max(0.001, a.hp / a.maxHp);
                                 this.spawnBurstParticles(a.pos.clone().add(new THREE.Vector3(0, 1.2, 0)), 0x34d399, 10);
                                 const beamGeo = new THREE.BufferGeometry().setFromPoints([en.pos.clone().setY(1.3), a.pos.clone().setY(1.1)]);
@@ -40755,6 +41242,10 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     if (!this.state.bestTimesHard) this.state.bestTimesHard = {};
                     if (typeof this.state.lifetimeCreditsSpent !== 'number') this.state.lifetimeCreditsSpent = 0;
                     if (typeof this.state.bountyContractKills !== 'number') this.state.bountyContractKills = 0;
+                    if (typeof this.state.secondaryKills !== 'number') this.state.secondaryKills = 0;
+                    if (typeof this.state.cosmeticCreditsSpent !== 'number') this.state.cosmeticCreditsSpent = 0;
+                    if (typeof this.state.rankCosmetic100kLatched !== 'boolean') this.state.rankCosmetic100kLatched = false;
+                    if (typeof this.state.overdriveUses !== 'number') this.state.overdriveUses = 0;
                     if (!this.state.flawlessNormalSectors) this.state.flawlessNormalSectors = {};
                     if (!this.state.flawlessHardSectors) this.state.flawlessHardSectors = {};
                     if (typeof this.state.totalNeoGunsCreated !== 'number') this.state.totalNeoGunsCreated = 0;
@@ -40859,6 +41350,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     tensorCleared: false, bestTimeTensor: null,
                     bestTimesNormal: {}, bestTimesHard: {}, bestTimesBonus: {},
                     lifetimeCreditsSpent: 0, bountyContractKills: 0,
+                    secondaryKills: 0, cosmeticCreditsSpent: 0, rankCosmetic100kLatched: false, overdriveUses: 0,
                     flawlessNormalSectors: {}, flawlessHardSectors: {},
                     totalNeoGunsCreated: 0,
                     sectorCheckpoints: {}, nexusClears: 0,
@@ -42270,8 +42762,11 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     return;
                 }
                 Game.spendCredits(cos.price);
+                st.cosmeticCreditsSpent = (st.cosmeticCreditsSpent || 0) + (cos.price || 0);
                 Game.grantCosmetic(cosId, `Purchased in Boutique for ${cos.price.toLocaleString()}₵`);
                 st.cosmetics.equipped[cos.slot] = cosId;
+                Game.checkCosmetic100kEquipLatch();
+                Game.checkCosmetic100kEquipLatch();
                 AudioEngine.sfx('loot');
                 Game.updateCosmeticsVisuals();
                 Game.saveGame();
@@ -42297,6 +42792,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 const cos = COSMETIC_CATALOG.find(c => c.id === cosId);
                 if (!cos || !st.cosmetics.owned.includes(cosId)) return;
                 st.cosmetics.equipped[cos.slot] = cosId;
+                Game.checkCosmetic100kEquipLatch();
                 if (this.previewShopCosId) {
                     const p = COSMETIC_CATALOG.find(c => c.id === this.previewShopCosId);
                     if (p && p.slot === cos.slot) this.previewShopCosId = cosId;
@@ -46558,12 +47054,42 @@ ${selLog.text}
                 const canvas = document.getElementById('minimap-canvas');
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
-                const w = canvas.width;
-                const h = canvas.height;
+                const mScale = (window.ZedEnhanced && window.ZedEnhanced.cfg && Number(window.ZedEnhanced.cfg.mapScale))
+                    ? Math.max(0.50, Math.min(1.60, Number(window.ZedEnhanced.cfg.mapScale)))
+                    : 1.0;
+                const dpr = Math.min(3, window.devicePixelRatio || 1);
+                const w = 144;
+                const h = 144;
+                const backingW = Math.max(72, Math.round(w * mScale * dpr));
+                const backingH = Math.max(72, Math.round(h * mScale * dpr));
+                if (canvas.width !== backingW || canvas.height !== backingH) {
+                    canvas.width = backingW;
+                    canvas.height = backingH;
+                    canvas.style.width = `${w}px`;
+                    canvas.style.height = `${h}px`;
+                }
+                ctx.setTransform(backingW / w, 0, 0, backingH / h, 0, 0);
+
                 const cx = w / 2;
                 const cy = h / 2;
-                const arenaDim = Game.currentArenaSize || 88;
+                let mapCenterX = 0;
+                let mapCenterZ = 0;
+                let arenaDim = Game.currentArenaSize || 88;
+                if (Game.customArenaBounds) {
+                    const b = Game.customArenaBounds;
+                    if (Game.trainCarsMeta && Game.trainCarsMeta.length > 0 && Game.player && Game.player.pos) {
+                        mapCenterX = 0;
+                        mapCenterZ = Game.player.pos.z;
+                        arenaDim = 136;
+                    } else {
+                        mapCenterX = (b.minX + b.maxX) * 0.5;
+                        mapCenterZ = (b.minZ + b.maxZ) * 0.5;
+                        arenaDim = Math.max(40, (b.maxX - b.minX), (b.maxZ - b.minZ));
+                    }
+                }
                 const scale = (w - 10) / arenaDim;
+                const toX = (wx) => cx + (wx - mapCenterX) * scale;
+                const toZ = (wz) => cy + (wz - mapCenterZ) * scale;
 
                 ctx.fillStyle = '#050811';
                 ctx.fillRect(0, 0, w, h);
@@ -46572,19 +47098,24 @@ ${selLog.text}
                 ctx.lineWidth = 1;
                 ctx.strokeRect(2, 2, w - 4, h - 4);
 
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(3, 3, w - 6, h - 6);
+                ctx.clip();
+
                 Game.wallColliders.forEach(box => {
                     ctx.fillStyle = box.isVoidCutout ? '#02040a' : '#1e293b';
                     ctx.fillRect(
-                        cx + (box.minX) * scale,
-                        cy + (box.minZ) * scale,
+                        toX(box.minX),
+                        toZ(box.minZ),
                         (box.maxX - box.minX) * scale,
                         (box.maxZ - box.minZ) * scale
                     );
                     if (box.isVoidCutout) {
                         ctx.strokeStyle = '#0369a1';
                         ctx.strokeRect(
-                            cx + (box.minX) * scale,
-                            cy + (box.minZ) * scale,
+                            toX(box.minX),
+                            toZ(box.minZ),
                             (box.maxX - box.minX) * scale,
                             (box.maxZ - box.minZ) * scale
                         );
@@ -46595,19 +47126,19 @@ ${selLog.text}
                         if (ae.type === 'arch_platform') {
                             ctx.fillStyle = 'rgba(56, 189, 248, 0.12)';
                             ctx.strokeStyle = 'rgba(56, 189, 248, 0.45)';
-                            ctx.strokeRect(cx + ae.minX * scale, cy + ae.minZ * scale, (ae.maxX - ae.minX) * scale, (ae.maxZ - ae.minZ) * scale);
+                            ctx.strokeRect(toX(ae.minX), toZ(ae.minZ), (ae.maxX - ae.minX) * scale, (ae.maxZ - ae.minZ) * scale);
                         } else if (ae.type === 'arch_roof' && ae.currentOpacity > 0.5) {
                             ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
                             ctx.strokeStyle = '#38bdf8';
-                            ctx.fillRect(cx + ae.minX * scale, cy + ae.minZ * scale, (ae.maxX - ae.minX) * scale, (ae.maxZ - ae.minZ) * scale);
-                            ctx.strokeRect(cx + ae.minX * scale, cy + ae.minZ * scale, (ae.maxX - ae.minX) * scale, (ae.maxZ - ae.minZ) * scale);
+                            ctx.fillRect(toX(ae.minX), toZ(ae.minZ), (ae.maxX - ae.minX) * scale, (ae.maxZ - ae.minZ) * scale);
+                            ctx.strokeRect(toX(ae.minX), toZ(ae.minZ), (ae.maxX - ae.minX) * scale, (ae.maxZ - ae.minZ) * scale);
                         } else if (ae.type === 'arch_door' && ae.openRatio < 0.5) {
                             ctx.fillStyle = '#facc15';
-                            ctx.fillRect(cx + ae.pos.x * scale - 2.5, cy + ae.pos.z * scale - 2.5, 5, 5);
+                            ctx.fillRect(toX(ae.pos.x) - 2.5, toZ(ae.pos.z) - 2.5, 5, 5);
                         } else if (ae.type === 'arch_jumppad') {
                             ctx.fillStyle = '#34d399';
                             ctx.beginPath();
-                            ctx.arc(cx + ae.pos.x * scale, cy + ae.pos.z * scale, 3.0, 0, Math.PI * 2);
+                            ctx.arc(toX(ae.pos.x), toZ(ae.pos.z), 3.0, 0, Math.PI * 2);
                             ctx.fill();
                         }
                     });
@@ -46616,15 +47147,15 @@ ${selLog.text}
                 Game.gimmickEntities.forEach(g => {
                     if (g.type === 'teleporter') {
                         ctx.fillStyle = '#22d3ee';
-                        ctx.fillRect(cx + g.pos.x * scale - 2.5, cy + g.pos.z * scale - 2.5, 5, 5);
+                        ctx.fillRect(toX(g.pos.x) - 2.5, toZ(g.pos.z) - 2.5, 5, 5);
                     } else if (g.type === 'unkillable_stalker') {
                         ctx.fillStyle = '#e879f9';
                         ctx.beginPath();
-                        ctx.arc(cx + g.pos.x * scale, cy + g.pos.z * scale, 4.5, 0, Math.PI * 2);
+                        ctx.arc(toX(g.pos.x), toZ(g.pos.z), 4.5, 0, Math.PI * 2);
                         ctx.fill();
                     } else if (g.type === 'vector_field' && g.mesh && g.mesh.visible) {
                         ctx.save();
-                        ctx.translate(cx + g.pos.x * scale, cy + g.pos.z * scale);
+                        ctx.translate(toX(g.pos.x), toZ(g.pos.z));
                         ctx.rotate(-g.angle);
                         const vw = (g.width || 5.6) * scale;
                         const vl = (g.length || 22.0) * scale;
@@ -46633,8 +47164,8 @@ ${selLog.text}
                         ctx.restore();
                     } else if (g.type === 'cryo_blizzard_controller' && g.safeZones && g.safeZones.length > 0) {
                         g.safeZones.forEach(sz => {
-                            const sx = cx + sz.pos.x * scale;
-                            const szz = cy + sz.pos.z * scale;
+                            const sx = toX(sz.pos.x);
+                            const szz = toZ(sz.pos.z);
                             const sr = Math.max(3.5, sz.radius * scale);
                             ctx.fillStyle = 'rgba(250, 204, 21, 0.25)';
                             ctx.strokeStyle = '#facc15';
@@ -46648,8 +47179,8 @@ ${selLog.text}
                 });
 
                 if (Game.tensorBossMarker) {
-                    const mx = cx + Game.tensorBossMarker.position.x * scale;
-                    const mz = cy + Game.tensorBossMarker.position.z * scale;
+                    const mx = toX(Game.tensorBossMarker.position.x);
+                    const mz = toZ(Game.tensorBossMarker.position.z);
                     ctx.fillStyle = '#facc15';
                     ctx.beginPath();
                     ctx.arc(mx, mz, 4.5, 0, Math.PI * 2);
@@ -46657,8 +47188,8 @@ ${selLog.text}
                 }
 
                 Game.interactables.forEach(inter => {
-                    const ix = cx + inter.pos.x * scale;
-                    const iz = cy + inter.pos.z * scale;
+                    const ix = toX(inter.pos.x);
+                    const iz = toZ(inter.pos.z);
                     if (inter.radarKind === 'lore') {
                         ctx.save();
                         ctx.translate(ix, iz);
@@ -46691,6 +47222,23 @@ ${selLog.text}
                         ctx.lineWidth = 1.4;
                         ctx.strokeRect(-4, -4, 8, 8);
                         ctx.restore();
+                    } else if (inter.radarKind === 'portal' || inter.radarKind === 'portal_extract') {
+                        const pCol = inter.radarKind === 'portal_extract' ? '#facc15' : '#22d3ee';
+                        ctx.strokeStyle = pCol;
+                        ctx.lineWidth = 2.0;
+                        ctx.beginPath();
+                        ctx.arc(ix, iz, 4.8, 0, Math.PI * 2);
+                        ctx.stroke();
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.arc(ix, iz, 1.6, 0, Math.PI * 2);
+                        ctx.fill();
+                    } else if (inter.isChest && !inter.opened) {
+                        ctx.fillStyle = inter.chestRarity === 'purple_gold' ? '#c084fc' : (inter.chestRarity === 'silver_gold' ? '#e2e8f0' : '#facc15');
+                        ctx.fillRect(ix - 3, iz - 2.5, 6, 5);
+                        ctx.strokeStyle = '#0f172a';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(ix - 3, iz - 2.5, 6, 5);
                     } else {
                         ctx.fillStyle = '#38bdf8';
                         ctx.fillRect(ix - 2, iz - 2, 4, 4);
@@ -46701,7 +47249,7 @@ ${selLog.text}
                     Game.alliedBots.forEach(bot => {
                         ctx.fillStyle = '#22d3ee';
                         ctx.beginPath();
-                        ctx.arc(cx + bot.pos.x * scale, cy + bot.pos.z * scale, 2.5, 0, Math.PI * 2);
+                        ctx.arc(toX(bot.pos.x), toZ(bot.pos.z), 2.5, 0, Math.PI * 2);
                         ctx.fill();
                     });
                 }
@@ -46713,15 +47261,15 @@ ${selLog.text}
                 Game.enemies.forEach(en => {
                     if (en.isDummy) {
                         ctx.fillStyle = '#38bdf8';
-                        ctx.fillRect(cx + en.pos.x * scale - 2, cy + en.pos.z * scale - 2, 4, 4);
+                        ctx.fillRect(toX(en.pos.x) - 2, toZ(en.pos.z) - 2, 4, 4);
                         return;
                     }
                     const isSonarRevealed = (en.sonarRevealTimer || 0) > 0;
                     const isCharmed = (en.mindControlTimer || 0) > 0;
                     const inLOS = en.pos.distanceTo(Game.player.pos) <= 20.0 && Game.hasLineOfSight(en.pos, Game.player.pos);
                     if (inLOS || en.isBoss || en.isMiniBoss || revealAllRemaining || isSonarRevealed || en.isBountyTarget || isCharmed) {
-                        const ex = cx + en.pos.x * scale;
-                        const ez = cy + en.pos.z * scale;
+                        const ex = toX(en.pos.x);
+                        const ez = toZ(en.pos.z);
                         ctx.fillStyle = isCharmed
                             ? '#e879f9'
                             : (en.isBountyTarget
@@ -46741,15 +47289,85 @@ ${selLog.text}
                         ctx.strokeStyle = '#facc15';
                         ctx.lineWidth = 1.5;
                         ctx.beginPath();
-                        ctx.arc(cx + en.lastSeenMinimapPos.x * scale, cy + en.lastSeenMinimapPos.z * scale, 2.8, 0, Math.PI * 2);
+                        ctx.arc(toX(en.lastSeenMinimapPos.x), toZ(en.lastSeenMinimapPos.z), 2.8, 0, Math.PI * 2);
                         ctx.stroke();
                     }
                 });
 
+                // Co-op Teammates (directional arrows, spawn-safe halos, downed cross + revive ring)
+                if (window.Coop && Coop.isActive()) {
+                    Coop.remotePlayers.forEach(rp => {
+                        const rx = toX(rp.pos.x);
+                        const rz = toZ(rp.pos.z);
+                        if (rp.isCoopDead) {
+                            ctx.strokeStyle = '#ef4444';
+                            ctx.lineWidth = 1.8;
+                            ctx.beginPath();
+                            ctx.moveTo(rx - 2.6, rz - 2.6);
+                            ctx.lineTo(rx + 2.6, rz + 2.6);
+                            ctx.moveTo(rx + 2.6, rz - 2.6);
+                            ctx.lineTo(rx - 2.6, rz + 2.6);
+                            ctx.stroke();
+                            if ((rp.reviveProgress || 0) > 0) {
+                                ctx.strokeStyle = '#34d399';
+                                ctx.lineWidth = 2.0;
+                                ctx.beginPath();
+                                ctx.arc(rx, rz, 5.2, -Math.PI / 2, -Math.PI / 2 + rp.reviveProgress * Math.PI * 2);
+                                ctx.stroke();
+                            }
+                        } else {
+                            if ((rp.coopSpawnSafeTimer || 0) > 0) {
+                                ctx.strokeStyle = '#22d3ee';
+                                ctx.lineWidth = 1.3;
+                                ctx.beginPath();
+                                ctx.arc(rx, rz, 5.4, 0, Math.PI * 2);
+                                ctx.stroke();
+                            }
+                            ctx.save();
+                            ctx.translate(rx, rz);
+                            ctx.rotate(-(rp.rotY || 0) + Math.PI);
+                            ctx.fillStyle = '#34d399';
+                            ctx.strokeStyle = '#052e16';
+                            ctx.lineWidth = 1.1;
+                            ctx.beginPath();
+                            ctx.moveTo(0, -4.4);
+                            ctx.lineTo(3.2, 3.2);
+                            ctx.lineTo(0, 1.4);
+                            ctx.lineTo(-3.2, 3.2);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.stroke();
+                            ctx.restore();
+                        }
+                    });
+                }
+
+                // Local Player marker (directional chevron + spawn-safe halo)
+                const plX = toX(Game.player.pos.x);
+                const plZ = toZ(Game.player.pos.z);
+                if ((Game.player.coopSpawnSafeTimer || 0) > 0) {
+                    ctx.strokeStyle = '#22d3ee';
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.arc(plX, plZ, 6.0, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+                ctx.save();
+                ctx.translate(plX, plZ);
+                ctx.rotate(-(Game.player.rotY || 0) + Math.PI);
                 ctx.fillStyle = '#38bdf8';
+                ctx.strokeStyle = '#020617';
+                ctx.lineWidth = 1.1;
                 ctx.beginPath();
-                ctx.arc(cx + Game.player.pos.x * scale, cy + Game.player.pos.z * scale, 3.8, 0, Math.PI * 2);
+                ctx.moveTo(0, -4.8);
+                ctx.lineTo(3.5, 3.4);
+                ctx.lineTo(0, 1.5);
+                ctx.lineTo(-3.5, 3.4);
+                ctx.closePath();
                 ctx.fill();
+                ctx.stroke();
+                ctx.restore();
+                ctx.restore();
             },
 
             announce(title, subtitle) {
@@ -47964,6 +48582,7 @@ ${selLog.text}
                 OD.dmgMult = prm.dmgMult;
                 OD.readyShown = false;
                 stats.odUses++;
+                if (G.state) G.state.overdriveUses = Math.max(G.state.overdriveUses || 0, stats.odUses);
                 const p = G.player;
                 p.hp = Math.min(p.maxHp, p.hp + Math.round(p.maxHp * prm.healPct));
                 p.armorShield = Math.min(p.maxArmorShield, p.player ? p.armorShield : p.armorShield + Math.round(p.maxArmorShield * prm.shieldPct));
@@ -48564,6 +49183,7 @@ ${selLog.text}
                     }
                     const mapBox = document.getElementById('hud-minimap-box');
                     if (mapBox) mapBox.style.zoom = String(mScale);
+                    if (window.UI && typeof UI.drawMinimap === 'function') UI.drawMinimap();
                 }, 'applyCfg');
             }
 
@@ -48894,8 +49514,8 @@ ${selLog.text}
             ]
         };
         const FAST_PKT_TYPES = new Set(['PL_STATE', 'EN_SYNC']);
-        const DMG_MULTS = [1.0, 1.25, 1.5, 1.75, 2.0, 2.25]; // 1P: 1.0x .. 6P: 2.25x (+0.25x/player)
-        const HP_MULTS  = [1.0, 1.65, 2.3, 2.95, 3.6, 4.25]; // 1P: 1.0x .. 6P: 4.25x (+0.65x/player)
+        const DMG_MULTS = [1.0, 1.2, 1.4, 1.6, 1.8, 2.0]; // 1P: 1.0x .. 6P: 2.25x (+0.25x/player)
+        const HP_MULTS  = [1.0, 1.55, 2.1, 2.65, 3.2, 3.75]; // 1P: 1.0x .. 6P: 4.25x (+0.65x/player)
         const SPAWN_OFFSETS = [
             [0, 0],
             [-1.6, 0],
@@ -49308,9 +49928,15 @@ ${selLog.text}
                         if (!rp.revivers) rp.revivers = new Map();
                         rp.revivers.set(this.myPeerId, nowMs);
                     }
-                    if (!prevActive || prevTarget !== targetPeerId || (nowMs - (this._lastRevPingMs || 0)) >= 150) {
+                    if (!prevActive || prevTarget !== targetPeerId || (nowMs - (this._lastRevPingMs || 0)) >= 100) {
                         this._lastRevPingMs = nowMs;
-                        this.broadcast({ t: 'REVIVE_PROG', reviverId: this.myPeerId, targetPeerId, active: true });
+                        this.broadcast({
+                            t: 'REVIVE_PROG',
+                            reviverId: this.myPeerId,
+                            targetPeerId,
+                            active: true,
+                            prog: rp ? +(rp.reviveProgress || 0).toFixed(3) : 0
+                        });
                     }
                 }
             },
@@ -49318,7 +49944,7 @@ ${selLog.text}
             getReviveStatus(targetPeerId) {
                 if (targetPeerId === this.myPeerId) {
                     const n = this.localRevivers ? this.localRevivers.size : 0;
-                    return { revivers: n, duration: this.getReviveDurationForCount(n), progress: Game.player.reviveProgress || 0 };
+                    return { revivers: n, duration: this.getReviveDurationForCount(Math.max(1, n)), progress: Game.player.reviveProgress || 0 };
                 }
                 const rp = this.remotePlayers.get(targetPeerId);
                 const n = (rp && rp.revivers) ? rp.revivers.size : 0;
@@ -49345,17 +49971,27 @@ ${selLog.text}
                 Game.player.hp = Math.max(1, Math.round((Game.player.maxHp || 100) * 0.30));
                 Game.player.armorShield = 0;
                 Game.player.reviveProgress = 0;
+                Game.player.coopSpawnSafeTimer = 10.0;
+                Game.player.protoMartyrInvulnTimer = Math.max(Game.player.protoMartyrInvulnTimer || 0, 10.0);
                 if (this.localRevivers) this.localRevivers.clear();
                 Game.player.lowHpVocalPlayed = false;
                 Game.isMouseDown = false;
                 Game.isRightMouseDown = false;
                 AudioEngine.sfx('levelup');
                 Game.spawnBurstParticles(Game.player.pos.clone().setY((Game.player.pos.y || 0) + 1.0), 0x34d399, 24);
-                UI.announce('SQUAD REVIVE COMPLETE', 'Restored in action at 30% HP (0 Shield)!');
+                Game.spawnFloatingText(Game.player.pos, 'REVIVED — 10s SPAWN IMMUNITY!', '#34d399', 'text-sm', true);
+                UI.announce('SQUAD REVIVE COMPLETE', 'Restored in action at 30% HP (0 Shield) • 10s Spawn Immunity!');
+                this.broadcast({
+                    t: 'REVIVE_STATE',
+                    targetPeerId: this.myPeerId,
+                    prog: 0,
+                    revIds: []
+                });
                 this.broadcast({
                     t: 'PL_REVIVE_DONE',
                     peerId: this.myPeerId,
                     hp: Game.player.hp,
+                    safe: 10.0,
                     x: +Game.player.pos.x.toFixed(2),
                     y: +(Game.player.pos.y || 0).toFixed(2),
                     z: +Game.player.pos.z.toFixed(2)
@@ -49397,7 +50033,8 @@ ${selLog.text}
                 }
 
                 Game.resetPlayerCombatState();
-                Game.player.protoMartyrInvulnTimer = 2.0;
+                Game.player.coopSpawnSafeTimer = 10.0;
+                Game.player.protoMartyrInvulnTimer = Math.max(Game.player.protoMartyrInvulnTimer || 0, 10.0);
                 Game.player.lowHpVocalPlayed = false;
                 Game.isMouseDown = false;
                 Game.isRightMouseDown = false;
@@ -49414,11 +50051,18 @@ ${selLog.text}
 
                 AudioEngine.sfx('levelup');
                 Game.spawnBurstParticles(Game.player.pos.clone().setY((Game.player.pos.y || 0) + 1.0), 0x34d399, 26);
-                Game.spawnFloatingText(Game.player.pos, 'CHASSIS REPRINTED — BACK IN ACTION!', '#34d399', 'text-sm', true);
+                Game.spawnFloatingText(Game.player.pos, 'CHASSIS REPRINTED — 10s SPAWN IMMUNITY!', '#34d399', 'text-sm', true);
 
+                this.broadcast({
+                    t: 'REVIVE_STATE',
+                    targetPeerId: this.myPeerId,
+                    prog: 0,
+                    revIds: []
+                });
                 this.broadcast({
                     t: 'PL_REVIVE',
                     peerId: this.myPeerId,
+                    safe: 10.0,
                     x: +Game.player.pos.x.toFixed(2),
                     y: +(Game.player.pos.y || 0).toFixed(2),
                     z: +Game.player.pos.z.toFixed(2),
@@ -49438,6 +50082,7 @@ ${selLog.text}
                 Game.player.coopRespawnMax = 0;
                 Game.player.coopDeathFloor = null;
                 Game.player.coopDeathPos = null;
+                Game.player.reviveProgress = 0;
                 Game.player.deathAnimTimer = 0;
                 if (Game.player.mesh) {
                     Game.player.mesh.visible = true;
@@ -49522,23 +50167,19 @@ ${selLog.text}
                     const maxDist = LOUD_SFX.has(name) ? 48.0 : 36.0;
                     if (dist > maxDist) return;
 
-                    const atten = Math.pow(Math.max(0.08, 1 - dist / maxDist), 1.3) * 0.85;
+                    const atten = Math.pow(Math.max(0.08, 1 - dist / maxDist), 1.3) * 0.78;
                     this.suppressNetSfx = true;
                     this.suppressVocal = true;
-                    const prevSfxVol = AudioEngine.sfxVol ?? 1.0;
+                    const prevOverride = AudioEngine._sfxOutOverride;
+                    const prevRemote = AudioEngine._isRemoteSfx;
                     try {
-                        if (AudioEngine.sfxBus && AudioEngine.ctx) {
-                            AudioEngine.sfxBus.gain.setValueAtTime(prevSfxVol * atten, AudioEngine.ctx.currentTime);
-                        }
+                        AudioEngine.init();
+                        AudioEngine._sfxOutOverride = AudioEngine.getAttenBus(atten);
+                        AudioEngine._isRemoteSfx = true;
                         origAudioSfx.call(AudioEngine, name);
                     } finally {
-                        if (AudioEngine.sfxBus && AudioEngine.ctx) {
-                            setTimeout(() => {
-                                if (AudioEngine.sfxBus && AudioEngine.ctx) {
-                                    AudioEngine.sfxBus.gain.setValueAtTime(AudioEngine.sfxVol ?? 1.0, AudioEngine.ctx.currentTime);
-                                }
-                            }, 90);
-                        }
+                        AudioEngine._sfxOutOverride = prevOverride;
+                        AudioEngine._isRemoteSfx = prevRemote;
                         this.suppressVocal = false;
                         this.suppressNetSfx = false;
                     }
@@ -49695,6 +50336,7 @@ ${selLog.text}
                             walkCycle: 0,
                             isCoopDead: false,
                             coopDeathFloor: null,
+                            coopSpawnSafeTimer: 0,
                             deathAnimTimer: 0,
                             aegisTimer: 0,
                             aegisHp: 0,
@@ -49767,6 +50409,7 @@ ${selLog.text}
                             rotY: Game.player.rotY,
                             isMoving: Game.player.isMoving,
                             stealthTimer: Game.player.stealthTimer || 0,
+                            spawnSafeTimer: Game.player.coopSpawnSafeTimer || 0,
                             isLocal: true
                         });
                     }
@@ -49778,6 +50421,7 @@ ${selLog.text}
                                 rotY: rp.rotY,
                                 isMoving: rp.isMoving,
                                 stealthTimer: rp.stealthTimer || 0,
+                                spawnSafeTimer: rp.coopSpawnSafeTimer || 0,
                                 isLocal: false,
                                 rpRef: rp
                             });
@@ -49792,19 +50436,52 @@ ${selLog.text}
 
                 getPlayerByPeerId(peerId) {
                     if (!peerId || peerId === this.myPeerId || peerId === 'local') {
-                        return { peerId: this.myPeerId || 'local', pos: Game.player.pos, rotY: Game.player.rotY, isMoving: Game.player.isMoving, isLocal: true };
+                        return {
+                            peerId: this.myPeerId || 'local',
+                            pos: Game.player.pos,
+                            rotY: Game.player.rotY,
+                            isMoving: Game.player.isMoving,
+                            stealthTimer: Game.player.stealthTimer || 0,
+                            spawnSafeTimer: Game.player.coopSpawnSafeTimer || 0,
+                            isLocal: true
+                        };
                     }
                     const rp = this.remotePlayers.get(peerId);
                     if (rp) {
-                        return { peerId: rp.peerId, pos: rp.pos, rotY: rp.rotY, isMoving: rp.isMoving, isLocal: false, rpRef: rp };
+                        return {
+                            peerId: rp.peerId,
+                            pos: rp.pos,
+                            rotY: rp.rotY,
+                            isMoving: rp.isMoving,
+                            stealthTimer: rp.stealthTimer || 0,
+                            spawnSafeTimer: rp.coopSpawnSafeTimer || 0,
+                            isLocal: false,
+                            rpRef: rp
+                        };
                     }
-                    return { peerId: 'local', pos: Game.player.pos, rotY: Game.player.rotY, isMoving: Game.player.isMoving, isLocal: true };
+                    return {
+                        peerId: 'local',
+                        pos: Game.player.pos,
+                        rotY: Game.player.rotY,
+                        isMoving: Game.player.isMoving,
+                        stealthTimer: Game.player.stealthTimer || 0,
+                        spawnSafeTimer: Game.player.coopSpawnSafeTimer || 0,
+                        isLocal: true
+                    };
+                },
+
+                isEnemyTargetSpawnSafe(en) {
+                    if (!this.isActive() || !en) return false;
+                    const tgt = en.targetPeerId ? this.getPlayerByPeerId(en.targetPeerId) : this.getPlayerByPeerId('local');
+                    return Boolean(tgt && ((tgt.spawnSafeTimer || 0) > 0 || (tgt.stealthTimer || 0) > 0));
                 },
 
                 updateHostTargetRanking(dt) {
                     if (!this.isHost() || Game.mode !== 'dungeon') return;
-                    const living = this.getAllLivingPlayers().filter(p => (p.stealthTimer || 0) <= 0);
-                    if (living.length === 0) return;
+                    const nonStealth = this.getAllLivingPlayers().filter(p => (p.stealthTimer || 0) <= 0);
+                    if (nonStealth.length === 0) return;
+                    const nonSafe = nonStealth.filter(p => (p.spawnSafeTimer || 0) <= 0);
+                    const living = nonSafe.length > 0 ? nonSafe : nonStealth;
 
                     Game.enemies.forEach(en => {
                         if (en.isDummy || en.hp <= 0) return;
@@ -49840,8 +50517,8 @@ ${selLog.text}
                     if (this.isClient() && !_fromNet) return true;
                     if (this.isHost() && !_fromNet) {
                         const seed = (Math.random() * 0xFFFFFFFF) >>> 0;
-                        const uIdx = forcedUltIdx !== null ? forcedUltIdx : (((boss.ultCycleIdx || 0) + 1) % 3);
                         const secIdx = forcedSecIdx !== null ? forcedSecIdx : (game.isTensorRun ? Math.min(8, Math.floor((game.dungeonFloor - 1) / 2)) : game.activeBiomeIndex);
+                        const uIdx = forcedUltIdx !== null ? forcedUltIdx : game.pickSmartBossAbilityIdx(boss, secIdx);
                         const targetPeerId = boss.targetPeerId || this.myPeerId;
                         const pkt = {
                             t: 'BOSS_ULT',
@@ -50117,7 +50794,7 @@ ${selLog.text}
 
                                     if (this.isHost() && [
                     'PL_STATE', 'PROJ', 'SFX', 'FX_EXPLODE', 'FX_CANISTER', 'DASH_FX', 'SKILL_FX',
-                    'AEGIS_STATE', 'AEGIS_ABSORB', 'PROP_HIT', 'INTER_USE', 'CHEST_HIT', 'CHEST_OPEN', 'BONUS_UNLOCK', 'REVIVE_PROG', 'PL_REVIVE_DONE', 'LOOT_PICKUP', 'PORTAL_USE', 'PL_DIED', 'PL_REVIVE', 'CS_VOTE', 'CS_DONE'
+                    'AEGIS_STATE', 'AEGIS_ABSORB', 'PROP_HIT', 'INTER_USE', 'CHEST_HIT', 'CHEST_OPEN', 'BONUS_UNLOCK', 'REVIVE_PROG', 'REVIVE_STATE', 'PL_REVIVE_DONE', 'LOOT_PICKUP', 'PORTAL_USE', 'PL_DIED', 'PL_REVIVE', 'CS_VOTE', 'CS_DONE'
                 ].includes(data.t)) {
                     this.broadcast(data, senderPeerId);
                 }
@@ -50253,6 +50930,7 @@ ${selLog.text}
                         rp.isADS = Boolean(data.ads);
                         rp.dashActiveTimer = data.dsh || 0;
                         rp.stealthTimer = data.stl || 0;
+                        rp.coopSpawnSafeTimer = data.safe || 0;
                         rp.activeEmoteType = data.em || '';
                         if (data.slot && rp.profile && rp.profile.activeWeaponSlot !== data.slot) {
                             rp.profile.activeWeaponSlot = data.slot;
@@ -50695,14 +51373,57 @@ ${selLog.text}
                         const nowMs = performance.now();
                         if (tId === this.myPeerId) {
                             if (!this.localRevivers) this.localRevivers = new Map();
+                            const prevSz = this.localRevivers.size;
                             if (data.active) this.localRevivers.set(rId, nowMs);
                             else this.localRevivers.delete(rId);
+                            if (this.localRevivers.size !== prevSz && Game.player && Game.player.isCoopDead) {
+                                this._lastRevStateSentMs = nowMs;
+                                this.broadcast({
+                                    t: 'REVIVE_STATE',
+                                    targetPeerId: this.myPeerId,
+                                    prog: +(Game.player.reviveProgress || 0).toFixed(3),
+                                    revIds: Array.from(this.localRevivers.keys())
+                                });
+                            }
                         } else {
                             const rp = this.remotePlayers.get(tId);
                             if (rp) {
                                 if (!rp.revivers) rp.revivers = new Map();
-                                if (data.active) rp.revivers.set(rId, nowMs);
-                                else rp.revivers.delete(rId);
+                                if (data.active) {
+                                    rp.revivers.set(rId, nowMs);
+                                    if (typeof data.prog === 'number' && data.prog > (rp.reviveProgress || 0)) {
+                                        rp.reviveProgress = Math.min(1, data.prog);
+                                    }
+                                } else {
+                                    rp.revivers.delete(rId);
+                                }
+                            }
+                        }
+                        break;
+                    }
+
+                    case 'REVIVE_STATE': {
+                        const tId = data.targetPeerId || senderPeerId;
+                        const nowMs = performance.now();
+                        const revList = Array.isArray(data.revIds) ? data.revIds : [];
+                        if (tId === this.myPeerId) {
+                            if (Game.player && Game.player.isCoopDead && typeof data.prog === 'number') {
+                                Game.player.reviveProgress = Math.max(0, Math.min(1, data.prog));
+                            }
+                        } else {
+                            const rp = this.remotePlayers.get(tId);
+                            if (rp && rp.isCoopDead) {
+                                if (typeof data.prog === 'number') {
+                                    rp.reviveProgress = Math.max(0, Math.min(1, data.prog));
+                                }
+                                if (!rp.revivers) rp.revivers = new Map();
+                                revList.forEach(rId => {
+                                    if (!rp.revivers.has(rId)) rp.revivers.set(rId, nowMs);
+                                    else rp.revivers.set(rId, nowMs);
+                                });
+                                Array.from(rp.revivers.keys()).forEach(k => {
+                                    if (!revList.includes(k) && k !== this.myPeerId) rp.revivers.delete(k);
+                                });
                             }
                         }
                         break;
@@ -50714,6 +51435,7 @@ ${selLog.text}
                             rp.isCoopDead = false;
                             rp.coopRespawnTimer = 0;
                             rp.coopDeathFloor = null;
+                            rp.coopSpawnSafeTimer = typeof data.safe === 'number' ? data.safe : 10.0;
                             rp.reviveProgress = 0;
                             if (rp.revivers) rp.revivers.clear();
                             rp.hp = data.hp || Math.max(1, Math.round((rp.maxHp || 100) * 0.30));
@@ -50723,7 +51445,7 @@ ${selLog.text}
                                 rp.targetPos.copy(rp.pos);
                             }
                             Game.spawnBurstParticles(rp.pos.clone().setY((rp.pos.y || 0) + 1.0), 0x34d399, 20);
-                            Game.spawnFloatingText(rp.pos, `${rp.profile?.name || 'OPERATIVE'} REVIVED (30% HP)!`, '#34d399', 'text-sm', true);
+                            Game.spawnFloatingText(rp.pos, `${rp.profile?.name || 'OPERATIVE'} REVIVED (30% HP • 10s SAFE)!`, '#34d399', 'text-sm', true);
                             this.updateSquadHUD();
                         }
                         break;
@@ -50788,6 +51510,9 @@ ${selLog.text}
                             rp.coopRespawnTimer = 0;
                             rp.coopRespawnMax = 0;
                             rp.coopDeathFloor = null;
+                            rp.coopSpawnSafeTimer = typeof data.safe === 'number' ? data.safe : 10.0;
+                            rp.reviveProgress = 0;
+                            if (rp.revivers) rp.revivers.clear();
                             rp.deathAnimTimer = 0;
                             rp.hp = data.hp || rp.maxHp;
                             rp.maxHp = data.mhp || rp.maxHp;
@@ -50802,7 +51527,7 @@ ${selLog.text}
                             }
                             this.playRemoteSpatialSfx('potion', rp.pos.x, rp.pos.z);
                             Game.spawnBurstParticles(rp.pos.clone().setY((rp.pos.y || 0) + 1.0), 0x34d399, 20);
-                            Game.spawnFloatingText(rp.pos, `${rp.profile?.name || 'TEAMMATE'} REPRINTED!`, '#34d399', 'text-sm', true);
+                            Game.spawnFloatingText(rp.pos, `${rp.profile?.name || 'TEAMMATE'} REPRINTED (10s SAFE)!`, '#34d399', 'text-sm', true);
                             this.updateSquadHUD();
                         }
                         break;
@@ -50826,6 +51551,19 @@ ${selLog.text}
 
                     case 'CS_SKIP_EXEC':
                         this.forceExecuteCutsceneSkip();
+                        break;
+
+                    case 'TRAIN_AMBUSH_START':
+                        if (this.isClient() && Game.trainCarsMeta && typeof Game.activateTrainCarAmbush === 'function') {
+                            const tCar = Game.trainCarsMeta.find(c => c.id === data.carId);
+                            if (tCar) Game.activateTrainCarAmbush(tCar, data.totalToSpawn || 15);
+                        }
+                        break;
+
+                    case 'TRAIN_AMBUSH_END':
+                        if (this.isClient() && typeof Game.endTrainCarAmbush === 'function') {
+                            Game.endTrainCarAmbush();
+                        }
                         break;
                 }
             },
@@ -50962,6 +51700,8 @@ ${selLog.text}
                 const rem = Math.max(0, Game.player.coopRespawnTimer || 0);
                 const maxT = Math.max(1, Game.player.coopRespawnMax || 30);
                 const pct = Math.max(0, Math.min(100, (1 - rem / maxT) * 100));
+                const revCnt = this.localRevivers ? this.localRevivers.size : 0;
+                const revPct = Math.max(0, Math.min(100, Math.round((Game.player.reviveProgress || 0) * 100)));
 
                 banner.classList.add('on');
                 banner.innerHTML = `
@@ -50971,6 +51711,14 @@ ${selLog.text}
                     <div class="w-full h-1.5 bg-black border border-red-900 overflow-hidden my-0.5">
                         <div class="h-full bg-gradient-to-r from-red-500 to-emerald-400" style="width:${pct}%"></div>
                     </div>
+                    ${(revCnt > 0 || revPct > 0) ? `
+                        <div class="text-[11px] font-extrabold text-emerald-300 tracking-wider uppercase mt-0.5">
+                            ✦ SQUAD REVIVE IN PROGRESS — ${revPct}% (${revCnt || 1} ${(revCnt || 1) > 1 ? 'REVIVERS' : 'REVIVER'})
+                        </div>
+                        <div class="w-full h-2 bg-black border border-emerald-500/80 overflow-hidden mb-1">
+                            <div class="h-full bg-emerald-400 transition-none" style="width:${revPct}%"></div>
+                        </div>
+                    ` : ''}
                     <div class="flex items-center gap-3 text-[11px] text-sky-200 font-bold">
                         <button onclick="Coop.cycleSpectateTarget(-1)" class="arpg-btn px-2 py-0.5 text-[10px]">◀ [A]</button>
                         <span>SPECTATING: <strong class="text-white">${targetRp?.profile?.name || 'SQUAD'}</strong></span>
@@ -51023,6 +51771,9 @@ ${selLog.text}
                         dead: Boolean(Game.player.isCoopDead),
                         rt: Math.max(0, Game.player.coopRespawnTimer || 0),
                         rmax: Math.max(1, Game.player.coopRespawnMax || 30),
+                        revProg: Math.max(0, Math.min(1, Game.player.reviveProgress || 0)),
+                        revCnt: this.localRevivers ? this.localRevivers.size : 0,
+                        safe: Math.max(0, Game.player.coopSpawnSafeTimer || 0),
                         hp: Game.player.hp,
                         mhp: Game.player.maxHp,
                         sh: Game.player.armorShield,
@@ -51037,6 +51788,9 @@ ${selLog.text}
                             dead: Boolean(rp.isCoopDead),
                             rt: Math.max(0, rp.coopRespawnTimer || 0),
                             rmax: Math.max(1, rp.coopRespawnMax || 30),
+                            revProg: Math.max(0, Math.min(1, rp.reviveProgress || 0)),
+                            revCnt: rp.revivers ? rp.revivers.size : 0,
+                            safe: Math.max(0, rp.coopSpawnSafeTimer || 0),
                             hp: rp.hp,
                             mhp: rp.maxHp,
                             sh: rp.armorShield,
@@ -51057,18 +51811,24 @@ ${selLog.text}
                         const hpPct = Math.max(0, Math.min(100, (m.hp / Math.max(1, m.mhp)) * 100));
                         const shPct = Math.max(0, Math.min(100, (m.sh / Math.max(1, m.msh)) * 100));
                         const respPct = m.dead ? Math.max(0, Math.min(100, (1 - m.rt / m.rmax) * 100)) : 100;
+                        const revPct = Math.round((m.revProg || 0) * 100);
                         return `
                             <div class="coop-top-pill ${m.isMe ? 'me' : ''} ${m.dead ? 'dead' : ''}">
                                 <div class="flex justify-between items-center gap-2 text-[10px] font-bold">
                                     <span class="${m.isMe ? 'text-sky-200' : 'text-white'} truncate">${m.isHost ? '★ ' : ''}${m.name}${m.isMe ? ' (YOU)' : ''}</span>
-                                    <span class="${m.dead ? 'text-rose-300 animate-pulse font-extrabold' : 'text-emerald-300'} shrink-0">
-                                        ${m.dead ? `☠ ${m.rt.toFixed(1)}s` : `${Math.round(hpPct)}%`}
+                                    <span class="${m.dead ? 'text-rose-300 animate-pulse font-extrabold' : (m.safe > 0 ? 'text-cyan-300 font-extrabold' : 'text-emerald-300')} shrink-0">
+                                        ${m.dead ? `☠ ${m.rt.toFixed(1)}s` : (m.safe > 0 ? `🛡 ${m.safe.toFixed(0)}s` : `${Math.round(hpPct)}%`)}
                                     </span>
                                 </div>
                                 ${m.dead ? `
                                     <div class="w-full h-1.5 bg-black border border-red-900 mt-1 overflow-hidden">
                                         <div class="h-full bg-gradient-to-r from-red-500 to-emerald-400" style="width:${respPct}%"></div>
                                     </div>
+                                    ${(m.revCnt > 0 || revPct > 0) ? `
+                                        <div class="w-full h-1.5 bg-black border border-emerald-600 mt-0.5 overflow-hidden" title="Reviving ${revPct}% (${m.revCnt || 1}x)">
+                                            <div class="h-full bg-emerald-400 transition-none" style="width:${revPct}%"></div>
+                                        </div>
+                                    ` : ''}
                                 ` : `
                                     <div class="w-full h-1 bg-black border border-cyan-900 mt-0.5 overflow-hidden">
                                         <div class="h-full bg-cyan-400" style="width:${shPct}%"></div>
@@ -51094,12 +51854,14 @@ ${selLog.text}
                     const hpPct = Math.max(0, Math.min(100, (rp.hp / Math.max(1, rp.maxHp)) * 100));
                     const shPct = Math.max(0, Math.min(100, (rp.armorShield / Math.max(1, rp.maxArmorShield)) * 100));
                     const rRem = Math.max(0, rp.coopRespawnTimer || 0);
+                    const rpRevCnt = rp.revivers ? rp.revivers.size : 0;
+                    const rpRevPct = Math.max(0, Math.min(100, Math.round((rp.reviveProgress || 0) * 100)));
                     cards.push(`
                         <div class="coop-mate-card ${rp.isCoopDead ? 'dead' : ''}">
                             <div class="flex justify-between items-center text-[10px] font-bold">
                                 <span class="text-sky-200 truncate">${rp.profile?.name || 'OPERATIVE'}</span>
-                                <span class="${rp.isCoopDead ? 'text-red-300 animate-pulse' : 'text-emerald-300'} text-[9px]">
-                                    ${rp.isCoopDead ? `☠ RESPAWN ${rRem.toFixed(1)}s` : `LVL ${rp.profile?.level || 1}${rp.pingMs ? ` • ${rp.pingMs}ms` : ''}`}
+                                <span class="${rp.isCoopDead ? 'text-red-300 animate-pulse' : ((rp.coopSpawnSafeTimer || 0) > 0 ? 'text-cyan-300 font-extrabold' : 'text-emerald-300')} text-[9px]">
+                                    ${rp.isCoopDead ? `☠ RESPAWN ${rRem.toFixed(1)}s` : ((rp.coopSpawnSafeTimer || 0) > 0 ? `🛡 SAFE ${rp.coopSpawnSafeTimer.toFixed(0)}s` : `LVL ${rp.profile?.level || 1}${rp.pingMs ? ` • ${rp.pingMs}ms` : ''}`)}
                                 </span>
                             </div>
                             <div class="w-full h-1 bg-black border border-cyan-900 mt-1 overflow-hidden">
@@ -51108,6 +51870,17 @@ ${selLog.text}
                             <div class="w-full h-1.5 bg-black border border-red-900 mt-0.5 overflow-hidden">
                                 <div class="h-full bg-red-500" style="width:${hpPct}%"></div>
                             </div>
+                            ${rp.isCoopDead && (rpRevCnt > 0 || rpRevPct > 0) ? `
+                                <div class="mt-1">
+                                    <div class="flex justify-between text-[8px] font-extrabold text-emerald-300 uppercase">
+                                        <span>REVIVING (${rpRevCnt || 1}x)</span>
+                                        <span>${rpRevPct}%</span>
+                                    </div>
+                                    <div class="w-full h-1.5 bg-black border border-emerald-600 overflow-hidden">
+                                        <div class="h-full bg-emerald-400 transition-none" style="width:${rpRevPct}%"></div>
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
                     `);
                 });
@@ -51143,23 +51916,43 @@ ${selLog.text}
                             this.localRevivers.forEach((ts, rId) => { if (nowMs - ts > 650) this.localRevivers.delete(rId); });
                         }
                         const locRevCnt = this.localRevivers ? this.localRevivers.size : 0;
+                        const prevRevCnt = this._prevLocalRevCnt || 0;
                         if (locRevCnt > 0) {
                             const rDur = this.getReviveDurationForCount(locRevCnt);
                             Game.player.reviveProgress = Math.min(1, (Game.player.reviveProgress || 0) + dt / rDur);
                             if (Game.player.reviveProgress >= 1) {
                                 this.earlyReviveLocalPlayer();
+                            } else if (locRevCnt !== prevRevCnt || (nowMs - (this._lastRevStateSentMs || 0)) >= 95) {
+                                this._lastRevStateSentMs = nowMs;
+                                this.broadcast({
+                                    t: 'REVIVE_STATE',
+                                    targetPeerId: this.myPeerId,
+                                    prog: +(Game.player.reviveProgress || 0).toFixed(3),
+                                    revIds: Array.from(this.localRevivers.keys())
+                                });
                             }
                         } else {
-                            Game.player.reviveProgress = 0;
+                            if ((Game.player.reviveProgress || 0) > 0 || prevRevCnt > 0) {
+                                Game.player.reviveProgress = 0;
+                                this._lastRevStateSentMs = nowMs;
+                                this.broadcast({ t: 'REVIVE_STATE', targetPeerId: this.myPeerId, prog: 0, revIds: [] });
+                            } else {
+                                Game.player.reviveProgress = 0;
+                            }
                         }
+                        this._prevLocalRevCnt = locRevCnt;
                         if (Game.player.isCoopDead && Game.player.coopRespawnTimer <= 0) {
                             this.respawnLocalPlayer();
                         }
                     } else if (Game.player) {
                         Game.player.reviveProgress = 0;
+                        this._prevLocalRevCnt = 0;
                         if (this.localRevivers) this.localRevivers.clear();
                     }
                     this.remotePlayers.forEach(rp => {
+                        if ((rp.coopSpawnSafeTimer || 0) > 0) {
+                            rp.coopSpawnSafeTimer = Math.max(0, rp.coopSpawnSafeTimer - dt);
+                        }
                         if (rp.isCoopDead) {
                             if ((rp.coopRespawnTimer || 0) > 0) rp.coopRespawnTimer = Math.max(0, rp.coopRespawnTimer - dt);
                             if (rp.revivers && rp.revivers.size > 0) {
@@ -51226,6 +52019,7 @@ ${selLog.text}
                             ads: (!p.isCoopDead && p.isADS) ? 1 : 0,
                             dsh: +(p.dashActiveTimer || 0).toFixed(2),
                             stl: +(p.stealthTimer || 0).toFixed(2),
+                            safe: +(p.coopSpawnSafeTimer || 0).toFixed(1),
                             em: (!p.isCoopDead && p.activeEmote && p.activeEmote.type) ? p.activeEmote.type : '',
                             slot: p.activeWeaponSlot || 'weapon',
                             dead: p.isCoopDead ? 1 : 0,
@@ -51509,6 +52303,7 @@ ${selLog.text}
                                             <div class="font-cinzel font-bold text-amber-300">ACTIVE CO-OP SCALING (${mults.count} PLAYERS):</div>
                                             <div class="flex justify-between"><span>Hostile Health Multiplier:</span><span class="font-bold text-red-400">${mults.hp}x HP (+0.65x / player)</span></div>
                                             <div class="flex justify-between"><span>Hostile Damage Multiplier:</span><span class="font-bold text-orange-400">${mults.dmg}x DMG (+0.25x / player)</span></div>
+                                            <div class="flex justify-between"><span>Boss Self-Healing:</span><span class="font-bold text-rose-400">0.40x (-60% Co-Op Balance)</span></div>
                                             <div class="flex justify-between"><span>Respawn Timer:</span><span class="font-bold text-emerald-300">30s Normal / 60s Bosses</span></div>
                                             <div class="flex justify-between"><span>Sector Completion Credit:</span><span class="font-bold text-sky-300">Shared Across All Squad Members</span></div>
                                         </div>
@@ -51571,14 +52366,19 @@ ${selLog.text}
         const origAudioSfx = AudioEngine.sfx;
         AudioEngine.sfx = function (name) {
             const r = origAudioSfx.apply(this, arguments);
-            if (Coop.isActive() && !Coop.suppressNetSfx && SYNCED_SFX.has(name) && Game.player) {
-                Coop.broadcast({
-                    t: 'SFX',
-                    sender: Coop.myPeerId,
-                    name,
-                    x: +Game.player.pos.x.toFixed(1),
-                    z: +Game.player.pos.z.toFixed(1)
-                });
+            if (r !== false && Coop.isActive() && !Coop.suppressNetSfx && SYNCED_SFX.has(name) && Game.player) {
+                const nowMs = performance.now();
+                if (!Coop._lastSfxBroadcast) Coop._lastSfxBroadcast = {};
+                if (nowMs - (Coop._lastSfxBroadcast[name] || 0) >= 45) {
+                    Coop._lastSfxBroadcast[name] = nowMs;
+                    Coop.broadcast({
+                        t: 'SFX',
+                        sender: Coop.myPeerId,
+                        name,
+                        x: +Game.player.pos.x.toFixed(1),
+                        z: +Game.player.pos.z.toFixed(1)
+                    });
+                }
             }
             return r;
         };
