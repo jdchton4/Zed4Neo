@@ -6337,6 +6337,17 @@ boss_tensor: {
             { id: 'bless_chronos', slot: 'blessing', slotLabel: 'Blessing', isBlessing: true, goldCost: 50000, name: 'Blessing of Chrono-Synapse', matRecipe: { att_lens: 26, att_titanium: 22, att_servo: 30, att_wire: 36 }, bonuses: { dmgPct: 0.25, cdrPct: 0.18, crit: 8, reloadPct: 0.25 }, desc: '+25% Dmg, +18% Tech CDR, +8% Crit, -25% Reload' }
         ];
 
+        // Tactical Emotes Catalog & Default 6-Slot Radial Wheel
+        const DEFAULT_EMOTE_WHEEL = ['wave', 'confused', 'dance', 'salute', 'peace', 'flex'];
+        const EMOTE_CATALOG = [
+            { id: 'wave', name: 'Tactical Wave', shortLabel: 'WAVE', emoji: '👋', icon: 'fa-hand', color: 'text-sky-300', price: 0, starter: true, desc: 'Quick squad acknowledgment wave.' },
+            { id: 'confused', name: 'Quizzical Tilt', shortLabel: 'CONFUSED', emoji: '🤨', icon: 'fa-question', color: 'text-amber-300', price: 0, starter: true, desc: 'Inspect suspicious station telemetry.' },
+            { id: 'dance', name: 'Combat Groove', shortLabel: 'DANCE', emoji: '💃', icon: 'fa-music', color: 'text-fuchsia-300', price: 0, starter: true, desc: 'Synchronized rhythmic servo flex.' },
+            { id: 'salute', name: 'Sentinel Salute', shortLabel: 'SALUTE', emoji: '🫡', icon: 'fa-award', color: 'text-emerald-300', price: 0, starter: true, desc: 'Regulation Vanguard combat salute.' },
+            { id: 'peace', name: 'Victory V-Sign', shortLabel: 'PEACE', emoji: '✌️', icon: 'fa-hand-peace', color: 'text-cyan-300', price: 0, starter: true, desc: 'Casual post-clear victory pose.' },
+            { id: 'flex', name: 'Wing Flare Flex', shortLabel: 'FLEX', emoji: '💪', icon: 'fa-dumbbell', color: 'text-rose-300', price: 0, starter: true, desc: 'Dorsal stabilizer flare and power pose.' }
+        ];
+
         // 78-Item Cosmetics Catalog (All Descriptions Rewritten in Deadpan, Laid-Back, Unserious Humor)
         const COSMETIC_CATALOG = [
             // FACES (16)
@@ -10554,6 +10565,99 @@ const LORE_ENTRIES = [
                 if (eq.hat === undefined) eq.hat = null;
                 if (eq.outfit === undefined) eq.outfit = null;
                 if (eq.accessory === undefined) eq.accessory = null;
+                this.ensureEmotesState();
+            },
+
+            ensureEmotesState() {
+                if (!this.state) return;
+                if (!this.state.emotes || typeof this.state.emotes !== 'object') {
+                    this.state.emotes = {
+                        owned: DEFAULT_EMOTE_WHEEL.slice(),
+                        meta: {},
+                        wheel: DEFAULT_EMOTE_WHEEL.slice()
+                    };
+                }
+                const em = this.state.emotes;
+                if (!Array.isArray(em.owned)) em.owned = [];
+                EMOTE_CATALOG.forEach(e => {
+                    if (e.starter && !em.owned.includes(e.id)) em.owned.push(e.id);
+                });
+                em.owned = em.owned.filter(id => EMOTE_CATALOG.some(e => e.id === id));
+                if (!em.meta || typeof em.meta !== 'object') em.meta = {};
+                if (!Array.isArray(em.wheel)) {
+                    em.wheel = DEFAULT_EMOTE_WHEEL.slice();
+                } else {
+                    em.wheel = Array.from({ length: 6 }, (_, idx) => {
+                        const eid = em.wheel[idx];
+                        return (eid && em.owned.includes(eid)) ? eid : null;
+                    });
+                }
+            },
+
+            getEmoteWheelSlots() {
+                this.ensureEmotesState();
+                return (this.state && this.state.emotes && Array.isArray(this.state.emotes.wheel))
+                    ? this.state.emotes.wheel
+                    : DEFAULT_EMOTE_WHEEL.slice();
+            },
+
+            grantEmote(emoteId, sourceLabel = 'Unlocked') {
+                this.ensureEmotesState();
+                const def = EMOTE_CATALOG.find(e => e.id === emoteId);
+                if (!def) return false;
+                if (!this.state.emotes.owned.includes(emoteId)) {
+                    this.state.emotes.owned.push(emoteId);
+                }
+                if (!this.state.emotes.meta[emoteId]) {
+                    this.state.emotes.meta[emoteId] = { unlockedAt: Date.now(), how: sourceLabel };
+                }
+                return true;
+            },
+
+            equipEmoteToWheel(slotIdx, emoteId) {
+                this.ensureEmotesState();
+                const idx = Math.max(0, Math.min(5, Number(slotIdx) || 0));
+                if (emoteId && !this.state.emotes.owned.includes(emoteId)) return false;
+                this.state.emotes.wheel[idx] = emoteId || null;
+                this.syncEmoteWheelDOM();
+                this.saveGame();
+                return true;
+            },
+
+            removeEmoteFromWheel(slotIdx) {
+                this.ensureEmotesState();
+                const idx = Math.max(0, Math.min(5, Number(slotIdx) || 0));
+                this.state.emotes.wheel[idx] = null;
+                this.syncEmoteWheelDOM();
+                this.saveGame();
+            },
+
+            resetEmoteWheel() {
+                this.ensureEmotesState();
+                this.state.emotes.wheel = DEFAULT_EMOTE_WHEEL.map(id => this.state.emotes.owned.includes(id) ? id : null);
+                this.syncEmoteWheelDOM();
+                this.saveGame();
+            },
+
+            syncEmoteWheelDOM() {
+                const el = document.getElementById('zn-emote-wheel');
+                if (!el) return;
+                const slices = el.querySelectorAll('.zn-emote-slice');
+                const slots = this.getEmoteWheelSlots();
+                slices.forEach((btn, idx) => {
+                    const eid = slots[idx] || null;
+                    const def = eid ? EMOTE_CATALOG.find(e => e.id === eid) : null;
+                    btn.dataset.emote = def ? def.id : '';
+                    if (def) {
+                        btn.setAttribute('onclick', `Game.startWorldEmote('${def.id}')`);
+                        btn.classList.remove('opacity-45', 'border-dashed');
+                        btn.innerHTML = `<span class="text-base leading-none">${def.emoji}</span><span class="font-cinzel font-bold text-[10px]">${def.shortLabel}</span>`;
+                    } else {
+                        btn.setAttribute('onclick', 'Game.closeEmoteWheel()');
+                        btn.classList.add('opacity-45', 'border-dashed');
+                        btn.innerHTML = `<span class="text-base leading-none text-slate-500">—</span><span class="font-cinzel font-bold text-[10px] text-slate-500">EMPTY</span>`;
+                    }
+                });
             },
 
             grantCosmetic(cosId, sourceLabel = 'Unlocked') {
@@ -13829,6 +13933,7 @@ const LORE_ENTRIES = [
                 if (this.isDefeatPending || (this.player && this.player.isCoopDead)) return;
                 const el = document.getElementById('zn-emote-wheel');
                 if (!el) return;
+                this.syncEmoteWheelDOM();
                 this.emoteWheelOpen = true;
                 this.emoteWheelHovered = null;
                 this.emoteWheelOpenAt = performance.now();
@@ -13865,13 +13970,13 @@ const LORE_ENTRIES = [
                 let hovered = null;
                 if (dist >= 34) {
                     const deg = ((Math.atan2(mx, -my) * 180 / Math.PI) + 360) % 360;
-                    const order = ['wave', 'confused', 'dance', 'salute', 'peace', 'flex'];
+                    const order = this.getEmoteWheelSlots();
                     const idx = Math.floor(((deg + 30) % 360) / 60);
                     hovered = order[idx] || null;
                 }
                 this.emoteWheelHovered = hovered;
                 el.querySelectorAll('.zn-emote-slice').forEach(btn => {
-                    const active = btn.dataset.emote === hovered;
+                    const active = Boolean(hovered) && btn.dataset.emote === hovered;
                     btn.classList.toggle('border-cyan-300', active);
                     btn.classList.toggle('bg-sky-900/80', active);
                     btn.classList.toggle('scale-105', active);
@@ -35235,7 +35340,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 }
                 const dt = rawDt;
 
-                if ((UI.activeModal === 'inventory' || (UI.activeModal === 'shop_tab' && UI.previewShopCosId)) && this.previewRenderer && this.previewScene && this.previewCamera) {
+                if ((UI.activeModal === 'inventory' || (UI.activeModal === 'shop_tab' && (UI.previewShopCosId || UI.shopSubPage === 'emotes'))) && this.previewRenderer && this.previewScene && this.previewCamera) {
                     const em = this.previewEmote;
                     const t = performance.now() * 0.0025;
 
@@ -41391,11 +41496,11 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
          */
         const UI = {
             activeModal: null,
-            operativeSubPage: 'equipped', // 'equipped' | 'stash' | 'wardrobe'
+            operativeSubPage: 'equipped', // 'equipped' | 'stash' | 'wardrobe' | 'emotes'
             skillTypeFilter: 'active', // 'active' | 'passive'
             skillBranchTab: 'Ordnance', // 'Ordnance' | 'Tech-Ops' | 'Recon'
             assigningSkillId: null,
-            shopSubPage: 'supplies', // 'supplies' | 'parts' | 'augments' | 'boutique'
+            shopSubPage: 'supplies', // 'supplies' | 'parts' | 'augments' | 'boutique' | 'emotes'
             forgeSubPage: 'mod', // 'mod' | 'craft'
             evoSubPage: 'abilities', // 'abilities' | 'weapons' | 'armor'
             evoSkillBranchFilter: 'All',
@@ -42287,7 +42392,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                     });
                 }
 
-                if (modalId === 'inventory' || (modalId === 'shop_tab' && this.previewShopCosId)) {
+                if (modalId === 'inventory' || (modalId === 'shop_tab' && (this.previewShopCosId || this.shopSubPage === 'emotes'))) {
                     setTimeout(() => Game.mountOperativePreviewCanvas(), 15);
                 } else if (modalId === 'cores_tab') {
                     setTimeout(() => Game.mountAugmentPreviewCanvas(), 15);
@@ -42822,6 +42927,59 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                 if (this.activeModal === 'inventory' || this.activeModal === 'shop_tab') {
                     this.openModal(this.activeModal);
                 }
+            },
+
+            selectEmoteWheelSlot(slotIdx) {
+                this.selectedEmoteWheelSlot = Math.max(0, Math.min(5, Number(slotIdx) || 0));
+                if (this.activeModal === 'inventory' || this.activeModal === 'shop_tab') {
+                    this.openModal(this.activeModal);
+                }
+            },
+
+            equipEmoteToSlot(emoteId, slotIdx = null) {
+                const targetSlot = slotIdx !== null ? slotIdx : (this.selectedEmoteWheelSlot ?? 0);
+                if (Game.equipEmoteToWheel(targetSlot, emoteId)) {
+                    AudioEngine.sfx('loot');
+                    Game.triggerPreviewEmote(emoteId);
+                    if (this.activeModal === 'inventory' || this.activeModal === 'shop_tab') {
+                        this.openModal(this.activeModal);
+                    }
+                }
+            },
+
+            removeEmoteFromSlot(slotIdx) {
+                Game.removeEmoteFromWheel(slotIdx);
+                AudioEngine.sfx('reload');
+                if (this.activeModal === 'inventory' || this.activeModal === 'shop_tab') {
+                    this.openModal(this.activeModal);
+                }
+            },
+
+            resetEmoteWheelToDefault() {
+                Game.resetEmoteWheel();
+                AudioEngine.sfx('loot');
+                if (this.activeModal === 'inventory' || this.activeModal === 'shop_tab') {
+                    this.openModal(this.activeModal);
+                }
+            },
+
+            buyEmote(emoteId) {
+                const st = Game.state;
+                Game.ensureEmotesState();
+                const em = EMOTE_CATALOG.find(e => e.id === emoteId);
+                if (!em || em.starter || st.emotes.owned.includes(emoteId) || st.gold < (em.price || 0)) {
+                    AudioEngine.sfx('oom');
+                    return;
+                }
+                Game.spendCredits(em.price || 0);
+                Game.grantEmote(emoteId, `Purchased in Emotes Boutique for ${(em.price || 0).toLocaleString()}₵`);
+                const emptyIdx = (st.emotes.wheel || []).findIndex(x => !x);
+                if (emptyIdx !== -1) Game.equipEmoteToWheel(emptyIdx, emoteId);
+                AudioEngine.sfx('loot');
+                Game.triggerPreviewEmote(emoteId);
+                Game.saveGame();
+                this.updateHUD();
+                this.openModal(this.activeModal || 'shop_tab');
             },
 
             selectAugmentPiece(augId, copyIdx) {
@@ -43526,10 +43684,12 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                 </div>
                             </div>
 
-                            <!-- Column 2 (8 Cols): Clean Sub-Paged Workspace (Equipped | Stash | Wardrobe) -->
+                            <!-- Column 2 (8 Cols): Clean Sub-Paged Workspace (Equipped | Stash | Wardrobe | Emotes) -->
                             ${(() => {
                                 const opPage = this.operativeSubPage || 'equipped';
                                 const equippedCnt = ['weapon', 'secondary', 'armor', 'helm', 'relic', 'boots'].filter(k => Boolean(st.equipped[k])).length;
+                                Game.ensureEmotesState();
+                                const ownedEmotes = (st.emotes && Array.isArray(st.emotes.owned)) ? st.emotes.owned : [];
                                 return `
                                 <div class="lg:col-span-8 arpg-panel p-4 flex flex-col gap-4 min-h-0">
                                     <!-- Prominent Sub-Page Selector Bar -->
@@ -43544,6 +43704,9 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                             <button onclick="UI.operativeSubPage='wardrobe'; UI.openModal('inventory');" class="ui-subtab-btn ${opPage === 'wardrobe' ? 'active-fuchsia' : ''}">
                                                 <i class="fa-solid fa-shirt"></i> Wardrobe (${ownedCosIds.length}/${COSMETIC_CATALOG.length})
                                             </button>
+                                            <button onclick="UI.operativeSubPage='emotes'; UI.openModal('inventory');" class="ui-subtab-btn ${opPage === 'emotes' ? 'active-cyan' : ''}">
+                                                <i class="fa-solid fa-masks-theater"></i> Emotes (${ownedEmotes.length}/${EMOTE_CATALOG.length})
+                                            </button>
                                         </div>
                                         ${opPage === 'equipped' ? `
                                             <button onclick="Game.switchWeaponSlot(); UI.openModal('inventory');" class="arpg-btn px-4 py-2 text-xs text-amber-300 font-bold">
@@ -43553,11 +43716,15 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                             <button onclick="UI.shopSubPage='boutique'; UI.openModal('shop_tab');" class="arpg-btn-gold px-4 py-2 text-xs font-bold">
                                                 <i class="fa-solid fa-store mr-1.5"></i> Cosmetics Boutique (M) ↗
                                             </button>
+                                        ` : (opPage === 'emotes' ? `
+                                            <button onclick="UI.shopSubPage='emotes'; UI.openModal('shop_tab');" class="arpg-btn-gold px-4 py-2 text-xs font-bold">
+                                                <i class="fa-solid fa-store mr-1.5"></i> Emotes Boutique (M) ↗
+                                            </button>
                                         ` : `
                                             <button onclick="UI.showBulkSalvageModal=true; UI.openModal('inventory');" class="arpg-btn px-4 py-2 text-xs text-emerald-300 border-emerald-500/70 font-bold" ${isDeployed || st.inventory.length === 0 ? 'disabled' : ''}>
                                                 <i class="fa-solid fa-recycle mr-1.5"></i> Bulk Salvage...
                                             </button>
-                                        `)}
+                                        `))}
                                     </div>
 
                                     ${opPage === 'equipped' ? `
@@ -43668,7 +43835,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                                 })()}
                                             </div>
                                         </div>
-                                    ` : `
+                                    ` : (opPage === 'wardrobe' ? `
                                         <div class="flex flex-col gap-3 flex-1 min-h-0">
                                             <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs shrink-0">
                                                 ${[
@@ -43777,7 +43944,98 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                                 }).join('')}
                                             </div>
                                         </div>
-                                    `)}
+                                    ` : (() => {
+                                        const wheelSlots = Game.getEmoteWheelSlots();
+                                        const selSlot = Math.max(0, Math.min(5, this.selectedEmoteWheelSlot ?? 0));
+                                        const slotPosClasses = [
+                                            'top-2 left-1/2 -translate-x-1/2',
+                                            'top-[68px] right-2',
+                                            'bottom-[68px] right-2',
+                                            'bottom-2 left-1/2 -translate-x-1/2',
+                                            'bottom-[68px] left-2',
+                                            'top-[68px] left-2'
+                                        ];
+                                        const slotDirLabels = ['TOP', 'TOP-R', 'BOT-R', 'BOT', 'BOT-L', 'TOP-L'];
+                                        const unlockedEmotes = EMOTE_CATALOG.filter(e => ownedEmotes.includes(e.id));
+                                        return `
+                                            <div class="flex flex-col lg:flex-row gap-4 flex-1 min-h-0 overflow-y-auto pr-1">
+                                                <!-- Left: Radial Emote Wheel Customizer -->
+                                                <div class="ui-surface p-4 border-cyan-500/50 flex flex-col items-center gap-3 shrink-0">
+                                                    <div class="w-full flex justify-between items-center border-b border-slate-800 pb-2">
+                                                        <div>
+                                                            <div class="text-xs font-cinzel font-bold text-cyan-300">TACTICAL EMOTE WHEEL (TAB)</div>
+                                                            <div class="text-[11px] text-slate-400">Select a slot, then add, replace, or remove emotes.</div>
+                                                        </div>
+                                                        <button onclick="UI.resetEmoteWheelToDefault()" class="arpg-btn px-2.5 py-1 text-[10px] text-amber-300" title="Restore Starter Wheel">Reset Default</button>
+                                                    </div>
+                                                    <div class="relative w-[308px] h-[308px] flex items-center justify-center select-none my-1">
+                                                        <div class="w-24 h-24 rounded-full bg-slate-950/95 border-2 border-cyan-400/80 shadow-[0_0_20px_rgba(34,211,238,0.28)] flex flex-col items-center justify-center text-center px-2">
+                                                            <span class="font-cinzel font-black text-[10px] tracking-widest text-cyan-300">SLOT #${selSlot + 1}</span>
+                                                            <span class="text-[9px] text-slate-300 font-semibold mt-0.5">${slotDirLabels[selSlot]}</span>
+                                                        </div>
+                                                        ${wheelSlots.map((eid, idx) => {
+                                                            const def = eid ? EMOTE_CATALOG.find(e => e.id === eid) : null;
+                                                            const isSel = selSlot === idx;
+                                                            return `
+                                                                <div onclick="UI.selectEmoteWheelSlot(${idx})"
+                                                                    class="absolute ${slotPosClasses[idx]} w-[98px] p-1.5 rounded border cursor-pointer transition flex flex-col items-center gap-0.5 ${isSel ? 'bg-cyan-950/90 border-cyan-300 ring-1 ring-cyan-300 scale-105' : (def ? 'bg-slate-950/90 border-sky-500/60 hover:border-cyan-400' : 'bg-slate-950/70 border-dashed border-slate-700 hover:border-slate-500')}">
+                                                                    <div class="w-full flex justify-between items-center text-[8px] font-cinzel text-slate-400">
+                                                                        <span>#${idx + 1} ${slotDirLabels[idx]}</span>
+                                                                        ${def ? `<button onclick="event.stopPropagation(); UI.removeEmoteFromSlot(${idx})" title="Remove from Wheel" class="text-rose-400 hover:text-rose-200 font-bold px-1">✕</button>` : ''}
+                                                                    </div>
+                                                                    ${def ? `
+                                                                        <span class="text-base leading-none">${def.emoji}</span>
+                                                                        <span class="font-cinzel font-bold text-[10px] ${def.color} truncate max-w-full">${def.shortLabel}</span>
+                                                                    ` : `
+                                                                        <span class="text-sm leading-none text-slate-600">+</span>
+                                                                        <span class="font-cinzel font-bold text-[9px] text-slate-500">EMPTY</span>
+                                                                    `}
+                                                                </div>
+                                                            `;
+                                                        }).join('')}
+                                                    </div>
+                                                </div>
+
+                                                <!-- Right: Unlocked Emotes Library -->
+                                                <div class="flex-1 flex flex-col gap-3 min-w-0">
+                                                    <div class="ui-surface p-3 border-sky-500/40 flex flex-wrap justify-between items-center gap-2">
+                                                        <div>
+                                                            <div class="text-xs font-cinzel font-bold text-sky-300">UNLOCKED EMOTES (${unlockedEmotes.length})</div>
+                                                            <div class="text-[11px] text-slate-400">Editing <span class="text-cyan-300 font-bold">Wheel Slot #${selSlot + 1} (${slotDirLabels[selSlot]})</span> — click Assign / Replace below.</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 content-start">
+                                                        ${unlockedEmotes.map(em => {
+                                                            const equippedIndices = wheelSlots.map((wId, wIdx) => (wId === em.id ? wIdx : -1)).filter(x => x !== -1);
+                                                            const inSelSlot = wheelSlots[selSlot] === em.id;
+                                                            return `
+                                                                <div class="ui-surface-elevated p-3 border ${inSelSlot ? 'border-cyan-400 bg-cyan-950/20' : 'border-slate-800 hover:border-slate-600'} flex flex-col justify-between gap-2.5">
+                                                                    <div class="flex items-start justify-between gap-2">
+                                                                        <div class="flex items-center gap-2.5 min-w-0">
+                                                                            <div class="w-9 h-9 rounded bg-slate-950 border border-slate-700 flex items-center justify-center text-lg shrink-0">${em.emoji}</div>
+                                                                            <div class="min-w-0">
+                                                                                <div class="text-xs font-bold ${em.color} truncate">${em.name}</div>
+                                                                                <div class="text-[11px] text-slate-400 line-clamp-2 leading-tight">${em.desc}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        ${equippedIndices.length > 0 ? `<span class="px-1.5 py-0.5 rounded bg-cyan-950 border border-cyan-500/70 text-[9px] font-cinzel font-bold text-cyan-300 shrink-0">SLOT ${equippedIndices.map(i => '#' + (i + 1)).join(',')}</span>` : ''}
+                                                                    </div>
+                                                                    <div class="flex gap-1.5">
+                                                                        <button onclick="Game.triggerPreviewEmote('${em.id}')" class="arpg-btn px-2.5 py-1.5 text-[11px] text-sky-300" title="Preview on Zed3">▶ Preview</button>
+                                                                        ${inSelSlot ? `
+                                                                            <button onclick="UI.removeEmoteFromSlot(${selSlot})" class="arpg-btn py-1.5 text-[11px] text-rose-300 flex-1 font-bold">Remove (#${selSlot + 1})</button>
+                                                                        ` : `
+                                                                            <button onclick="UI.equipEmoteToSlot('${em.id}', ${selSlot})" class="arpg-btn-gold py-1.5 text-[11px] flex-1 font-bold">${wheelSlots[selSlot] ? `Replace #${selSlot + 1}` : `Add to #${selSlot + 1}`}</button>
+                                                                        `}
+                                                                    </div>
+                                                                </div>
+                                                            `;
+                                                        }).join('')}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        `;
+                                    })()))}
                                 </div>
                                 `;
                             })()}
@@ -44281,6 +44539,9 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                 <button onclick="UI.shopSubPage='boutique'; UI.openModal('shop_tab');" class="ui-subtab-btn ${shopPage === 'boutique' ? 'active-fuchsia' : ''}">
                                     <i class="fa-solid fa-shirt"></i> Cosmetics Boutique (${st.cosmetics.owned.length}/${COSMETIC_CATALOG.length})
                                 </button>
+                                <button onclick="UI.shopSubPage='emotes'; UI.openModal('shop_tab');" class="ui-subtab-btn ${shopPage === 'emotes' ? 'active-cyan' : ''}">
+                                    <i class="fa-solid fa-masks-theater"></i> Emotes Boutique
+                                </button>
                             </div>
                             <div class="flex flex-wrap items-center gap-3">
                                 ${(shopPage === 'supplies' || shopPage === 'parts') ? `
@@ -44449,7 +44710,113 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                         }).join('')}
                                     </div>
                                 </div>
-                            ` : `
+                            ` : (shopPage === 'emotes' ? (() => {
+                                Game.ensureEmotesState();
+                                const ownedEmotes = (st.emotes && Array.isArray(st.emotes.owned)) ? st.emotes.owned : [];
+                                const purchasableEmotes = EMOTE_CATALOG.filter(e => !e.starter);
+                                const starterEmotes = EMOTE_CATALOG.filter(e => e.starter);
+                                return `
+                                <div class="arpg-panel p-5 flex flex-col gap-4 border-cyan-500/45">
+                                    <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-3 gap-2 shrink-0">
+                                        <div>
+                                            <h4 class="font-cinzel font-bold text-sm text-cyan-300">
+                                                Operative Emotes Boutique (${ownedEmotes.length}/${EMOTE_CATALOG.length} Unlocked)
+                                            </h4>
+                                            <p class="text-xs text-slate-400 mt-0.5">Acquire tactical & social animations here, then bind them to your 6-slot Radial Emote Wheel.</p>
+                                        </div>
+                                        <button onclick="UI.operativeSubPage='emotes'; UI.openModal('inventory');" class="arpg-btn px-4 py-2 text-xs text-cyan-300 border-cyan-500/70 font-bold">
+                                            <i class="fa-solid fa-sliders mr-1.5"></i> Customize Emote Wheel (E) ↗
+                                        </button>
+                                    </div>
+
+                                    <div class="ui-surface p-3.5 border border-amber-500/50 bg-amber-950/15 flex flex-wrap items-center justify-between gap-2">
+                                        <div class="flex items-center gap-2.5">
+                                            <span class="px-2 py-0.5 rounded bg-amber-500/20 border border-amber-400 text-[10px] font-cinzel font-extrabold text-amber-300">WIP // WORK IN PROGRESS</span>
+                                            <span class="text-xs text-slate-300">Additional purchasable & unlockable emotes are currently in development and will appear in this storefront soon.</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+                                        <div class="lg:col-span-2 flex flex-col gap-4">
+                                            ${purchasableEmotes.length > 0 ? `
+                                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                                                    ${purchasableEmotes.map(em => {
+                                                        const owned = ownedEmotes.includes(em.id);
+                                                        return `
+                                                            <div class="ui-surface p-3 border ${owned ? 'border-emerald-500/60' : 'border-slate-800'} flex flex-col justify-between gap-2.5">
+                                                                <div class="flex items-center gap-2.5">
+                                                                    <div class="w-10 h-10 rounded bg-slate-950 border border-slate-700 flex items-center justify-center text-xl shrink-0">${em.emoji}</div>
+                                                                    <div class="min-w-0">
+                                                                        <div class="font-bold ${em.color} text-xs truncate">${em.name}</div>
+                                                                        <div class="text-[11px] text-slate-400 line-clamp-2 leading-tight">${em.desc}</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="flex gap-1.5">
+                                                                    <button onclick="Game.triggerPreviewEmote('${em.id}')" class="arpg-btn px-2 py-1.5 text-[11px] text-sky-300" title="Preview in 3D">▶</button>
+                                                                    ${!owned ? `
+                                                                        <button onclick="UI.buyEmote('${em.id}')" class="arpg-btn-gold py-1.5 text-[11px] flex-1" ${st.gold < (em.price || 0) ? 'disabled' : ''}>Buy ${(em.price || 0).toLocaleString()}₵</button>
+                                                                    ` : `
+                                                                        <button onclick="UI.operativeSubPage='emotes'; UI.openModal('inventory');" class="arpg-btn py-1.5 text-[11px] text-emerald-300 flex-1">Owned • Equip ↗</button>
+                                                                    `}
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                    }).join('')}
+                                                </div>
+                                            ` : ''}
+
+                                            <div>
+                                                <div class="text-[11px] font-cinzel font-bold text-slate-400 uppercase tracking-wider mb-2">Standard Issue & Upcoming Releases</div>
+                                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+                                                    ${starterEmotes.map(em => `
+                                                        <div class="ui-surface p-3 border border-emerald-700/50 flex flex-col justify-between gap-2">
+                                                            <div class="flex items-center gap-2.5">
+                                                                <div class="w-9 h-9 rounded bg-slate-950 border border-slate-700 flex items-center justify-center text-lg shrink-0">${em.emoji}</div>
+                                                                <div class="min-w-0">
+                                                                    <div class="font-bold ${em.color} text-xs truncate">${em.name}</div>
+                                                                    <div class="text-[10px] font-cinzel text-emerald-400 font-bold">STARTER • OWNED</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="flex gap-1.5">
+                                                                <button onclick="Game.triggerPreviewEmote('${em.id}')" class="arpg-btn py-1 text-[11px] text-sky-300 flex-1">▶ Preview</button>
+                                                                <button onclick="UI.operativeSubPage='emotes'; UI.openModal('inventory');" class="arpg-btn py-1 text-[11px] text-cyan-300">Wheel</button>
+                                                            </div>
+                                                        </div>
+                                                    `).join('')}
+                                                    ${['Custom Emote #01', 'Custom Emote #02', 'Custom Emote #03'].map(title => `
+                                                        <div class="ui-surface p-3 border border-dashed border-slate-700/80 opacity-65 flex flex-col justify-between gap-2">
+                                                            <div class="flex items-center gap-2.5">
+                                                                <div class="w-9 h-9 rounded bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-600"><i class="fa-solid fa-hourglass-half"></i></div>
+                                                                <div class="min-w-0">
+                                                                    <div class="font-bold text-slate-400 text-xs">${title}</div>
+                                                                    <div class="text-[10px] font-cinzel text-amber-400/90 font-bold">WIP • FUTURE UPDATE</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="text-[11px] text-slate-500 italic">Placeholder storefront slot reserved for future purchasable emotes.</div>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="ui-surface-elevated p-4 border-cyan-400 flex flex-col gap-3 lg:sticky lg:top-0 self-start">
+                                            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                                                <span class="text-xs font-cinzel font-bold text-cyan-300">EMOTE PREVIEW DECK</span>
+                                                <span class="text-[10px] text-slate-400">3D Live Rig</span>
+                                            </div>
+                                            <div class="relative w-full h-72 bg-slate-950 rounded border border-cyan-500/50 overflow-hidden">
+                                                <div id="operative-preview-mount" class="w-full h-full"></div>
+                                                <div class="absolute top-2 right-2 z-20 flex gap-1">
+                                                    <button onclick="Game.rotatePreview(-0.45)" class="arpg-btn w-7 h-7 text-xs text-sky-300">⟲</button>
+                                                    <button onclick="Game.rotatePreview(0.45)" class="arpg-btn w-7 h-7 text-xs text-sky-300">⟳</button>
+                                                </div>
+                                            </div>
+                                            <p class="text-[11px] text-slate-400 text-center">Click <span class="text-sky-300 font-bold">▶ Preview</span> on any emote card to test its animation on Zed3.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            })() : `
                                 <div class="arpg-panel p-5 flex flex-col gap-4 border-fuchsia-500/45">
                                     <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-3 gap-2 shrink-0">
                                         <h4 class="font-cinzel font-bold text-sm text-fuchsia-300">
@@ -44535,7 +44902,7 @@ Parity Level ${lvl} • Clear all ${this.enemiesRemaining} hostiles to unlock th
                                         })() : ''}
                                     </div>
                                 </div>
-                            `))}
+                            `)))}
                         </div>
                     </div>
                 `;
@@ -49565,7 +49932,7 @@ ${selLog.text}
             #coop-squad-hud {
                 position: fixed;
                 left: 14px;
-                top: 238px;
+                top: 342px;
                 z-index: 33;
                 display: none;
                 flex-direction: column;
@@ -51885,6 +52252,14 @@ ${selLog.text}
                     `);
                 });
                 el.innerHTML = cards.join('');
+                const topLeftHud = document.getElementById('hud-top-left');
+                if (topLeftHud) {
+                    const rect = topLeftHud.getBoundingClientRect();
+                    const z = parseFloat(el.style.zoom || '1') || 1;
+                    if (rect.bottom > 100) {
+                        el.style.top = `${Math.round((rect.bottom + 10) / z)}px`;
+                    }
+                }
             },
 
             // ==================== PER-FRAME CO-OP TICK ====================
